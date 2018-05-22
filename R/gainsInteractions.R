@@ -10,6 +10,7 @@
 #'
 #'
 #'
+#'
 
 
 
@@ -20,6 +21,7 @@ gainsInteractions<-function(xgb.model,data, trees = NULL){
   treeList<-calculateGain(xgb.model,data, trees)
   trees<-rbindlist(treeList)
   trees<-na.omit(trees[,.(Tree,name_pair, parentsGain, childsGain, Cover, parentsCover)])
+  trees<-trees[,interaction:=(parentsGain<childsGain)]
 
   return(trees[])
 }

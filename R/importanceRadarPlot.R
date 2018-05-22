@@ -18,17 +18,16 @@
 
 importanceRadarPlot<-function(xgb.model,data,opt="mixed",top=10,trees=NULL){
 
-Feature<-sumGain<-sumCover<-meanGain<-meanCover<-mean5Gain<-.<-NULL
-
-  if(opt=="single"){
-    importance<-importanceSingleVariable(xgb.model,data,trees)
-  }
-  if(opt=="mixed"){
-    importance<-importanceTable(xgb.model,data,trees)
-  }
-  if(opt=="interactions"){
-    importance<-importanceInteractions(xgb.model,data,trees)
-  }
+ Feature<-sumGain<-sumCover<-meanGain<-meanCover<-mean5Gain<-.<-NULL
+ if(opt=="single"){
+   importance<-importanceSingleVariable(xgb.model,data,trees)
+ }
+ if(opt=="mixed"){
+   importance<-importanceTableMixed(xgb.model,data,trees)
+ }
+ if(opt=="interactions"){
+   importance<-importanceInteractions(xgb.model,data,trees)
+ }
 
   import<-importance[1:top,]
   import<-import[1:top,.(Feature,

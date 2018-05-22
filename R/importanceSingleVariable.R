@@ -14,28 +14,19 @@
 
 importanceSingleVariable<-function(xgb.model, data,trees = NULL){
 
-  Feature<-Gain<-Quality<-Cover<-indx<-.<-NULL
+Feature<-Gain<-Quality<-Cover<-indx<-.<-NULL
 
-#do poprawy
 trees2 = xgb.model.dt.tree(colnames(data), model = xgb.model, trees )
 trees2<-trees2[Feature!="Leaf",Gain:=Quality]
 trees2<-trees2[,.(Feature,Gain,Cover)]
 
-importance5<-countRoots(xgb.model, data,trees)
-importance6<-calculateWeightedDepth(xgb.model, data,trees)
+importance1<-merge(countRoots(xgb.model, data,trees),calculateWeightedDepth(xgb.model, data,trees), by="Feature", all=TRUE)[,-"sumGain"]
+importance2<-merge(trees2[Feature!="Leaf",.(sumGain=sum(Gain), sumCover=sum(Cover),meanGain=mean(Gain), meanCover=mean(Cover), frequency=.N),,by=Feature],mean5gain(trees2), by="Feature")
 
+importance<-merge(importance1,importance2, by="Feature")[,-"count"]
+setorderv(importance, "sumGain",-1)
+importance[is.na(importance)]<-0
 
-setorder(setDT(trees2), Feature, -Gain)[, indx := seq_len(.N), by = Feature]
-importanceTop<-trees2[indx <= 5]
-importance4<-importanceTop[,.(mean5Gain=mean(Gain)), by=Feature]
-importance3<-trees2[Feature!="Leaf",.(sumGain=sum(Gain), sumCover=sum(Cover),meanGain=mean(Gain), meanCover=mean(Cover), frequency=.N),by=Feature]
-
-importance7<-merge(importance5,importance6, by="Feature", all=TRUE)[,-"sumGain"]
-importance8<-merge(importance3,importance4, by="Feature")
-importance9<-merge(importance8,importance7, by="Feature")[,-"count"]
-
-setorderv(importance9, "sumGain",-1)
-importance9[is.na(importance9)]<-0
-return(importance9[])
+return(importance[])
 
 }

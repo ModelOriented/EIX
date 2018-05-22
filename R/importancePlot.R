@@ -23,7 +23,7 @@ importancePlot<-function(xgb.model,data,xlab="sumCover", ylab="sumGain", opt="mi
     importance<-importanceSingleVariable(xgb.model,data,trees)
   }
  if(opt=="mixed"){
-   importance<-importanceTable(xgb.model,data,trees)
+   importance<-importanceTableMixed(xgb.model,data,trees)
  }
  if(opt=="interactions"){
     importance<-importanceInteractions(xgb.model,data,trees)

@@ -24,21 +24,14 @@
 importanceInteractions<-function(xgb.model,data, trees = NULL){
 
   parentsGain<-childsGain<-name_pair<-Cover<-.<-Feature<-Gain<-indx<-NULL
-# do poprawy
+
+  #importance<-importanceTable(xgb.model,data, trees)
   trees<-gainsInteractions(xgb.model, data,trees)
-  trees<-trees[,interaction:=(parentsGain<childsGain)]
-  importance<-trees[interaction==TRUE]
-  importance<-importance[,.(Feature=name_pair,Gain=childsGain, Cover)]
+  trees<-trees[interaction==TRUE]
+  tress<-trees[,`:=`(Feature=name_pair,Gain=childsGain)]
+  tress<-trees[,.(Feature,Gain, Cover)]
+  importance<-merge(trees[,.(sumGain=sum(Gain), sumCover=sum(Cover),meanGain=mean(Gain), meanCover=mean(Cover), frequency=.N),by=Feature],mean5gain(trees), by="Feature")
+  setorderv(importance, "sumGain",-1)
 
-  setorder(setDT(importance), Feature, -Gain)[, indx := seq_len(.N), by = Feature]
-  importanceTop<-importance[indx <= 5]
-  importance4<-importanceTop[,.(mean5Gain=mean(Gain)), by=Feature]
-
-  importance3<-importance[,.(sumGain=sum(Gain), sumCover=sum(Cover),meanGain=mean(Gain), meanCover=mean(Cover), frequency=.N),by=Feature]
-
-  importance5<-merge(importance3,importance4, by="Feature")
-  setorderv(importance5, "sumGain",-1)
-  return(importance5[])
-
-
+  return(importance[])
 }

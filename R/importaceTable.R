@@ -13,6 +13,7 @@
 #'
 #' @param xgb.model a xgboost model
 #' @param data a DMatrix of data used to create the model
+#' @param opt "single", "interactions","mixed". Default "mixed"
 #' @param trees   the number of trees to include in the xgboost model.Default NULL
 #'
 #'@import data.table
@@ -23,35 +24,13 @@
 
 
 
-importanceTable<-function(xgb.model, data,trees = NULL){
+importanceTable<-function(xgb.model, data,opt="mixed", trees = NULL){
 
-parentsGain<-childsGain<-name_pair<-Cover<-Feature<-Gain<-indx<-.<-NULL
+  importance<-NULL
 
-  trees<-gainsInteractions(xgb.model, data,trees)
-  trees<-trees[,interaction:=(parentsGain<childsGain)]
+  if(opt=="mixed") {importance<- importanceTableMixed(xgb.model, data, trees)}
+  if(opt=="single") {importance<-importanceSingleVariable(xgb.model, data, trees)}
+  if(opt=="interactions") {importance<-importanceInteractions(xgb.model, data, trees)}
+return(importance)
 
-
-  importance<-trees[interaction==FALSE]
-  importance<-importance[,.(Feature=as.vector(unlist(map(strsplit(importance[,name_pair], "[:]"), 1))),Gain=parentsGain,Cover)]
-  importance2<-importance
-
-  importance<-trees[interaction==FALSE]
-  importance<-importance[,.(Feature=as.vector(unlist(map(strsplit(importance[,name_pair], "[:]"), 2))),Gain=childsGain, Cover)]
-  importance2<-rbind(importance, importance2)
-
-  #interakcje
-  importance<-trees[interaction==TRUE]
-  importance<-importance[,.(Feature=name_pair,Gain=childsGain, Cover)]
-  importance2<-rbind(importance, importance2)
-
-
-  setorder(setDT(importance2), Feature, -Gain)[, indx := seq_len(.N), by = Feature]
-  importanceTop<-importance2[indx <= 5]
-  importance4<-importanceTop[,.(mean5Gain=mean(Gain)), by=Feature]
-
-  importance3<-importance2[,.(sumGain=sum(Gain), sumCover=sum(Cover),meanGain=mean(Gain), meanCover=mean(Cover), frequency=.N),by=Feature]
-
-  importance5<-merge(importance3,importance4, by="Feature")
-  setorderv(importance5, "sumGain",-1)
-  return(importance5[])
 }

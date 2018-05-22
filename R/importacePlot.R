@@ -38,15 +38,7 @@
 
 importancePlot<-function(xgb.model,data,xlab="sumCover", ylab="sumGain", opt="mixed", top=10,trees = NULL){
 
-  if(opt=="single"){
-    importance<-importanceSingleVariable(xgb.model,data,trees)
-  }
- if(opt=="mixed"){
-   importance<-importanceTable(xgb.model,data,trees)
- }
- if(opt=="interactions"){
-    importance<-importanceInteractions(xgb.model,data,trees)
-  }
+   importance<-importanceTable(xgb.model,data,opt,trees)
 
   if( top=="NULL"){
     ggplot(data.frame(importance), aes_string(x=xlab, y=ylab,label="Feature"))+

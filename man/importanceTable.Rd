@@ -16,6 +16,8 @@ importanceTable(xgb.model, data, trees = NULL)
 
 \item{trees}{the number of trees to include in the xgboost model.Default NULL}
 
+\item{opt}{"single", "interactions","mixed". Default "mixed"}
+
 \item{xgb.model}{a xgboost model}
 
 \item{data}{a DMatrix of data used to create the model}

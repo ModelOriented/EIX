@@ -9,6 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 knitr::opts_chunk$set(fig.height = 8, fig.width = 8, fig.align = "center")
 library("data.table")
@@ -78,7 +79,7 @@ knitr::kable(head(countPairs(xgb.model,sparse_matrix)))
 showPairsGainPlot(xgb.model,sparse_matrix)
 ```
 
-In second approach, to find strong interactions, we can consider only these pairs of variables in which variable on the bottom has higher gain than variable on the top. 
+In second approach, to find strong interactions, we can consider only these pairs of variables in which variable on the bottom has higher gain than variable on the top.
 
 ```{r, warning=FALSE, message=FALSE}
 knitr::kable(head(importanceInteractions(xgb.model,sparse_matrix)))
@@ -100,15 +101,15 @@ knitr::kable(head(importanceSingleVariable(xgb.model,sparse_matrix)))
 
 ##Variables' and interactions importance
 
-With `xgbExplainer` package we can compare importance of single variable and interactions. 
+With `xgbExplainer` package we can compare importance of single variable and interactions.
 
 Funtion `importancePlot` shows two measures of importance, which we can be chosen by `xlab` and `ylab` parameters. It returns three kinds of plots depending on the `opt` parametr:
 
 
  * `opt="single"` - plot consists only single variables
- 
+
  * `opt="interactions"`- only interactions
- 
+
  * `opt="mixed"`-  plot shows importance both single variables and interactions
 
 
@@ -135,7 +136,7 @@ importancePlot(xgb.model, sparse_matrix)
 The function `importanceRadarPlot` allows us to compare different measures of variables and interteranctions importance on the radar plot from `ggradar` package. Similar to the funtion `importancePlot` it is posible to ganerate this plot in three ways depending on the parametr `opt`.
 
 ```{r, warning=FALSE, message=FALSE}
-importanceRadarPlot(xgb.model,sparse_matrix,top=10)
+importanceRadarPlot(xgb.model,sparse_matrix,top=10, trees=NULL, opt="mixed")
 ```
 
 ##Explanation of one prediction including interactions
