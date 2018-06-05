@@ -11,7 +11,7 @@
 #'@import utils
 #'@import xgboost
 #'
-#'
+#' @export
 
 
 countRoots<- function(xgb.model,data, trees = NULL) {

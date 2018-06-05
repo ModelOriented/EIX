@@ -10,7 +10,7 @@
 #'@import data.table
 #'@import xgboost
 #'
-#'
+#'@export
 
 calculateDepth<-function(xgb.model,data, trees = NULL){
 

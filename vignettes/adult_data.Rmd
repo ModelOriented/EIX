@@ -8,10 +8,10 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-Example of useage for adult_data from [www.archive.ics.uci.edu] (http://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data). 
+<!-- Example of useage for adult_data from [www.archive.ics.uci.edu] (http://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data). -->
 
-Description of packages functionalities in 
-vignette: HR_data.
+<!-- Description of packages functionalities in -->
+<!-- vignette: HR_data. -->
 
 <!-- ```{r, echo=FALSE, warning=FALSE, message=FALSE} -->
 <!-- knitr::opts_chunk$set(fig.height = 8, fig.width = 8, fig.align = "center") -->
@@ -21,6 +21,8 @@ vignette: HR_data.
 <!-- library("Matrix") -->
 <!-- library("DALEX") -->
 <!-- library("ggradar") -->
+<!-- library("ggrepel") -->
+
 <!-- ``` -->
 
 <!-- ```{r, warning=FALSE, message=FALSE} -->
@@ -44,8 +46,8 @@ vignette: HR_data.
 <!-- str(data) -->
 <!-- head(sparse_matrix) -->
 <!-- xgb.train.data = xgb.DMatrix(sparse_matrix,label = label,missing = NA) -->
-<!-- param <- list(objective = "binary:logistic", base_score = 0.5,max_depth=2) -->
-<!-- xgb.model <-xgboost( param = param,data = xgb.train.data,nrounds = 20,verbose = FALSE) -->
+<!-- param <- list(objective = "binary:logistic", base_score = 0.5,max_depth=5) -->
+<!-- xgb.model <-xgboost( param = param,data = xgb.train.data,nrounds = 100,verbose = FALSE) -->
 <!-- head(xgb.importance(colnames(sparse_matrix),xgb.model)) -->
 <!-- ``` -->
 
@@ -54,51 +56,82 @@ vignette: HR_data.
 
 
 <!-- ```{r, warning=FALSE, message=FALSE} -->
-<!-- gainLollypop(xgb.model, sparse_matrix) -->
+<!-- gainLollipop(xgb.model, sparse_matrix) -->
 <!-- ``` -->
 
 
-<!-- ##Finding interactions -->
+<!-- ## Interactions finding -->
 
+<!-- We can consider interactions in two ways. In first aproach we can explore all pairs of variable, which occur in the model one above the other . This approach is not the best because we can not distinguish if pair of variables are real interaction or not. In this approach high gain of pair can be a result of high gain of down variable (child). Package has the tools to explore pairs of variables. -->
 
 <!-- ```{r, warning=FALSE, message=FALSE} -->
-<!-- knitr::kable(head(calculateGainTable(xgb.model,sparse_matrix))) -->
+<!-- knitr::kable(head(calculatePairsGainTable(xgb.model,sparse_matrix))) -->
 <!-- knitr::kable(head(countPairs(xgb.model,sparse_matrix))) -->
-<!-- showPairsGainPlot(xgb.model,sparse_matrix) -->
+<!-- showInteractionsPlot(xgb.model,sparse_matrix, opt="pairs") -->
 <!-- ``` -->
+
+<!-- In second approach, to find strong interactions, we can consider only these pairs of variables in which variable on the bottom has higher gain than variable on the top. -->
+
+<!-- ```{r, warning=FALSE, message=FALSE} -->
+<!-- knitr::kable(head(importanceTable(xgb.model,sparse_matrix,opt="interactions"))) -->
+<!-- showInteractionsPlot(xgb.model,sparse_matrix) -->
+<!-- ``` -->
+
+<!-- ##Variables' importance -->
+
+<!-- For single variable `xgbExplainer` gives additionally measures of variables importance: -->
+
+<!-- * **counterRoot** - number of occurrences in the root -->
+<!-- * **weightedRoot**  - mean number of occurrences in the root, which is weighted by gain -->
+<!-- * **meanDepth ** - mean depth weighted by gain -->
 
 
 <!-- ```{r, warning=FALSE, message=FALSE} -->
-<!-- knitr::kable(head(importanceInteractions(xgb.model,sparse_matrix))) -->
-<!-- showInteractionsGainPlot(xgb.model,sparse_matrix) -->
+<!-- knitr::kable(head(importanceTable(xgb.model,sparse_matrix,opt="single"))) -->
 <!-- ``` -->
 
-<!-- ##Variable importance -->
+<!-- ##Variables' and interactions importance -->
+
+<!-- With `xgbExplainer` package we can compare importance of single variable and interactions. -->
+
+<!-- Funtion `importancePlot` shows two measures of importance, which we can be chosen by `xlab` and `ylab` parameters. It returns three kinds of plots depending on the `opt` parametr: -->
 
 
+<!--  * `opt="single"` - plot consists only single variables -->
 
-<!-- ```{r, warning=FALSE, message=FALSE} -->
-<!-- knitr::kable(head(countRoots(xgb.model, sparse_matrix))) -->
-<!-- knitr::kable(head(calculateWeightedDepth(xgb.model, sparse_matrix))) -->
-<!-- ``` -->
+<!--  * `opt="interactions"`- only interactions -->
 
-<!-- ##Variable and interactions importance -->
+<!--  * `opt="mixed"`-  plot shows importance both single variables and interactions -->
 
+
+<!--  In function `importancePlot` the following measures are avaible: -->
+
+<!-- * **sumGain** -->
+<!-- * **sumCover** -->
+<!-- * **mean5Gain** - mean gain from 5 occurrences of given variable with the highest gain -->
+<!-- * **meanGain** -->
+<!-- * **meanCover** -->
+<!-- * **freqency** -->
+
+<!-- Additionally for `opt="single"`: -->
+
+<!-- * **meanDepth** (weighted by variables gain) -->
+<!-- * **counterRoots** -->
+<!-- * **weightedRoot** (weighted by variables gain) -->
 
 <!-- ```{r, warning=FALSE, message=FALSE} -->
 <!-- knitr::kable(head(importanceTable(xgb.model, sparse_matrix))) -->
 <!-- importancePlot(xgb.model, sparse_matrix) -->
 <!-- ``` -->
 
+<!-- The function `importanceRadarPlot` allows us to compare different measures of variables and interteranctions importance on the radar plot from `ggradar` package. Similar to the funtion `importancePlot` it is posible to ganerate this plot in three ways depending on the parametr `opt`. -->
 
 <!-- ```{r, warning=FALSE, message=FALSE} -->
-<!-- importanceRadarPlot(xgb.model,sparse_matrix,top=10) -->
+<!-- importanceRadarPlot(xgb.model,sparse_matrix,top=10, trees=NULL, opt="mixed") -->
 <!-- ``` -->
 
-<!-- ##Explanation of one prediction taking into account interactions -->
+<!-- ##Explanation of one prediction including interactions -->
 
 <!-- ```{r, warning=FALSE, message=FALSE} -->
-
-<!-- ``` -->
 
 <!-- ``` -->

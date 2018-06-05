@@ -9,19 +9,19 @@
 #'
 #'
 #'
+#'@export
 #'
-#'
 
 
 
-gainsInteractions<-function(xgb.model,data, trees = NULL){
+gainInteractions<-function(xgb.model,data, trees = NULL){
 
   Tree<-name_pair<-parentsGain<-childsGain<-.<-Cover<-parentsCover<-NULL
 
   treeList<-calculateGain(xgb.model,data, trees)
   trees<-rbindlist(treeList)
-  trees<-na.omit(trees[,.(Tree,name_pair, parentsGain, childsGain, Cover, parentsCover)])
-  trees<-trees[,interaction:=(parentsGain<childsGain)]
+  trees<-na.omit(trees[Feature!="Leaf",.(Tree,name_pair, parentsGain, childsGain, Cover, parentsCover, Feature,parentsName)])
+  trees<-trees[,interaction:=((parentsGain<childsGain) & (Feature!=parentsName))]
 
   return(trees[])
 }
