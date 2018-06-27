@@ -16,7 +16,7 @@
 
 gainInteractions<-function(xgb.model,data, trees = NULL){
 
-  Tree<-name_pair<-parentsGain<-childsGain<-.<-Cover<-parentsCover<-NULL
+  parentsName<-Feature<-Tree<-name_pair<-parentsGain<-childsGain<-.<-Cover<-parentsCover<-NULL
 
   treeList<-calculateGain(xgb.model,data, trees)
   trees<-rbindlist(treeList)

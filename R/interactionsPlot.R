@@ -18,13 +18,13 @@
 #' @export
 
 
-showInteractionsPlot<-function(xgb.model,data, opt="interactions",trees = NULL){
+interactionsPlot<-function(xgb.model,data, opt="interactions",trees = NULL){
 
-  Feature<-sumGain<-child<-parent<-breaks<-NULL
+  Feature<-sumGain<-Child<-Parent<-breaks<-NULL
 
   if(opt=="interactions"){
   gainTable<-importanceInteraction(xgb.model,data, trees)[,Feature,sumGain]
-  gainTable<-gainTable[,`:=`(parent=as.vector(unlist(map(strsplit(gainTable[,Feature], "[:]"), 1))),child=as.vector(unlist(map(strsplit(gainTable[,Feature], "[:]"), 2))))]
+  gainTable<-gainTable[,`:=`(Parent=as.vector(unlist(map(strsplit(gainTable[,Feature], "[:]"), 1))),Child=as.vector(unlist(map(strsplit(gainTable[,Feature], "[:]"), 2))))]
   gainTable<-gainTable[,-2]
   }
   if(opt=="pairs"){
@@ -34,13 +34,14 @@ showInteractionsPlot<-function(xgb.model,data, opt="interactions",trees = NULL){
   sumGain<-gainTable$sumGain
   breaks<-c(min(sumGain),((max(sumGain-min(sumGain)))/4),((max(sumGain-min(sumGain)))/2),(3*((max(sumGain-min(sumGain)))/4)),max(sumGain))
   gainTable$breaks <- cut(sumGain,breaks =breaks ,right = FALSE, dig.lab = 4, include.lowest=TRUE)
-  gainTable$child <- factor(gainTable$child, levels = unique(gainTable$child[order(gainTable$sumGain,decreasing = TRUE)]))
+  gainTable$Child <- factor(gainTable$Child, levels = unique(gainTable$Child[order(gainTable$sumGain,decreasing = TRUE)]))
 
-  ggplot(data.frame(gainTable), aes(child, parent, sumGain)) +
+  ggplot(data.frame(gainTable), aes(Child, Parent, sumGain)) +
     geom_tile(aes(fill = breaks)) +
     theme_mi2() +
-    theme(axis.text.x = element_text(angle = 90))+
-    scale_fill_manual(name = "sumGain", values = c("#ffffff","#ccccff","#7f7fff","#3232ff"), drop=FALSE,breaks = levels(gainTable$breaks), labels= levels(gainTable$breaks))+
+    theme(axis.text.x = element_text(hjust=1, angle=90),
+          axis.text.y=element_text(hjust=1, angle=0))+
+    scale_fill_manual(name = "sumGain", values = c("#ffffff","#ccccff","#7f7fff","#3232ff"), drop=FALSE,breaks = levels(gainTable$breaks), labels= c("very low","low", "medium","high"))+
     coord_equal()
 }
 

@@ -31,7 +31,7 @@ calculatePairsGainTable<-function(xgb.model,data, trees = NULL){
 
   importance<- trees[,.(sumGain=sum(childsGain)),by=name_pair]
   importance<-na.omit(importance)
-  importance<-importance[,`:=`(parent=as.vector(unlist(map(strsplit(importance[,name_pair], "[:]"), 1))),child=as.vector(unlist(map(strsplit(importance[,name_pair], "[:]"), 2))))]
+  importance<-importance[,`:=`(Parent=as.vector(unlist(map(strsplit(importance[,name_pair], "[:]"), 1))),Child=as.vector(unlist(map(strsplit(importance[,name_pair], "[:]"), 2))))]
   importance<-importance[,-1]
   #importance<-spread(importance,down,sumGain)
   #importance[is.na(importance)]<-'.'

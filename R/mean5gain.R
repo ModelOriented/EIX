@@ -10,6 +10,8 @@
 
 mean5gain<-function(trees){
 
+  indx<-Gain<-.<-Feature<-NULL
+
   setorder(setDT(trees), Feature, -Gain)[, indx := seq_len(.N), by = Feature]
   importanceTop<-trees[indx <= 5]
   importance<-importanceTop[,.(mean5Gain=mean(Gain)), by=Feature]

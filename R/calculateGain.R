@@ -20,7 +20,7 @@
 
 calculateGain<- function(xgb.model,data, trees = NULL) {
 
-  leaf<-Feature<-Yes<-No<-ID<-parentsGain<-Quality<-parentsCover<-Cover<-name_pair<-childsGain<-NULL
+  leaf<-Feature<-Yes<-No<-ID<-parentsGain<-Quality<-parentsCover<-Cover<-name_pair<-childsGain<-depth<-parentsName<-NULL
 
   trees = xgb.model.dt.tree(colnames(data), model = xgb.model, trees = trees)
   trees[,leaf := Feature == "Leaf"]
