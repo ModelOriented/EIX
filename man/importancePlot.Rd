@@ -5,41 +5,48 @@
 \title{Importance plot}
 \usage{
 importancePlot(xgb.model, data, xlab = "sumCover", ylab = "sumGain",
-  opt = "mixed", top = 10, trees = NULL)
+  opt = "mixed", top = 10)
 }
 \arguments{
-\item{xgb.model}{a xgboost model}
+\item{xgb.model}{a xgboost or lightgbm model}
 
-\item{data}{a DMatrix of data used to create the model}
+\item{data}{a data table with data used to train the model}
 
 \item{xlab}{measure on the x-axis. Default "sumCover"}
 
 \item{ylab}{measure on the y-axis. Default "sumGain"}
 
-\item{opt}{"single", "mixed","interactions". Default "mixed"}
+\item{opt}{if "single" then plot includes only single variable,
+if "interactions", then only interactions
+if "mixed", then both single variable and interactons.
+Default "mixed".}
 
-\item{top}{number of variables on the plot or NULL for all variable. Default NULL}
-
-\item{trees}{the number of trees to include in the xgboost model.Default NULL}
+\item{top}{number of positions on the plot or NULL for all variable. Default 10.}
+}
+\value{
+a ggplot object
 }
 \description{
-Plot two chosen measures of variables importance in the xgboost model.
+The plot containing two chosen measures of variables' importance in the model.
 }
 \details{
-Avaible measures:
+Available measures:
 \itemize{
-\item "sumGain"
-\item "sumCover"
-\item "mean5Gain"
-\item "meanGain"
-\item "meanCover"
-\item "freqency"
+\item "sumGain" - sum of Gain value in all nodes, in which given variable occurs
+\item "sumCover" - sum of Cover value in all nodes, in which given variable occurs; for LightGBM models: number of observation, which pass through the node
+\item "mean5Gain" - mean gain from 5 occurrences of given variable with the highest gain
+\item "meanGain" - mean Gain value in all nodes, in which given variable occurs
+\item "meanCover" - mean Cover value in all nodes, in which given variable occurs; for LightGBM models: mean number of observation, which pass through the node
+\item "freqency" - number of occurrences in the nodes for given variable
 }
 
-Aditionally for plots with single variable:
+Additionally for plots with single variables:
 \itemize{
-\item "meanDepth",
-\item "counterRoot",
-\item "weightedRoot",
+\item "meanDepth"  - mean depth weighted by gain
+\item "counterRoot" - number of occurrences in the root
+\item "weightedRoot" - mean number of occurrences in the root, which is weighted by gain
 }
+}
+\examples{
+
 }

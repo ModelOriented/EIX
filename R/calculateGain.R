@@ -1,28 +1,23 @@
-#'caculateGain
+#' calculateGain
 #'
-#'Function \code{calculateGain} returns list of trees with pairs of variable and their gain.
+#' List of trees with pairs of variable and other needed fields
 #'
+#' @param xgb.model a xgboost or lightgbm model
+#' @param data a data table with data used to train the model
 #'
-#' @param xgb.model a xgboost model
-#' @param data a DMatrix of data used to create the model
-#' @param trees   the number of trees to include in the xgboost model.Default NULL
+#' @return a list
 #'
-#'@import data.table
-#'@import stats
-#'@import utils
-#'@import xgboost
-#'
-#'@export
-#'
+#' @import data.table
+#' @import stats
+#' @import utils
+#' @import xgboost
 #'
 
-
-
-calculateGain<- function(xgb.model,data, trees = NULL) {
+calculateGain<- function(xgb.model,data) {
 
   leaf<-Feature<-Yes<-No<-ID<-parentsGain<-Quality<-parentsCover<-Cover<-name_pair<-childsGain<-depth<-parentsName<-NULL
 
-  trees = xgb.model.dt.tree(colnames(data), model = xgb.model, trees = trees)
+  trees = tableOfTrees( model = xgb.model, data)
   trees[,leaf := Feature == "Leaf"]
   trees$depth<-0
   treeList = split(trees,as.factor(trees$Tree))
@@ -35,32 +30,24 @@ calculateGain<- function(xgb.model,data, trees = NULL) {
       right = tree[r,No]
       if (tree[ID==left,leaf]==F){
          newDepth<-tree[r ,depth] + 1
-        tree[ID==left,`:=`(parentsGain=tree[r,Quality],parentsCover=tree[r,Cover],name_pair=paste(tree[r,Feature],tree[ID==left,Feature], sep = ":"),childsGain=Quality,depth= newDepth,parentsName= tree[r,Feature])]
+        tree[ID==left,`:=`(parentsGain=tree[r,Quality],
+                           parentsCover=tree[r,Cover],
+                           name_pair=paste(tree[r,Feature],tree[ID==left,Feature], sep = ":"),
+                           childsGain=Quality,
+                           depth= newDepth,
+                           parentsName= tree[r,Feature])]
         tree[ID==left,interaction:=((parentsGain<childsGain) & (Feature!=parentsName))]
-        # tree[ID==left,parentsGain:=tree[r,Quality]]
-        # tree[ID==left,parentsCover:=tree[r,Cover]]
-        # name_pair4=paste(tree[r,Feature],tree[ID==left,Feature], sep = ":")
-        # tree[ID==left, name_pair:=name_pair4]
-        # tree[ID==left,childsGain:=Quality]
-        # newDepth<-tree[r ,depth] + 1
-        # tree[ID==left, depth:= newDepth]
-        # tree[ID==left, parentsName:= tree[r,Feature]]
-
       }
       if (tree[ID==right,leaf]==F){
         newDepth<-tree[r ,depth] + 1
-        tree[ID==right,`:=`(parentsGain=tree[r,Quality],parentsCover=tree[r,Cover],name_pair=paste(tree[r,Feature],tree[ID==right,Feature], sep = ":"),childsGain=Quality,depth= newDepth,parentsName= tree[r,Feature])]
+        tree[ID==right,`:=`(parentsGain=tree[r,Quality],
+                            parentsCover=tree[r,Cover],
+                            name_pair=paste(tree[r,Feature],tree[ID==right,Feature], sep = ":"),
+                            childsGain=Quality,
+                            depth= newDepth,
+                            parentsName= tree[r,Feature])]
         tree[ID==right,interaction:=((parentsGain<childsGain) & (Feature!=parentsName))]
-        # tree[ID==right,parentsGain:=tree[r,Quality]]
-        # tree[ID==right,parentsCover:=tree[r,Cover]]
-        # name_pair1= paste(tree[r,Feature],tree[ID==right,Feature], sep = ":")
-        # tree[ID==right, name_pair:=name_pair1]
-        # tree[ID==right,childsGain:=Quality]
-        # newDepth<-tree[r ,depth] + 1
-        # tree[ID==right, depth:= newDepth]
-        # tree[ID==right, parentsName:= tree[r,Feature]]
       }
-
     }
   }
 

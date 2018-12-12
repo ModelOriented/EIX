@@ -2,17 +2,21 @@
 % Please edit documentation in R/countPairs.R
 \name{countPairs}
 \alias{countPairs}
-\title{Table with namber of pairs}
+\title{Table of occurancess number}
 \usage{
-countPairs(xgb.model, data, trees = NULL)
+countPairs(xgb.model, data)
 }
 \arguments{
-\item{xgb.model}{a xgboost model}
+\item{xgb.model}{a xgboost or lightgbm model}
 
-\item{data}{a DMatrix of data used to create the model}
+\item{data}{a data table with data used to train the model}
+}
+\value{
 
-\item{trees}{the number of trees to include in the xgboost model.Default NULL}
 }
 \description{
-Function \code{countPairs} counts how many times each pair of variable occures in the model.
+Table containing occurancess number of variables' pairs in the model.
+}
+\examples{
+
 }

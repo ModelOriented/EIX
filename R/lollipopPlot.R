@@ -1,28 +1,32 @@
-#'Visualiation of xgboost model
+#' Visualiation of the model
 #'
+#' Visualiation of the model
 #'
+#' @param xgb.model a xgboost or lightgbm model
+#' @param data a data table with data used to train the model
+#' @param labels if "topAll" then labels for the most important interactions (vertical label)
+#'               and variables in the roots(horizontal label) will be displayed,
+#'               if "interactions" then labels for all interactions,
+#'               if "roots" then labels for all variables in the root.
+#' @param log  TRUE/FALSE logarithmic scale on the plot. Default TRUE.
 #'
-#' @param xgb.model a xgboost model
-#' @param data a DMatrix of data used to create the model
-#' @param trees   the number of trees to include in the xgboost model.Default NULL
-#' @param labels "topAll", "interactions", "roots"
-#' @param log whether the plot should have log scale
+#' @return a ggplot object
 #'
-#'@import data.table
-#'@import ggplot2
-#'@import DALEX
-#'@import ggrepel
+#' @import data.table
+#' @import ggplot2
+#' @import DALEX
+#' @import ggrepel
+#'
+#' @examples
 #'
 #' @export
-#'
-#'
 
-lollipopPlot<- function(xgb.model, data, labels="topAll",log=TRUE ,trees = NULL){
+lollipopPlot<- function(xgb.model, data, labels="topAll",log=TRUE){
 
     Tree<-Quality<-depth<-Feature<-NULL
 
-    nodes<-nodesGainTable(xgb.model, data,trees)
-    roots<-rootsGainTable(xgb.model, data,trees)
+    nodes<-nodesGainTable(xgb.model, data)
+    roots<-rootsGainTable(xgb.model, data)
 
     p<-ggplot(data=data.frame(nodes), aes(x=Tree, y=Quality,group=as.factor(depth), label=Feature))+
       geom_line(data=data.frame(roots), color="red", size=1.25, alpha=.5) +
@@ -44,11 +48,11 @@ lollipopPlot<- function(xgb.model, data, labels="topAll",log=TRUE ,trees = NULL)
 }
 
 
-rootsGainTable<-function(xgb.model, data,trees = NULL){
+rootsGainTable<-function(xgb.model, data){
 
   Node<-Quality<- Feature<-Tree<-ID<-depth<-.<-NULL
 
-  trees = rbindlist(calculateDepth(xgb.model, data,trees))
+  trees = rbindlist(calculateGain(xgb.model, data))
   roots<-trees[Node==0, .(Quality, Feature, Tree, ID,depth)]
 
   return(roots[])
@@ -56,13 +60,13 @@ rootsGainTable<-function(xgb.model, data,trees = NULL){
 }
 
 
-nodesGainTable<-function(xgb.model, data,trees = NULL){
+nodesGainTable<-function(xgb.model, data){
 
   Feature<-Quality<-Node<-Tree<-ID<-depth<-.<-NULL
 
-  trees = rbindlist(calculateGain(xgb.model, data,trees))
-  nodes<-trees[Feature!="Leaf", .(Quality, Feature,Node,Tree, ID,interaction,depth,parentsName)]
-  nodes[interaction==TRUE,Feature:= paste(Feature,parentsName, sep = ":")]
+  trees = rbindlist(calculateGain(xgb.model, data))
+  nodes<-trees[Feature!="Leaf", .(Quality, Feature,Node,Tree, ID,interaction,depth,parentsName,name_pair)]
+  nodes[interaction==TRUE,Feature:= name_pair]
   return(nodes[])
 }
 

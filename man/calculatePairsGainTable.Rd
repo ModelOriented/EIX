@@ -4,15 +4,19 @@
 \alias{calculatePairsGainTable}
 \title{Table of pairs' gains}
 \usage{
-calculatePairsGainTable(xgb.model, data, trees = NULL)
+calculatePairsGainTable(xgb.model, data)
 }
 \arguments{
-\item{xgb.model}{a xgboost model}
+\item{xgb.model}{a xgboost or lightgbm model}
 
-\item{data}{a DMatrix of data used to create the model}
-
-\item{trees}{the number of trees to include in the xgboost model.Default NULL}
+\item{data}{a data table with data used to train the model}
+}
+\value{
+a data table
 }
 \description{
-Function \code{calculateGainTable} returns table of gains of all variables' pair occures in the model.
+Table containing gains of all variables' pairs occur in the model.
+}
+\examples{
+
 }

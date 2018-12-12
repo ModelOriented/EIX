@@ -2,17 +2,18 @@
 % Please edit documentation in R/calculateGain.R
 \name{calculateGain}
 \alias{calculateGain}
-\title{caculateGain}
+\title{calculateGain}
 \usage{
-calculateGain(xgb.model, data, trees = NULL)
+calculateGain(xgb.model, data)
 }
 \arguments{
-\item{xgb.model}{a xgboost model}
+\item{xgb.model}{a xgboost or lightgbm model}
 
-\item{data}{a DMatrix of data used to create the model}
-
-\item{trees}{the number of trees to include in the xgboost model.Default NULL}
+\item{data}{a data table with data used to train the model}
+}
+\value{
+a list
 }
 \description{
-Function \code{calculateGain} returns list of trees with pairs of variable and their gain.
+List of trees with pairs of variable and other needed fields
 }

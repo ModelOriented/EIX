@@ -1,2 +1,10 @@
-# xgbExplainer
-R package that explains xgboost models
+## EIX - Explain Interactions in Xgboost
+A set of tools to explain XGBoost and LightGBM models.
+
+## Installation
+
+Install from GitHub
+```{r}
+devtools::install_github("ekarbowiak/EIX")
+```
+

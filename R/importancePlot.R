@@ -1,55 +1,49 @@
-#'Importance plot
+#' Importance plot
 #'
-#'Plot two chosen measures of variables importance in the xgboost model.
+#' The plot containing two chosen measures of variables' importance in the model.
 #'
-#'Avaible measures:
+#' Available measures:
 #'\itemize{
-#'\item "sumGain"
-#'\item "sumCover"
-#'\item "mean5Gain"
-#'\item "meanGain"
-#'\item "meanCover"
-#'\item "freqency"
+#'\item "sumGain" - sum of Gain value in all nodes, in which given variable occurs
+#'\item "sumCover" - sum of Cover value in all nodes, in which given variable occurs; for LightGBM models: number of observation, which pass through the node
+#'\item "mean5Gain" - mean gain from 5 occurrences of given variable with the highest gain
+#'\item "meanGain" - mean Gain value in all nodes, in which given variable occurs
+#'\item "meanCover" - mean Cover value in all nodes, in which given variable occurs; for LightGBM models: mean number of observation, which pass through the node
+#'\item "freqency" - number of occurrences in the nodes for given variable
 #'}
 #'
-#'Aditionally for plots with single variable:
+#' Additionally for plots with single variables:
 #'\itemize{
-#'\item "meanDepth",
-#'\item "counterRoot",
-#'\item "weightedRoot",
+#'\item "meanDepth"  - mean depth weighted by gain
+#'\item "counterRoot" - number of occurrences in the root
+#'\item "weightedRoot" - mean number of occurrences in the root, which is weighted by gain
 #'}
 #'
-#'
-#' @param xgb.model a xgboost model
-#' @param data a DMatrix of data used to create the model
+#' @param xgb.model a xgboost or lightgbm model
+#' @param data a data table with data used to train the model
 #' @param xlab measure on the x-axis. Default "sumCover"
 #' @param ylab measure on the y-axis. Default "sumGain"
-#' @param opt  "single", "mixed","interactions". Default "mixed"
-#' @param top number of variables on the plot or NULL for all variable. Default NULL
-#' @param trees   the number of trees to include in the xgboost model.Default NULL
+#' @param opt if "single" then plot includes only single variable,
+#'            if "interactions", then only interactions
+#'            if "mixed", then both single variable and interactons.
+#'            Default "mixed".
+#' @param top number of positions on the plot or NULL for all variable. Default 10.
+#'
+#' @return a ggplot object
 #'
 #' @import ggplot2
 #' @import data.table
 #' @import DALEX
 #' @import ggrepel
 #'
+#' @examples
 #'
 #' @export
 
 
-importancePlot<-function(xgb.model,data,xlab="sumCover", ylab="sumGain", opt="mixed", top=10,trees = NULL){
+importancePlot<-function(xgb.model,data,xlab="sumCover", ylab="sumGain", opt="mixed", top=10){
 
-  # if(opt=="single"){
-  #   importance<-importanceSingleVariable(xgb.model,data,trees)
-  # }
-  # if(opt=="mixed"){
-  #   importance<-importanceTableMixed(xgb.model,data,trees)
-  # }
-  # if(opt=="interactions"){
-  #   importance<-importanceInteraction(xgb.model,data,trees)
-  # }
-
-importance<-importanceTable(xgb.model,data,opt,trees)
+importance<-importanceTable(xgb.model,data,opt)
 
   if( top=="NULL"){
     ggplot(data.frame(importance), aes_string(x=xlab, y=ylab,label="Feature"))+

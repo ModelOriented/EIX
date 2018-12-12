@@ -4,25 +4,42 @@
 \alias{importanceTable}
 \title{Importance table}
 \usage{
-importanceTable(xgb.model, data, opt = "mixed", trees = NULL)
+importanceTable(xgb.model, data, opt = "mixed")
 }
 \arguments{
-\item{xgb.model}{a xgboost model}
+\item{xgb.model}{a xgboost or lightgbm model}
 
-\item{data}{a DMatrix of data used to create the model}
+\item{data}{a data table with data used to train the model}
 
-\item{opt}{"single", "interactions","mixed". Default "mixed"}
-
-\item{trees}{the number of trees to include in the xgboost model.Default NULL}
+\item{opt}{if "single" then table includes only single variable,
+if "interactions", then only interactions
+if "mixed", then both single variable and interactons.
+Default "mixed".}
+}
+\value{
+a data table
 }
 \description{
-Function \code{importaceTable} returns table with importance of single variable and interactions with the following measure:
-\itemize{
-\item sumGain
-\item sumCover
-\item mean5Gain
-\item meanGain
-\item meanCover
-\item freqency
+Importance table
 }
+\details{
+Available measures:
+\itemize{
+\item "sumGain" - sum of Gain value in all nodes, in which given variable occurs
+\item "sumCover" - sum of Cover value in all nodes, in which given variable occurs; for LightGBM models: number of observation, which pass through the node
+\item "mean5Gain" - mean gain from 5 occurrences of given variable with the highest gain
+\item "meanGain" - mean Gain value in all nodes, in which given variable occurs
+\item "meanCover" - mean Cover value in all nodes, in which given variable occurs; for LightGBM models: mean number of observation, which pass through the node
+\item "freqency" - number of occurrences in the nodes for given variable
+}
+
+Additionally for table with single variables:
+\itemize{
+\item "meanDepth"  - mean depth weighted by gain
+\item "counterRoot" - number of occurrences in the root
+\item "weightedRoot" - mean number of occurrences in the root, which is weighted by gain
+}
+}
+\examples{
+
 }

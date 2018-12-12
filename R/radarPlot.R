@@ -1,28 +1,32 @@
 #'Importance radar plot
 #'
+#' The plot of six measures of variables' importance in the model.
 #'
+#' @param xgb.model a xgboost or lightgbm model
+#' @param data a data table with data used to train the model
+#' @param opt if "single" then plot includes only single variable,
+#'            if "interactions", then only interactions
+#'            if "mixed", then both single variable and interactons.
+#'            Default "mixed".
+#' @param top number of positions on the plot. Default 10.
 #'
-#'
-#' @param xgb.model a xgboost model
-#' @param data a DMatrix of data used to create the model
-#' @param opt  "single", "mixed","interactions". Default "mixed"
-#' @param top Default 10
-#' @param trees   the number of trees to include in the xgboost model.Default NULL
+#' @return a ggplot object
 #'
 #' @import data.table
 #' @import ggplot2
-#' @import ggradar
 #' @import DALEX
+#'
+#' @examples
 #'
 #' @export
 
-radarPlot<-function(xgb.model,data,opt="mixed",top=10,trees=NULL){
+radarPlot<-function(xgb.model,data,opt="mixed",top=10){
 
 
   Feature<-sumGain<-sumCover<-meanGain<-meanCover<-mean5Gain<-.<-NULL
 
 
-  importance<-importanceTable(xgb.model,data,opt,trees)
+  importance<-importanceTable(xgb.model,data,opt)
 
   import<-importance[1:top,]
   import<-import[1:top,.(Feature,

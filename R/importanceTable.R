@@ -1,36 +1,47 @@
-#'Importance table
+#' Importance table
 #'
-#'Function \code{importaceTable} returns table with importance of single variable and interactions with the following measure:
+#' Importance table
+#'
+#' Available measures:
 #'\itemize{
-#'\item sumGain
-#'\item sumCover
-#'\item mean5Gain
-#'\item meanGain
-#'\item meanCover
-#'\item freqency
+#'\item "sumGain" - sum of Gain value in all nodes, in which given variable occurs
+#'\item "sumCover" - sum of Cover value in all nodes, in which given variable occurs; for LightGBM models: number of observation, which pass through the node
+#'\item "mean5Gain" - mean gain from 5 occurrences of given variable with the highest gain
+#'\item "meanGain" - mean Gain value in all nodes, in which given variable occurs
+#'\item "meanCover" - mean Cover value in all nodes, in which given variable occurs; for LightGBM models: mean number of observation, which pass through the node
+#'\item "freqency" - number of occurrences in the nodes for given variable
 #'}
 #'
+#' Additionally for table with single variables:
+#'\itemize{
+#'\item "meanDepth"  - mean depth weighted by gain
+#'\item "counterRoot" - number of occurrences in the root
+#'\item "weightedRoot" - mean number of occurrences in the root, which is weighted by gain
+#'}
 #'
-#' @param xgb.model a xgboost model
-#' @param data a DMatrix of data used to create the model
-#' @param opt "single", "interactions","mixed". Default "mixed"
-#' @param trees   the number of trees to include in the xgboost model.Default NULL
+#' @param xgb.model a xgboost or lightgbm model
+#' @param data a data table with data used to train the model
+#' @param opt if "single" then table includes only single variable,
+#'            if "interactions", then only interactions
+#'            if "mixed", then both single variable and interactons.
+#'            Default "mixed".
 #'
+#' @return a data table
 #' @import data.table
 #'
-#'
+#' @examples
 #'
 #' @export
 
 
 
-importanceTable<-function(xgb.model, data,opt="mixed", trees = NULL){
+importanceTable<-function(xgb.model, data,opt="mixed"){
 
   importance<-NULL
 
-  if(opt=="mixed") {importance<- importanceTableMixed(xgb.model, data, trees)}
-  if(opt=="single") {importance<-importanceSingleVariable(xgb.model, data, trees)}
-  if(opt=="interactions") {importance<-importanceInteraction(xgb.model, data, trees)}
+  if(opt=="mixed") {importance<- importanceTableMixed(xgb.model, data)}
+  if(opt=="single") {importance<-importanceSingleVariable(xgb.model, data)}
+  if(opt=="interactions") {importance<-importanceInteraction(xgb.model, data)}
 
   importance<-cbind(importance[,1],signif(importance[,-1], digits = 4))
 
@@ -38,37 +49,32 @@ importanceTable<-function(xgb.model, data,opt="mixed", trees = NULL){
 
 }
 
-importanceTableMixed<-function(xgb.model, data, trees = NULL){
+importanceTableMixed<-function(xgb.model, data){
 
   parentsGain<-childsGain<-name_pair<-Cover<-Feature<-Gain<-indx<-.<-NULL
 
-  trees<-gainInteractions(xgb.model, data,trees)
+  trees<-noLeavesGainTable(xgb.model, data)
 
   #single variables
-  importance<-trees[interaction==FALSE]
-  importance1<-importance[,.(Feature=as.vector(unlist(map(strsplit(importance[,name_pair], "[:]"), 1))),Gain=parentsGain,Cover, interaction)]
-  importance2<-importance[,.(Feature=as.vector(unlist(map(strsplit(importance[,name_pair], "[:]"), 2))),Gain=childsGain, Cover, interaction)]
-  importance3<-rbind(importance1, importance2)
-
+  importanceSingle<-trees[(interaction==FALSE) | (is.na(interaction)), .(Feature,Gain=Quality, Cover) ]
 
   #interactions
-  importance<-trees[interaction==TRUE]
-  importance1<-importance[,.(Feature=name_pair,Gain=childsGain, Cover, interaction)]
-  importance3<-rbind(importance3, importance1)
+  interactions<-trees[interaction==TRUE]
+  importanceInter<-interactions[,.(Feature=name_pair,Gain=childsGain, Cover)]
+  importance<-rbind(importanceSingle, importanceInter)
 
-  importance4<-merge(importance3[,.(sumGain=sum(Gain), sumCover=sum(Cover),meanGain=mean(Gain), meanCover=mean(Cover), frequency=.N),by=Feature],mean5gain(importance3), by="Feature")
+  importance4<-merge(importance[,.(sumGain=sum(Gain), sumCover=sum(Cover),meanGain=mean(Gain), meanCover=mean(Cover), frequency=.N),by=Feature],mean5gain(importance), by="Feature")
   setorderv(importance4, "sumGain",-1)
 
   return(importance4[])
 }
 
 
-importanceInteraction<-function(xgb.model,data, trees = NULL){
+importanceInteraction<-function(xgb.model,data){
 
   parentsGain<-childsGain<-name_pair<-Cover<-.<-Feature<-Gain<-indx<-NULL
 
-  #importance<-importanceTable(xgb.model,data, trees)
-  trees<-gainInteractions(xgb.model, data,trees)
+  trees<-noLeavesGainTable(xgb.model, data)
   trees<-trees[interaction==TRUE]
   tress<-trees[,`:=`(Feature=name_pair,Gain=childsGain)]
   tress<-trees[,.(Feature,Gain, Cover)]
@@ -79,17 +85,18 @@ importanceInteraction<-function(xgb.model,data, trees = NULL){
 }
 
 
-importanceSingleVariable<-function(xgb.model, data,trees = NULL){
+importanceSingleVariable<-function(xgb.model, data){
 
   Feature<-Gain<-Quality<-Cover<-indx<-.<-NULL
 
-  trees2 = xgb.model.dt.tree(colnames(data), model = xgb.model, trees )
-  trees2<-trees2[Feature!="Leaf",Gain:=Quality]
-  trees2<-trees2[,.(Feature,Gain,Cover)]
+  trees<-noLeavesGainTable(xgb.model, data)
+  trees[,Gain:=Quality]
 
-  importance1<-merge(countRoots(xgb.model, data,trees),calculateWeightedDepth(xgb.model, data,trees), by="Feature", all=TRUE)[,-"sumGain"]
-  importance2<-merge(trees2[Feature!="Leaf",.(sumGain=sum(Gain), sumCover=sum(Cover),meanGain=mean(Gain), meanCover=mean(Cover), frequency=.N),,by=Feature],mean5gain(trees2), by="Feature")
+  importance1<-merge(countRoots(trees),calculateWeightedDepth(trees), by="Feature", all=TRUE)[,-"sumGain"]
 
+  trees<-trees[,.(Feature,Gain,Cover)]
+
+  importance2<-merge(trees[,.(sumGain=sum(Gain), sumCover=sum(Cover),meanGain=mean(Gain), meanCover=mean(Cover), frequency=.N),,by=Feature],mean5gain(trees), by="Feature")
   importance<-merge(importance1,importance2, by="Feature")[,-"count"]
   setorderv(importance, "sumGain",-1)
   importance[is.na(importance)]<-0
@@ -98,4 +105,50 @@ importanceSingleVariable<-function(xgb.model, data,trees = NULL){
 
 }
 
+#Table with number of roots and weighedRoot
+#counts how many times each variable is in the root of the tree and calculates the weighedRoot-number of occurrences in root weighed by Gain.
+countRoots<- function(trees) {
 
+  Node<-Quality<-Feature<-sumGain<-.<-weightedRoot<-NULL
+
+  roots<-trees[Node==0,]
+  roots<-roots[, .(sumGain=sum(Quality),countRoots=.N),by=Feature]
+  sumGains<-sum(roots[,sumGain])
+  roots<-roots[, weightedRoot:=round(roots[,sumGain]*roots[,countRoots]/sumGains,4)]
+
+  return(roots[])
+}
+
+#Mean form 5 nodes with the highests gain
+mean5gain<-function(trees){
+
+  indx<-Gain<-.<-Feature<-NULL
+
+  setorder(setDT(trees), Feature, -Gain)[, indx := seq_len(.N), by = Feature]
+  importanceTop<-trees[indx <= 5]
+  importance<-importanceTop[,.(mean5Gain=mean(Gain)), by=Feature]
+
+  return(importance[])
+}
+
+#calculates depth mean for every variable weighted by Gain
+calculateWeightedDepth <-function(trees){
+
+  Feature<-depth<-Quality<-.<-NULL
+
+  trees<-trees[, .(meanDepth=weighted.mean(depth, Quality),count=.N),by=Feature]
+
+  return(trees[])
+}
+
+
+noLeavesGainTable<-function(xgb.model,data){
+
+  parentsName<-Feature<-Tree<-name_pair<-parentsGain<-childsGain<-.<-Cover<-parentsCover<-interaction<-NULL
+
+  treeList<-calculateGain(xgb.model,data)
+  trees<-rbindlist(treeList)
+  trees<-trees[Feature!="Leaf",.(Tree,Node,name_pair, parentsGain, childsGain, Cover, parentsCover, Feature,Quality,parentsName, interaction, depth)]
+
+  return(trees[])
+}

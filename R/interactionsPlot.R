@@ -1,34 +1,40 @@
-#'Gain for interactions
+#' Interactions Plot
 #'
-#'Function \code{showInteractionsPlot} returns plot with gains of each strong interaction in the model.
+#' Interactions Plot
+#'
+#' NOTE: High gain of pair for \code{opt="pairs"} can be a result of high gain of down variable (child).
+#'      As strong interactions should be considered only these pairs of variables,
+#'      where variable on the bottom (child) has higher gain than variable on the top (parent).
+#'
+#' @param xgb.model a xgboost or lightgbm model
+#' @param data a data table with data used to train the model
+#' @param opt if "interactions" then strong interactions will be presented on the plot,
+#'            if "pairs" then plot presents all pairs in the model. Default "interactions".
 #'
 #'
+#' @return a ggplot object
 #'
-#' @param xgb.model a xgboost model
-#' @param data a DMatrix of data used to create the model
-#' @param trees   the number of trees to include in the xgboost model.Default NULL
-#' @param opt "interactions", "pairs"
+#' @import data.table
+#' @import ggplot2
+#' @import DALEX
+#' @import purrr
 #'
-#'@import data.table
-#'@import ggplot2
-#'@import DALEX
-#'@import purrr
-#'
+#' @examples
 #'
 #' @export
 
 
-interactionsPlot<-function(xgb.model,data, opt="interactions",trees = NULL){
+interactionsPlot<-function(xgb.model,data, opt="interactions"){
 
   Feature<-sumGain<-Child<-Parent<-breaks<-NULL
 
   if(opt=="interactions"){
-  gainTable<-importanceInteraction(xgb.model,data, trees)[,Feature,sumGain]
+  gainTable<-importanceInteraction(xgb.model,data)[,Feature,sumGain]
   gainTable<-gainTable[,`:=`(Parent=as.vector(unlist(map(strsplit(gainTable[,Feature], "[:]"), 1))),Child=as.vector(unlist(map(strsplit(gainTable[,Feature], "[:]"), 2))))]
   gainTable<-gainTable[,-2]
   }
   if(opt=="pairs"){
-  gainTable<-calculatePairsGainTable(xgb.model,data, trees)
+  gainTable<-calculatePairsGainTable(xgb.model,data)
   }
 
   sumGain<-gainTable$sumGain
