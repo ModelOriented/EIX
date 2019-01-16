@@ -13,40 +13,44 @@
 #' @import xgboost
 #'
 
-calculateGain<- function(xgb.model,data) {
+calculateGain <- function(xgb.model, data) {
 
-  leaf<-Feature<-Yes<-No<-ID<-parentsGain<-Quality<-parentsCover<-Cover<-name_pair<-childsGain<-depth<-parentsName<-NULL
+  leaf <- Feature <- Yes <- No <- ID <- parentsGain <- Quality <- parentsCover <-
+    Cover <- name_pair <- childsGain <- depth <- parentsName <- NULL
 
-  trees = tableOfTrees( model = xgb.model, data)
-  trees[,leaf := Feature == "Leaf"]
-  trees$depth<-0
-  treeList = split(trees,as.factor(trees$Tree))
+  trees = tableOfTrees(model = xgb.model, data)
+  trees[, leaf := Feature == "Leaf"]
+  trees$depth <- 0
+  treeList = split(trees, as.factor(trees$Tree))
 
-  for (tree in treeList){
+  for (tree in treeList) {
     num_nodes = nrow(tree)
-    non_leaf_rows = rev(which(tree[,leaf]==F))
-    for (r in non_leaf_rows){
-      left = tree[r,Yes]
-      right = tree[r,No]
-      if (tree[ID==left,leaf]==F){
-         newDepth<-tree[r ,depth] + 1
-        tree[ID==left,`:=`(parentsGain=tree[r,Quality],
-                           parentsCover=tree[r,Cover],
-                           name_pair=paste(tree[r,Feature],tree[ID==left,Feature], sep = ":"),
-                           childsGain=Quality,
-                           depth= newDepth,
-                           parentsName= tree[r,Feature])]
-        tree[ID==left,interaction:=((parentsGain<childsGain) & (Feature!=parentsName))]
+    non_leaf_rows = rev(which(tree[, leaf] == F))
+    for (r in non_leaf_rows) {
+      left = tree[r, Yes]
+      right = tree[r, No]
+      if (tree[ID == left, leaf] == F) {
+
+        newDepth <- tree[r , depth] + 1
+        tree[ID == left,`:=`(parentsGain = tree[r, Quality],
+                             parentsCover = tree[r, Cover],
+                             name_pair = paste(tree[r, Feature], tree[ID == left, Feature], sep = ":"),
+                             childsGain = Quality,
+                             depth = newDepth,
+                             parentsName = tree[r, Feature])]
+        tree[ID == left, interaction := ((parentsGain < childsGain) & (Feature != parentsName))]
       }
-      if (tree[ID==right,leaf]==F){
-        newDepth<-tree[r ,depth] + 1
-        tree[ID==right,`:=`(parentsGain=tree[r,Quality],
-                            parentsCover=tree[r,Cover],
-                            name_pair=paste(tree[r,Feature],tree[ID==right,Feature], sep = ":"),
-                            childsGain=Quality,
-                            depth= newDepth,
-                            parentsName= tree[r,Feature])]
-        tree[ID==right,interaction:=((parentsGain<childsGain) & (Feature!=parentsName))]
+
+      if (tree[ID == right, leaf]==F) {
+
+        newDepth <- tree[r , depth] + 1
+        tree[ID == right, `:=`(parentsGain = tree[r, Quality],
+                               parentsCover = tree[r, Cover],
+                               name_pair = paste(tree[r, Feature], tree[ID == right, Feature], sep = ":"),
+                               childsGain = Quality,
+                               depth = newDepth,
+                               parentsName = tree[r, Feature])]
+        tree[ID == right, interaction := ((parentsGain < childsGain) & (Feature != parentsName))]
       }
     }
   }

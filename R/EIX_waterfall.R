@@ -1,10 +1,14 @@
-#' broken
+#' EIX_waterfall
 #'
-#' Function \code{broken}
+#' Function \code{EIX_waterfall}
+#'
+#' Function contains code or pieces of code
+#' from `breakDown` code created by Przemysław Biecek
+#' and`xgboostExplainer` code created by David Foster.
 #'
 #' @param xgb.model a xgboost or lightgbm model
 #' @param new_observation a new observation
-#' @param opt = "interaction" or "single"
+#' @param option = "interaction" or "variables"
 #' @param baseline
 #'
 #' @return an object of the broken class
@@ -14,36 +18,37 @@
 #'
 #' @export
 
-broken<-function(xgb.model,new_observation, opt="interactions", baseline=0){
+EIX_waterfall<-function(xgb.model,new_observation, option="interactions", baseline=0){
 
-  col_names<-colnames(new_observation)
+  #uses pieces of breakDown code created by Przemysław Biecek
+
+  col_names <- colnames(new_observation)
   trees = xgb.model.dt.tree(col_names, model = xgb.model)
 
-  if(opt=="interactions") {
+  if (option == "interactions") {
     tree_list = getStatsForTreesInter(trees, type = "binary", base_score = .5)
   }
-  if(opt=="single"){
+  if (option == "variables") {
     tree_list = getStatsForTrees(trees, type = "binary", base_score = .5)
   }
 
   explainer = buildExplainerFromTreeList(tree_list,names(table(rbindlist(tree_list)[,Feature])))
-  new_observation_DM<-slice(xgb.DMatrix(t(new_observation)),as.integer(1))
+  new_observation_DM <- slice(xgb.DMatrix(t(new_observation)), as.integer(1))
 
   breakdown = explainPredictions(xgb.model, explainer, new_observation_DM)
   df<-data.frame(
-    variable=colnames(breakdown),#,"=", sapply(new_observation_data[colnames(breakdown)], as.character)),
-    contribution=as.numeric(breakdown),
-    variable_name=colnames(breakdown),
-    variable_value=NA#sapply(new_observation_data[colnames(breakdown)], as.character)
-  )[as.numeric(breakdown)!=0,]
-  df<-df[order(abs(df[,2]), decreasing = TRUE),]
-  df<-as.data.frame(df)
+    variable = colnames(breakdown), #,"=", sapply(new_observation_data[colnames(breakdown)], as.character)),
+    contribution = as.numeric(breakdown),
+    variable_name = colnames(breakdown),
+    variable_value = NA#sapply(new_observation_data[colnames(breakdown)], as.character)
+  )[as.numeric(breakdown) != 0, ]
+  df <- df[order(abs(df[, 2]), decreasing = TRUE), ]
+  df <- as.data.frame(df)
 
-  df_intercept<-df[which(df[,3]=="intercept"),]
-  df<-df[-which(df[,3]=="intercept"),]
+  df_intercept <- df[which(df[, 3] == "intercept"), ]
+  df <- df[-which(df[, 3] == "intercept"), ]
 
-  broken_sorted<-rbind(df_intercept, df)
-
+  broken_sorted <- rbind(df_intercept, df)
 
   breakDown:::create.broken(broken_sorted, baseline)
 }

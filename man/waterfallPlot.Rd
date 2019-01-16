@@ -19,3 +19,6 @@ a ggplot object
 \description{
 waterfallPlot
 }
+\examples{
+
+}
