@@ -19,7 +19,7 @@
 #'\item "weightedRoot" - mean number of occurrences in the root, which is weighted by gain
 #'}
 #'
-#' @param obj a resutls of `importanceTable` function
+#' @param obj a resutl of `importanceTable` function
 #' @param top number of positions on the plot or NULL for all variable. Default 10.
 #' @param radar TRUE/FALSE. If TRUE the plot shows
 #'               six measures of variables' importance in the model.

@@ -6,8 +6,7 @@
 #'      As strong interactions should be considered only these pairs of variables,
 #'      where variable on the bottom (child) has higher gain than variable on the top (parent).
 #'
-#' @param xgb.model a xgboost or lightgbm model
-#' @param data a data table with data used to train the model
+#' @param x a result of `interactionsTable` function
 #' @param option if "interactions" then strong interactions will be presented on the plot,
 #'            if "pairs" then plot presents all pairs in the model. Default "interactions".
 #'

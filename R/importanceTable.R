@@ -33,8 +33,6 @@
 #'
 #' @export
 
-
-
 importanceTable <- function(xgb.model, data, option = "both"){
   importance <- NULL
 

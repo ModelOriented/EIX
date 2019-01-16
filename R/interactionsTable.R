@@ -18,9 +18,8 @@
 #' @export
 #'
 #'
+
 interactionsTable <- function(xgb.model, data, option = "interactions"){
-
-
   Child <- Parent <- NULL
 
   if (option == "interactions") {

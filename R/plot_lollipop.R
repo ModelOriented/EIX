@@ -2,8 +2,7 @@
 #'
 #' Visualiation of the model
 #'
-#' @param xgb.model a xgboost or lightgbm model
-#' @param data a data table with data used to train the model
+#' @param obj a result of `EIX_lollipop` function
 #' @param labels if "topAll" then labels for the most important interactions (vertical label)
 #'               and variables in the roots(horizontal label) will be displayed,
 #'               if "interactions" then labels for all interactions,
