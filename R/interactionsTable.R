@@ -14,13 +14,31 @@
 #' @import tidyr
 #'
 #' @examples
+#' library("EIX")
+#' library("Matrix")
+#' library("data.table")
+#' library("xgboost")
+#'
+#' dt_HR <- data.table(HR_data)
+#' sm <- sparse.model.matrix(left ~ . - 1,  data = dt_HR)
+#'
+#' param <- list(objective = "binary:logistic", base_score = 0.5, max_depth = 2)
+#' xgb.model <- xgboost( param = param, data = sm, label = dt_HR[, left] == 1, nrounds = 50, verbose = FALSE)
+#'
+#' inter <- interactionsTable(xgb.model, sm,		option = "interactions")
+#' inter
+#' plot(inter)
+#'
+#' inter <- interactionsTable(xgb.model, sm,		option = "pairs")
+#' inter
+#' plot(inter)
 #'
 #' @export
 #'
 #'
 
 interactionsTable <- function(xgb.model, data, option = "interactions"){
-  Child <- Parent <- NULL
+  Child <- Parent <- Feature <- sumGain <- NULL
 
   if (option == "interactions") {
     gainTable <- importanceInteraction(xgb.model, data)[, Feature, sumGain]

@@ -1,12 +1,17 @@
 Package: EIX
-Title: EIX: Explain Interactions in XGBoost. Structure mining for XGBoost and LightGBM models.
+Title: EIX: Explain Interactions in XGBoost
+       Structure mining for XGBoost and LightGBM models
 Version: 0.0.0.9000
 Authors@R: c(
   person("Ewelina", "Karbowiak", email = "ewelina.karbowiak12@gmail.com", role = c("aut", "cre")),
   person("Przemyslaw", "Biecek", email = "przemyslaw.biecek@gmail.com", role = c("aut","ths"))
   )
-Description:The `EIX` package is the set of tools to structure mining of XGBoost and LightGBM models.This package enables to find interactions in the model and also to measure variables' and interactions' importance. It includes the function of model visualization in such way that the most important variables and interactions are visible. It is also possible to analyze the prediction of a single observation taking into account the interactions. The last functionality was built using the `xgboostExplainer` and `breakDown` package.
-Depends: R (>= 3.4.2), MASS
+Description: The EIX package supports structure mining from XGBoost and LightGBM models.
+    Key functionalities of this package cover: viualisation of tree-based ensembles models,
+    identification of interactions, measuring of variable importance,
+    measuring of interaction importance, explanation of single prediction 
+    with break down plots (based on xgboostExplainer and breakDown packages).
+Depends: R (>= 3.4.0), MASS
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
@@ -19,7 +24,7 @@ Imports:
     DALEX,
     ggrepel,
     ggiraphExtra,
-    GGally
+    breakDown
 RoxygenNote: 6.0.1
 Suggests: knitr,
     rmarkdown

@@ -5,7 +5,7 @@
 #' @param xgb.model a xgboost or lightgbm model
 #' @param data a data table with data used to train the model
 #'
-#' @return
+#' @return a data table
 #'
 #' @import data.table
 #' @import stats
@@ -14,6 +14,18 @@
 #' @import purrr
 #'
 #' @examples
+#' library("EIX")
+#' library("Matrix")
+#' library("data.table")
+#' library("xgboost")
+#'
+#' dt_HR <- data.table(HR_data)
+#' sm <- sparse.model.matrix(left ~ . - 1,  data = dt_HR)
+#'
+#' param <- list(objective = "binary:logistic", base_score = 0.5, max_depth = 2)
+#' xgb.model <- xgboost( param = param, data = sm, label = dt_HR[, left] == 1, nrounds = 50, verbose = FALSE)
+#'
+#' countPairs(xgb.model, sm)
 #'
 #' @export
 

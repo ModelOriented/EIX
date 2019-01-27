@@ -2,12 +2,13 @@
 #'
 #' Visualiation of the model
 #'
-#' @param obj a result of `EIX_lollipop` function
+#' @param x a result of `EIX_lollipop` function
 #' @param labels if "topAll" then labels for the most important interactions (vertical label)
 #'               and variables in the roots(horizontal label) will be displayed,
 #'               if "interactions" then labels for all interactions,
 #'               if "roots" then labels for all variables in the root.
 #' @param log  TRUE/FALSE logarithmic scale on the plot. Default TRUE.
+#' @param ... other parameters
 #'
 #' @return a ggplot object
 #'
@@ -17,14 +18,27 @@
 #' @import ggrepel
 #'
 #' @examples
+#' library("EIX")
+#' library("Matrix")
+#' library("data.table")
+#' library("xgboost")
+#'
+#' dt_HR <- data.table(HR_data)
+#' sm <- sparse.model.matrix(left ~ . - 1,  data = dt_HR)
+#'
+#' param <- list(objective = "binary:logistic", base_score = 0.5, max_depth = 2)
+#' xgb.model <- xgboost( param = param, data = sm, label = dt_HR[, left] == 1, nrounds = 50, verbose = FALSE)
+#'
+#' lolli <- EIX_lollipop(xgb.model, sm)
+#' plot(lolli, labels = "topAll", log_scale = TRUE)
 #'
 #' @export
 
-plot.lollipop<-function(obj, ..., labels = "topAll", log = TRUE){
+plot.lollipop<-function(x, ..., labels = "topAll", log = TRUE){
 
   Tree <- Quality <- depth <- Feature <- NULL
-  nodes <- obj[[1]]
-  roots <- obj[[2]]
+  nodes <- x[[1]]
+  roots <- x[[2]]
 
   p <- ggplot(data = data.frame(nodes), aes(x = Tree, y = Quality, group = as.factor(depth), label = Feature)) +
     geom_line(data = data.frame(roots), color = "red", size = 1.25, alpha = .5) +

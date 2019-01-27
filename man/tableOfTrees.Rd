@@ -7,9 +7,9 @@
 tableOfTrees(model, data)
 }
 \arguments{
-\item{data}{a data table with data used to train the model}
+\item{model}{a xgboost or lightgbm model}
 
-\item{xgb.model}{a xgboost or lightgbm model}
+\item{data}{a data table with data used to train the model}
 }
 \value{
 a data table

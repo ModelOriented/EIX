@@ -2,16 +2,23 @@
 #'
 #'tableOfTrees
 #'
-#' @param xgb.model a xgboost or lightgbm model
+#' @param model a xgboost or lightgbm model
 #' @param data a data table with data used to train the model
 #'
 #' @return a data table
 #'
 #' @import data.table
 #' @import xgboost
-#'
+# @import lightgbm
+
 
 tableOfTrees <- function(model, data){
+  count <- split_feature <- leaf_count <- internal_count <-
+  split_index <- tree_index <- leaf_index <- threshold <-
+  leaf_value <- split_gain <- flag <- node_parent <- leaf_parent<-
+  Node <- Feature <- . <- Cover <- Yes <- No <- ID <-
+  Tree<- Quality <- Missing <- Split <- NULL
+
 
   if(class(model)[1] == "xgb.Booster") {
     return(xgb.model.dt.tree(colnames(data), model)[])

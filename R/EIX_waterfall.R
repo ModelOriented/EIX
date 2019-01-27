@@ -8,19 +8,37 @@
 #'
 #' @param xgb.model a xgboost or lightgbm model
 #' @param new_observation a new observation
-#' @param option = "interaction" or "variables"
-#' @param baseline
+#' @param option  "interaction" or "variables"
+#' @param baseline number that specifies on which level the baseline line should be plotted
 #'
 #' @return an object of the broken class
 #'
 #' @import data.table
 #' @import xgboost
+#' @import breakDown
+#'
+#' @examples
+#' library("EIX")
+#' library("Matrix")
+#' library("data.table")
+#' library("xgboost")
+#'
+#' dt_HR <- data.table(HR_data)
+#' sm <- sparse.model.matrix(left ~ . - 1,  data = dt_HR)
+#'
+#' param <- list(objective = "binary:logistic", base_score = 0.5, max_depth = 2)
+#' xgb.model <- xgboost( param = param, data = sm, label = dt_HR[, left] == 1, nrounds = 50, verbose = FALSE)
+#'
+#' new_observation <- sm[9,]
+#' wf <- EIX_waterfallPlot(xgb.model, new_observation,  option = "interactions ")
+#' wf
+#' plot(wf)
 #'
 #' @export
 
 EIX_waterfall<-function(xgb.model,new_observation, option="interactions", baseline=0){
-
   #uses pieces of breakDown code created by Przemysław Biecek
+  Feature <- NULL
 
   col_names <- colnames(new_observation)
   trees = xgb.model.dt.tree(col_names, model = xgb.model)
@@ -54,8 +72,11 @@ EIX_waterfall<-function(xgb.model,new_observation, option="interactions", baseli
 }
 
 getStatsForTreesInter = function(trees,type = "binary",  base_score = 0.5) {
-
  #code uses xgboostExplainer code created by David Foster
+  leaf <- Feature <- H <- Cover <- Yes <- No <- ID <-
+  weight <- Quality <- previous_weight <- G <- parentsCover <-
+  name_pair <- childsGain <- uplift_weight <- parentsGain <-
+  parentsName <- NULL
 
   treeList = copy(trees)
   treeList[, leaf := Feature == 'Leaf']
@@ -133,8 +154,9 @@ getStatsForTreesInter = function(trees,type = "binary",  base_score = 0.5) {
 
 
 getStatsForTrees = function(trees, nodes.train,type = "binary", base_score = 0.5) {
-
   #code comes from xgboostExplainer package created by David Foster
+  leaf <- Feature <- H <- Cover <- Yes <- No <- ID <-
+    weight <- Quality <- previous_weight <- G <- uplift_weight <- NULL
 
   #Accepts data table of tree (the output of xgb.model.dt.tree)
   #Returns a list of tree, with the stats filled in
@@ -227,7 +249,7 @@ buildExplainerFromTreeList = function(tree_list, col_names) {
 getTreeBreakdown = function(tree, col_names) {
 
   #code comes from xgboostExplainer package created by David Foster
-
+  Node <- NULL
   ####accepts a tree (data table), and column names
   ####outputs a data table, of the impact of each variable + intercept, for each leaf
 
@@ -250,9 +272,9 @@ getTreeBreakdown = function(tree, col_names) {
 
 
 getLeafBreakdown = function(tree, leaf, col_names) {
-
   #code comes from xgboostExplainer package created by David Foster
 
+  Node <- Feature <- . <- uplift_weight <- NULL
 
   ####accepts a tree, the leaf id to breakdown and column names
   ####outputs a list of the impact of each variable + intercept
@@ -275,9 +297,8 @@ getLeafBreakdown = function(tree, leaf, col_names) {
 
 
 findPath = function(tree, currentnode, path = c()) {
-
   #code comes from xgboostExplainer package created by David Foster
-
+  Node <- Yes <- No <- ID <- NULL
   #accepts a tree data table, and the node to reach
   #path is used in the recursive function - do not set this
 
@@ -295,7 +316,7 @@ findPath = function(tree, currentnode, path = c()) {
 explainPredictions = function(xgb.model, explainer , data) {
 
   #code comes from xgboostExplainer package created by David Foster
-
+  tree <- NULL
   #Accepts data table of the breakdown for each leaf of each tree and the node matrix
   #Returns the breakdown for each prediction as a data table
 

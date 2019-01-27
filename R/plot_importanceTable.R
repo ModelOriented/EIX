@@ -19,7 +19,7 @@
 #'\item "weightedRoot" - mean number of occurrences in the root, which is weighted by gain
 #'}
 #'
-#' @param obj a resutl of `importanceTable` function
+#' @param x a result of `importanceTable` function
 #' @param top number of positions on the plot or NULL for all variable. Default 10.
 #' @param radar TRUE/FALSE. If TRUE the plot shows
 #'               six measures of variables' importance in the model.
@@ -27,10 +27,7 @@
 #'               of variables' importance in the model.
 #' @param xmeasure measure on the x-axis.Available for `radar=FALSE`. Default "sumCover"
 #' @param ymeasure measure on the y-axis. Available for `radar=FALSE`. Default "sumGain"
-#' @param option if "variables" then plot includes only single variables,
-#'            if "interactions", then only interactions,
-#'            if "both", then both single variable and interactons.
-#'            Default "both".
+#' @param ... other parameters
 #'
 #' @return a ggplot object
 #'
@@ -41,28 +38,54 @@
 #' @import ggiraphExtra
 #'
 #' @examples
+#' library("EIX")
+#' library("Matrix")
+#' library("data.table")
+#' library("xgboost")
+#'
+#' dt_HR <- data.table(HR_data)
+#' sm <- sparse.model.matrix(left ~ . - 1,  data = dt_HR)
+#'
+#' param <- list(objective = "binary:logistic", base_score = 0.5, max_depth = 2)
+#' xgb.model <- xgboost( param = param, data = sm, label = dt_HR[, left] == 1, nrounds = 50, verbose = FALSE)
+#'
+#' imp <- importanceTable(xgb.model, sm, option = "both")
+#' imp
+#' plot(imp,  top = 10)
+#'
+#' imp <- importanceTable(xgb.model, sm, option = "variables")
+#' imp
+#' plot(imp,  top = 10)
+#'
+#'  imp <- importanceTable(xgb.model, sm, option = "interactions")
+#'  imp
+#'  plot(imp,  top = 10)
+#'
+#'  imp <- importanceTable(xgb.model, sm, option = "variables")
+#'  imp
+#'  plot(imp, top = 10, radar = FALSE, xmeasure = "sumCover", ymeasure = "sumGain")
 #'
 #' @export
 
 
-plot.importanceTable <- function(obj, ...,  top = 10, radar = TRUE,
+plot.importanceTable <- function(x, ...,  top = 10, radar = TRUE,
                                  xmeasure = "sumCover", ymeasure = "sumGain"){
 
   Feature <- sumGain <- sumCover <- meanGain <- meanCover <-
-    mean5Gain <- . <- NULL
+    mean5Gain <- . <- value <- variable <- NULL
 
   if (top == "NULL")
-    top <- nrow(obj)
+    top <- nrow(x)
 
 
   if (radar == FALSE) {
-    ggplot(data.frame(obj[1:top, ]),
+    ggplot(data.frame(x[1:top, ]),
            aes_string(x = xmeasure, y = ymeasure, label = "Feature")) +
       geom_point() +
       scale_size() + geom_label_repel() + theme_mi2()
 
-  } else{
-    import <- obj[1:top, ]
+  }else{
+    import <- as.data.table(x[1:top, ])
     import <- import[1:top, .(Feature,
                               sumGain = sumGain / max(import[, sumGain]),
                               sumCover = sumCover / max(import[, sumCover]),

@@ -7,9 +7,7 @@
 #'      where variable on the bottom (child) has higher gain than variable on the top (parent).
 #'
 #' @param x a result of `interactionsTable` function
-#' @param option if "interactions" then strong interactions will be presented on the plot,
-#'            if "pairs" then plot presents all pairs in the model. Default "interactions".
-#'
+#' @param ... other parameters
 #'
 #' @return a ggplot object
 #'
@@ -19,6 +17,24 @@
 #' @import purrr
 #'
 #' @examples
+#' #' library("EIX")
+#' library("Matrix")
+#' library("data.table")
+#' library("xgboost")
+#'
+#' dt_HR <- data.table(HR_data)
+#' sm <- sparse.model.matrix(left ~ . - 1,  data = dt_HR)
+#'
+#' param <- list(objective = "binary:logistic", base_score = 0.5, max_depth = 2)
+#' xgb.model <- xgboost( param = param, data = sm, label = dt_HR[, left] == 1, nrounds = 50, verbose = FALSE)
+#'
+#' inter <- interactionsTable(xgb.model, sm,		option = "interactions")
+#' inter
+#' plot(inter)
+#'
+#' inter <- interactionsTable(xgb.model, sm,		option = "pairs")
+#' inter
+#' plot(inter)
 #'
 #' @export
 
