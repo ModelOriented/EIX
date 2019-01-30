@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_interactionsTable.R
 \name{plot.interactionsTable}
 \alias{plot.interactionsTable}
-\title{Interactions Plot}
+\title{Interactions plot}
 \usage{
 \method{plot}{interactionsTable}(x, ...)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/interactionsTable.R
 \name{interactionsTable}
 \alias{interactionsTable}
-\title{interactionsTable}
+\title{Interactions table}
 \usage{
 interactionsTable(xgb.model, data, option = "interactions")
 }
@@ -17,7 +17,7 @@ interactionsTable(xgb.model, data, option = "interactions")
 a data table
 }
 \description{
-interactionsTable
+Interactions table
 }
 \examples{
 library("EIX")

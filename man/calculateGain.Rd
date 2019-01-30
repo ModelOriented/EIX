@@ -17,3 +17,4 @@ a list
 \description{
 List of trees with pairs of variable and other needed fields
 }
+\keyword{internal}

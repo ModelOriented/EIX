@@ -1,4 +1,4 @@
-#' Interactions Plot
+#' Interactions plot
 #'
 #' Interactions Plot
 #'

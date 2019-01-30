@@ -47,7 +47,7 @@
 #'
 #' imp <- importanceTable(xgb.model, sm, option = "variables")
 #' imp
-#' plot(imp,  top = 10)
+#' plot(imp,  top = nrow(imp))
 #'
 #'  imp <- importanceTable(xgb.model, sm, option = "interactions")
 #'  imp

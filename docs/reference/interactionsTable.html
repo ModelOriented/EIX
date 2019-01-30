@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>interactionsTable — interactionsTable • EIX</title>
+<title>Interactions table — interactionsTable • EIX</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -37,9 +37,9 @@
 
 
 
-<meta property="og:title" content="interactionsTable — interactionsTable" />
+<meta property="og:title" content="Interactions table — interactionsTable" />
 
-<meta property="og:description" content="interactionsTable" />
+<meta property="og:description" content="Interactions table" />
 
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -103,14 +103,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>interactionsTable</h1>
+    <h1>Interactions table</h1>
     
     <div class="hidden name"><code>interactionsTable.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>interactionsTable</p>
+    <p>Interactions table</p>
     
     </div>
 
@@ -150,56 +150,39 @@
 <span class='no'>param</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>objective</span> <span class='kw'>=</span> <span class='st'>"binary:logistic"</span>, <span class='kw'>base_score</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>max_depth</span> <span class='kw'>=</span> <span class='fl'>2</span>)
 <span class='no'>xgb.model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/xgboost/topics/xgb.train'>xgboost</a></span>( <span class='kw'>param</span> <span class='kw'>=</span> <span class='no'>param</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>sm</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='no'>dt_HR</span>[, <span class='no'>left</span>] <span class='kw'>==</span> <span class='fl'>1</span>, <span class='kw'>nrounds</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
-<span class='no'>inter</span> <span class='kw'>&lt;-</span> <span class='fu'>interactionsTable</span>(<span class='no'>xgb.model</span>, <span class='no'>sm</span>,               <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"interactions"</span>)
-<span class='no'>inter</span></div><div class='output co'>#&gt;       sumGain               Parent                Child
-#&gt;  1: 745.59421      last_evaluation average_montly_hours
-#&gt;  2: 708.87232      last_evaluation   satisfaction_level
-#&gt;  3: 634.99841      last_evaluation   time_spend_company
-#&gt;  4: 559.99847   satisfaction_level   time_spend_company
-#&gt;  5: 390.18979      last_evaluation       number_project
-#&gt;  6: 318.01422 average_montly_hours   time_spend_company
-#&gt;  7: 312.10888 average_montly_hours      last_evaluation
-#&gt;  8: 174.18144 average_montly_hours       number_project
-#&gt;  9: 169.90201 average_montly_hours   satisfaction_level
-#&gt; 10: 168.38994   satisfaction_level average_montly_hours
-#&gt; 11: 131.79431   satisfaction_level      last_evaluation
-#&gt; 12: 112.06531   time_spend_company      last_evaluation
-#&gt; 13:  87.09534   satisfaction_level       number_project
-#&gt; 14:  39.78418   time_spend_company       number_project
-#&gt; 15:  19.02950       number_project      last_evaluation
-#&gt; 16:  14.38998            salarylow         salarymedium</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>inter</span>)</div><div class='img'><img src='interactionsTable-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='no'>inter</span> <span class='kw'>&lt;-</span> <span class='fu'>interactionsTable</span>(<span class='no'>xgb.model</span>, <span class='no'>sm</span>,               <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"interactions"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in eval(jsub, SDenv, parent.frame()): nie znaleziono obiektu 'N'</span></div><div class='input'><span class='no'>inter</span></div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): nie znaleziono obiektu 'inter'</span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>inter</span>)</div><div class='output co'>#&gt; <span class='error'>Error in plot(inter): nie znaleziono obiektu 'inter'</span></div><div class='input'>
 <span class='no'>inter</span> <span class='kw'>&lt;-</span> <span class='fu'>interactionsTable</span>(<span class='no'>xgb.model</span>, <span class='no'>sm</span>,               <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"pairs"</span>)
-<span class='no'>inter</span></div><div class='output co'>#&gt;         sumGain               Parent                Child
-#&gt;  1: 3573.869144   satisfaction_level       number_project
-#&gt;  2: 3421.167360   satisfaction_level   time_spend_company
-#&gt;  3: 1078.148027   satisfaction_level   satisfaction_level
-#&gt;  4:  843.871933      last_evaluation average_montly_hours
-#&gt;  5:  826.747929      last_evaluation   satisfaction_level
-#&gt;  6:  651.903787      last_evaluation   time_spend_company
-#&gt;  7:  446.774613   time_spend_company   time_spend_company
-#&gt;  8:  399.432385      last_evaluation       number_project
-#&gt;  9:  346.017107 average_montly_hours   satisfaction_level
-#&gt; 10:  334.233341 average_montly_hours   time_spend_company
-#&gt; 11:  312.108875 average_montly_hours      last_evaluation
-#&gt; 12:  229.242886 average_montly_hours average_montly_hours
-#&gt; 13:  188.761364 average_montly_hours       number_project
-#&gt; 14:  168.389938   satisfaction_level average_montly_hours
-#&gt; 15:  131.794312   satisfaction_level      last_evaluation
-#&gt; 16:  125.887398      last_evaluation      last_evaluation
-#&gt; 17:  119.155579        Work_accident       number_project
-#&gt; 18:  112.065306   time_spend_company      last_evaluation
-#&gt; 19:   80.271004            salarylow   time_spend_company
-#&gt; 20:   67.291985   time_spend_company       number_project
-#&gt; 21:   59.674580            salarylow         salarymedium
-#&gt; 22:   54.700199        Work_accident   time_spend_company
-#&gt; 23:   39.800942        Work_accident   satisfaction_level
-#&gt; 24:   28.924749       number_project            salarylow
-#&gt; 25:   19.029501       number_project      last_evaluation
-#&gt; 26:   16.250017   time_spend_company   satisfaction_level
-#&gt; 27:   11.632745            salarylow        Work_accident
-#&gt; 28:    6.214535        Work_accident      last_evaluation
-#&gt; 29:    3.267537       number_project   satisfaction_level
-#&gt;         sumGain               Parent                Child</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>inter</span>)</div><div class='img'><img src='interactionsTable-2.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='no'>inter</span></div><div class='output co'>#&gt;                   Parent                Child     sumGain frequency
+#&gt;  1:   satisfaction_level       number_project 3573.869144         6
+#&gt;  2:   satisfaction_level   time_spend_company 3421.167360         5
+#&gt;  3:   satisfaction_level   satisfaction_level 1078.148027        10
+#&gt;  4:      last_evaluation average_montly_hours  843.871933         4
+#&gt;  5:      last_evaluation   satisfaction_level  826.747929         6
+#&gt;  6:      last_evaluation   time_spend_company  651.903787         4
+#&gt;  7:   time_spend_company   time_spend_company  446.774613         3
+#&gt;  8:      last_evaluation       number_project  399.432385         3
+#&gt;  9: average_montly_hours   satisfaction_level  346.017107         5
+#&gt; 10: average_montly_hours   time_spend_company  334.233341         3
+#&gt; 11: average_montly_hours      last_evaluation  312.108875         2
+#&gt; 12: average_montly_hours average_montly_hours  229.242886         6
+#&gt; 13: average_montly_hours       number_project  188.761364         3
+#&gt; 14:   satisfaction_level average_montly_hours  168.389938         1
+#&gt; 15:   satisfaction_level      last_evaluation  131.794312         1
+#&gt; 16:      last_evaluation      last_evaluation  125.887398         1
+#&gt; 17:        Work_accident       number_project  119.155579         1
+#&gt; 18:   time_spend_company      last_evaluation  112.065306         2
+#&gt; 19:            salarylow   time_spend_company   80.271004         1
+#&gt; 20:   time_spend_company       number_project   67.291985         3
+#&gt; 21:            salarylow         salarymedium   59.674580         2
+#&gt; 22:        Work_accident   time_spend_company   54.700199         1
+#&gt; 23:        Work_accident   satisfaction_level   39.800942         3
+#&gt; 24:       number_project            salarylow   28.924749         1
+#&gt; 25:       number_project      last_evaluation   19.029501         1
+#&gt; 26:   time_spend_company   satisfaction_level   16.250017         1
+#&gt; 27:            salarylow        Work_accident   11.632745         1
+#&gt; 28:        Work_accident      last_evaluation    6.214535         1
+#&gt; 29:       number_project   satisfaction_level    3.267537         2
+#&gt;                   Parent                Child     sumGain frequency</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>inter</span>)</div><div class='img'><img src='interactionsTable-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

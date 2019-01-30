@@ -40,7 +40,7 @@ param <- list(objective = "binary:logistic", base_score = 0.5, max_depth = 2)
 xgb.model <- xgboost( param = param, data = sm, label = dt_HR[, left] == 1, nrounds = 50, verbose = FALSE)
 
 new_observation <- sm[9,]
-wf <- EIX_waterfallPlot(xgb.model, new_observation,  option = "interactions ")
+wf <- EIX_waterfall(xgb.model, new_observation,  option = "interactions ")
 wf
 plot(wf)
 

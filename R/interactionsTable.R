@@ -1,5 +1,5 @@
 #'
-#'interactionsTable
+#'Interactions table
 #'
 #' @param xgb.model a xgboost or lightgbm model
 #' @param data a data table with data used to train the model
@@ -41,15 +41,15 @@ interactionsTable <- function(xgb.model, data, option = "interactions"){
   Child <- Parent <- Feature <- sumGain <- NULL
 
   if (option == "interactions") {
-    gainTable <- importanceInteraction(xgb.model, data)[, Feature, sumGain]
+    gainTable <- importanceInteraction(xgb.model, data)[, .(Feature, sumGain, frequency)]
     gainTable <-gainTable[, `:=`(Parent = as.vector(unlist(map(strsplit(gainTable[, Feature], "[:]"), 1))),
                                  Child = as.vector(unlist(map(strsplit(gainTable[, Feature], "[:]"), 2))))]
-    gainTable <- gainTable[, -2]
+    gainTable <- gainTable[, -1]
+    gainTable <- gainTable[,.(Parent, Child, sumGain, frequency = N)]
   }
   if (option == "pairs") {
     gainTable <- calculatePairsGainTable(xgb.model, data)
   }
-
   class(gainTable) <- c("interactionsTable", "data.table")
   return(gainTable)
 
@@ -62,14 +62,14 @@ calculatePairsGainTable <- function(xgb.model, data) {
   treeList <- calculateGain(xgb.model, data)
   trees <- rbindlist(treeList)
 
-  importance <- trees[, .(sumGain = sum(childsGain)), by = name_pair]
-  importance <- na.omit(importance)
+  importanceCount <- data.table(table(trees[, "name_pair"],dnn = "name_pair"))
+  importanceGain <- trees[, .(sumGain = sum(childsGain)), by = "name_pair"]
+  importance <- merge(importanceCount, importanceGain, by = "name_pair")
   importance <-
   importance[, `:=`(Parent = as.vector(unlist(map(strsplit(importance[, name_pair], "[:]"), 1))),
-                      Child = as.vector(unlist(map(strsplit(importance[, name_pair], "[:]"), 2 ))))]
+                     Child = as.vector(unlist(map(strsplit(importance[, name_pair], "[:]"), 2 ))))]
   importance <- importance[, -1]
   setorderv(importance, "sumGain", -1)
 
-  return(importance[])
-
+  return(importance[,.(Parent, Child, sumGain, frequency = N)])
 }
