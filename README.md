@@ -9,5 +9,5 @@ devtools::install_github("ekarbowiak/EIX")
 ```
 
 ## Cheatsheets
+<img src="https://raw.githubusercontent.com/ekarbowiak/EIX/master/cheatsheets/EIX.png"/>
 
-![EIX](https://github.com/ekarbowiak/EIX/blob/master/cheatsheets/EIX.png)
