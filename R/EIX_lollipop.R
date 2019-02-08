@@ -1,11 +1,13 @@
-#' Lollipop table
+#' Tables needed for lollipop plot
 #'
-#' The table needed to generate lollipop plot, which visualise the model.
+#' Two tables needed to generate lollipop plot, which visualise the model.
+#' The first table contains information about all nodes in the trees forming a model.
+#' The second table includes information about roots in the trees.
 #'
 #' @param xgb.model a xgboost or lightgbm model
 #' @param data a data table with data used to train the model
 #'
-#' @return a data table
+#' @return an object of the lollipop class
 #'
 #' @import data.table
 #' @import ggplot2
@@ -22,7 +24,7 @@
 #' sm <- sparse.model.matrix(left ~ . - 1,  data = dt_HR)
 #'
 #' param <- list(objective = "binary:logistic", base_score = 0.5, max_depth = 2)
-#' xgb.model <- xgboost( param = param, data = sm, label = dt_HR[, left] == 1, nrounds = 50, verbose = FALSE)
+#' xgb.model <- xgboost(sm, params = param, label = dt_HR[, left] == 1, nrounds = 50, verbose = FALSE)
 #'
 #' lolli <- EIX_lollipop(xgb.model, sm)
 #' plot(lolli, labels = "topAll", log_scale = TRUE)

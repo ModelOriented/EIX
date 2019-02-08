@@ -22,7 +22,8 @@ if "roots" then labels for all variables in the root.}
 a ggplot object
 }
 \description{
-Visualiation of the model
+The lollipop plot is used to visualize the model in such a way
+that the most important variables and interactions are visible.
 }
 \examples{
 library("EIX")
@@ -34,7 +35,7 @@ dt_HR <- data.table(HR_data)
 sm <- sparse.model.matrix(left ~ . - 1,  data = dt_HR)
 
 param <- list(objective = "binary:logistic", base_score = 0.5, max_depth = 2)
-xgb.model <- xgboost( param = param, data = sm, label = dt_HR[, left] == 1, nrounds = 50, verbose = FALSE)
+xgb.model <- xgboost(sm, params = param, label = dt_HR[, left] == 1, nrounds = 50, verbose = FALSE)
 
 lolli <- EIX_lollipop(xgb.model, sm)
 plot(lolli, labels = "topAll", log_scale = TRUE)

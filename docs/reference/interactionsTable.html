@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Interactions table — interactionsTable • EIX</title>
+<title>Importance of interactions and pairs in the model — interactionsTable • EIX</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -48,7 +48,7 @@
 	  <a class = "navbar-mi2logo" href="http://mi2.mini.pw.edu.pl/">
         <img src = "https://github.com/mi2-warsaw/MI2template/blob/master/inst/pkgdown/assets/MI2logo.jpg?raw=true" alt = "MI2" height = 46 title = "MI2">
 	  </a>
-      <a class="navbar-brand navbar-mi2" href="../index.html">Interactions table</a>
+      <a class="navbar-brand navbar-mi2" href="../index.html">Importance of interactions and pairs in the model</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="navbar-mi2 nav navbar-nav">
@@ -76,11 +76,11 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Interactions table</h1>
+    <h1>Importance of interactions and pairs in the model</h1>
     </div>
 
     
-    <p>Interactions table</p>
+    <p>The table with two measures of importance for interactions and pairs in the model.</p>
     
 
     <pre class="usage"><span class='fu'>interactionsTable</span>(<span class='no'>xgb.model</span>, <span class='no'>data</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"interactions"</span>)</pre>
@@ -98,13 +98,25 @@
     </tr>
     <tr>
       <th>option</th>
-      <td><p>"interactions", "pairs"</p></td>
+      <td><p>if "interactions", the table contains interactions,
+if "pairs", this table contains all the pairs in the model.
+Default "interactions".</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>a data table</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Available measures:</p><ul>
+<li><p>"sumGain" - sum of Gain value in all nodes, in which given variable occurs</p></li>
+<li><p>"freqency" - number of occurrences in the nodes for given variable</p></li>
+</ul>
+    <p>NOTE: High gain of pair for <code>option="pairs"</code> can be a result of high gain of down variable (child).
+     As strong interactions should be considered only these pairs of variables,
+     where variable on the bottom (child) has higher gain than variable on the top (parent).</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -117,41 +129,58 @@
 <span class='no'>sm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/Matrix/topics/sparse.model.matrix'>sparse.model.matrix</a></span>(<span class='no'>left</span> ~ <span class='no'>.</span> - <span class='fl'>1</span>,  <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>dt_HR</span>)
 
 <span class='no'>param</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>objective</span> <span class='kw'>=</span> <span class='st'>"binary:logistic"</span>, <span class='kw'>base_score</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>max_depth</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-<span class='no'>xgb.model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/xgboost/topics/xgb.train'>xgboost</a></span>( <span class='kw'>param</span> <span class='kw'>=</span> <span class='no'>param</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>sm</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='no'>dt_HR</span>[, <span class='no'>left</span>] <span class='kw'>==</span> <span class='fl'>1</span>, <span class='kw'>nrounds</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='no'>xgb.model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/xgboost/topics/xgb.train'>xgboost</a></span>(<span class='no'>sm</span>, <span class='kw'>params</span> <span class='kw'>=</span> <span class='no'>param</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='no'>dt_HR</span>[, <span class='no'>left</span>] <span class='kw'>==</span> <span class='fl'>1</span>, <span class='kw'>nrounds</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
-<span class='no'>inter</span> <span class='kw'>&lt;-</span> <span class='fu'>interactionsTable</span>(<span class='no'>xgb.model</span>, <span class='no'>sm</span>,               <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"interactions"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in eval(jsub, SDenv, parent.frame()): nie znaleziono obiektu 'N'</span></div><div class='input'><span class='no'>inter</span></div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): nie znaleziono obiektu 'inter'</span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>inter</span>)</div><div class='output co'>#&gt; <span class='error'>Error in plot(inter): nie znaleziono obiektu 'inter'</span></div><div class='input'>
-<span class='no'>inter</span> <span class='kw'>&lt;-</span> <span class='fu'>interactionsTable</span>(<span class='no'>xgb.model</span>, <span class='no'>sm</span>,               <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"pairs"</span>)
+<span class='no'>inter</span> <span class='kw'>&lt;-</span> <span class='fu'>interactionsTable</span>(<span class='no'>xgb.model</span>, <span class='no'>sm</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"interactions"</span>)
+<span class='no'>inter</span></div><div class='output co'>#&gt;                   Parent                Child   sumGain frequency
+#&gt;  1:      last_evaluation average_montly_hours 745.59427         2
+#&gt;  2:      last_evaluation   satisfaction_level 708.87227         4
+#&gt;  3:      last_evaluation   time_spend_company 634.99841         3
+#&gt;  4:   satisfaction_level   time_spend_company 559.99852         2
+#&gt;  5:      last_evaluation       number_project 390.18976         1
+#&gt;  6: average_montly_hours   time_spend_company 318.01422         2
+#&gt;  7: average_montly_hours      last_evaluation 312.10882         2
+#&gt;  8: average_montly_hours       number_project 174.18143         1
+#&gt;  9: average_montly_hours   satisfaction_level 169.90201         1
+#&gt; 10:   satisfaction_level average_montly_hours 168.38992         1
+#&gt; 11:   satisfaction_level      last_evaluation 131.79431         1
+#&gt; 12:   time_spend_company      last_evaluation 112.06530         2
+#&gt; 13:   satisfaction_level       number_project  87.09535         1
+#&gt; 14:   time_spend_company       number_project  39.78419         1
+#&gt; 15:       number_project      last_evaluation  19.02951         1
+#&gt; 16:            salarylow         salarymedium  14.38998         1</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>inter</span>)</div><div class='img'><img src='interactionsTable-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='no'>inter</span> <span class='kw'>&lt;-</span> <span class='fu'>interactionsTable</span>(<span class='no'>xgb.model</span>, <span class='no'>sm</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"pairs"</span>)
 <span class='no'>inter</span></div><div class='output co'>#&gt;                   Parent                Child     sumGain frequency
-#&gt;  1:   satisfaction_level       number_project 3573.869144         6
-#&gt;  2:   satisfaction_level   time_spend_company 3421.167360         5
-#&gt;  3:   satisfaction_level   satisfaction_level 1078.148027        10
-#&gt;  4:      last_evaluation average_montly_hours  843.871933         4
-#&gt;  5:      last_evaluation   satisfaction_level  826.747929         6
-#&gt;  6:      last_evaluation   time_spend_company  651.903787         4
-#&gt;  7:   time_spend_company   time_spend_company  446.774613         3
-#&gt;  8:      last_evaluation       number_project  399.432385         3
-#&gt;  9: average_montly_hours   satisfaction_level  346.017107         5
-#&gt; 10: average_montly_hours   time_spend_company  334.233341         3
-#&gt; 11: average_montly_hours      last_evaluation  312.108875         2
-#&gt; 12: average_montly_hours average_montly_hours  229.242886         6
-#&gt; 13: average_montly_hours       number_project  188.761364         3
-#&gt; 14:   satisfaction_level average_montly_hours  168.389938         1
+#&gt;  1:   satisfaction_level       number_project 3573.869457         6
+#&gt;  2:   satisfaction_level   time_spend_company 3421.167467         5
+#&gt;  3:   satisfaction_level   satisfaction_level 1078.148020        10
+#&gt;  4:      last_evaluation average_montly_hours  843.872006         4
+#&gt;  5:      last_evaluation   satisfaction_level  826.747874         6
+#&gt;  6:      last_evaluation   time_spend_company  651.903801         4
+#&gt;  7:   time_spend_company   time_spend_company  446.774647         3
+#&gt;  8:      last_evaluation       number_project  399.432373         3
+#&gt;  9: average_montly_hours   satisfaction_level  346.017090         5
+#&gt; 10: average_montly_hours   time_spend_company  334.233343         3
+#&gt; 11: average_montly_hours      last_evaluation  312.108822         2
+#&gt; 12: average_montly_hours average_montly_hours  229.242862         6
+#&gt; 13: average_montly_hours       number_project  188.761345         3
+#&gt; 14:   satisfaction_level average_montly_hours  168.389923         1
 #&gt; 15:   satisfaction_level      last_evaluation  131.794312         1
 #&gt; 16:      last_evaluation      last_evaluation  125.887398         1
 #&gt; 17:        Work_accident       number_project  119.155579         1
-#&gt; 18:   time_spend_company      last_evaluation  112.065306         2
+#&gt; 18:   time_spend_company      last_evaluation  112.065304         2
 #&gt; 19:            salarylow   time_spend_company   80.271004         1
-#&gt; 20:   time_spend_company       number_project   67.291985         3
-#&gt; 21:            salarylow         salarymedium   59.674580         2
-#&gt; 22:        Work_accident   time_spend_company   54.700199         1
-#&gt; 23:        Work_accident   satisfaction_level   39.800942         3
-#&gt; 24:       number_project            salarylow   28.924749         1
-#&gt; 25:       number_project      last_evaluation   19.029501         1
-#&gt; 26:   time_spend_company   satisfaction_level   16.250017         1
-#&gt; 27:            salarylow        Work_accident   11.632745         1
+#&gt; 20:   time_spend_company       number_project   67.291999         3
+#&gt; 21:            salarylow         salarymedium   59.674581         2
+#&gt; 22:        Work_accident   time_spend_company   54.700195         1
+#&gt; 23:        Work_accident   satisfaction_level   39.800945         3
+#&gt; 24:       number_project            salarylow   28.924757         1
+#&gt; 25:       number_project      last_evaluation   19.029507         1
+#&gt; 26:   time_spend_company   satisfaction_level   16.250031         1
+#&gt; 27:            salarylow        Work_accident   11.632748         1
 #&gt; 28:        Work_accident      last_evaluation    6.214535         1
-#&gt; 29:       number_project   satisfaction_level    3.267537         2
-#&gt;                   Parent                Child     sumGain frequency</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>inter</span>)</div><div class='img'><img src='interactionsTable-1.png' alt='' width='700' height='433' /></div><div class='input'>
+#&gt; 29:       number_project   satisfaction_level    3.267536         2
+#&gt;                   Parent                Child     sumGain frequency</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>inter</span>)</div><div class='img'><img src='interactionsTable-2.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -160,6 +189,8 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

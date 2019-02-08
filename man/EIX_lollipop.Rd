@@ -2,7 +2,7 @@
 % Please edit documentation in R/EIX_lollipop.R
 \name{EIX_lollipop}
 \alias{EIX_lollipop}
-\title{Lollipop table}
+\title{Tables needed for lollipop plot}
 \usage{
 EIX_lollipop(xgb.model, data)
 }
@@ -12,10 +12,12 @@ EIX_lollipop(xgb.model, data)
 \item{data}{a data table with data used to train the model}
 }
 \value{
-a data table
+an object of the lollipop class
 }
 \description{
-The table needed to generate lollipop plot, which visualise the model.
+Two tables needed to generate lollipop plot, which visualise the model.
+The first table contains information about all nodes in the trees forming a model.
+The second table includes information about roots in the trees.
 }
 \examples{
 library("EIX")
@@ -27,7 +29,7 @@ dt_HR <- data.table(HR_data)
 sm <- sparse.model.matrix(left ~ . - 1,  data = dt_HR)
 
 param <- list(objective = "binary:logistic", base_score = 0.5, max_depth = 2)
-xgb.model <- xgboost( param = param, data = sm, label = dt_HR[, left] == 1, nrounds = 50, verbose = FALSE)
+xgb.model <- xgboost(sm, params = param, label = dt_HR[, left] == 1, nrounds = 50, verbose = FALSE)
 
 lolli <- EIX_lollipop(xgb.model, sm)
 plot(lolli, labels = "topAll", log_scale = TRUE)

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Importance table — importanceTable • EIX</title>
+<title>Importance of variables and interactions in the model — importanceTable • EIX</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -48,7 +48,7 @@
 	  <a class = "navbar-mi2logo" href="http://mi2.mini.pw.edu.pl/">
         <img src = "https://github.com/mi2-warsaw/MI2template/blob/master/inst/pkgdown/assets/MI2logo.jpg?raw=true" alt = "MI2" height = 46 title = "MI2">
 	  </a>
-      <a class="navbar-brand navbar-mi2" href="../index.html">Importance table</a>
+      <a class="navbar-brand navbar-mi2" href="../index.html">Importance of variables and interactions in the model</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="navbar-mi2 nav navbar-nav">
@@ -76,11 +76,11 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Importance table</h1>
+    <h1>Importance of variables and interactions in the model</h1>
     </div>
 
     
-    <p>Importance table</p>
+    <p>The table with different measures of importance for variables and interactions.</p>
     
 
     <pre class="usage"><span class='fu'>importanceTable</span>(<span class='no'>xgb.model</span>, <span class='no'>data</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"both"</span>)</pre>
@@ -98,7 +98,7 @@
     </tr>
     <tr>
       <th>option</th>
-      <td><p>if "variables" then table includes only single variable,
+      <td><p>if "variables" then table includes only single variables,
 if "interactions", then only interactions
 if "both", then both single variable and interactons.
 Default "both".</p></td>
@@ -136,7 +136,7 @@ Default "both".</p></td>
 <span class='no'>sm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/Matrix/topics/sparse.model.matrix'>sparse.model.matrix</a></span>(<span class='no'>left</span> ~ <span class='no'>.</span> - <span class='fl'>1</span>,  <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>dt_HR</span>)
 
 <span class='no'>param</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>objective</span> <span class='kw'>=</span> <span class='st'>"binary:logistic"</span>, <span class='kw'>base_score</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>max_depth</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-<span class='no'>xgb.model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/xgboost/topics/xgb.train'>xgboost</a></span>( <span class='kw'>param</span> <span class='kw'>=</span> <span class='no'>param</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>sm</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='no'>dt_HR</span>[, <span class='no'>left</span>] <span class='kw'>==</span> <span class='fl'>1</span>, <span class='kw'>nrounds</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='no'>xgb.model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/xgboost/topics/xgb.train'>xgboost</a></span>(<span class='no'>sm</span>, <span class='kw'>params</span> <span class='kw'>=</span> <span class='no'>param</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='no'>dt_HR</span>[, <span class='no'>left</span>] <span class='kw'>==</span> <span class='fl'>1</span>, <span class='kw'>nrounds</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='no'>imp</span> <span class='kw'>&lt;-</span> <span class='fu'>importanceTable</span>(<span class='no'>xgb.model</span>, <span class='no'>sm</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"both"</span>)
 <span class='no'>imp</span></div><div class='output co'>#&gt;                                     Feature  sumGain sumCover meanGain

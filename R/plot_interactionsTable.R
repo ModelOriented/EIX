@@ -1,6 +1,6 @@
-#' Interactions plot
+#' Plot importance of interactions or pairs
 #'
-#' Interactions Plot
+#' This function visualizes the importance ranking of interactions and pairs in the model.
 #'
 #' NOTE: High gain of pair for \code{option="pairs"} can be a result of high gain of down variable (child).
 #'      As strong interactions should be considered only these pairs of variables,
@@ -17,7 +17,7 @@
 #' @import purrr
 #'
 #' @examples
-#' #' library("EIX")
+#' library("EIX")
 #' library("Matrix")
 #' library("data.table")
 #' library("xgboost")
@@ -26,7 +26,7 @@
 #' sm <- sparse.model.matrix(left ~ . - 1,  data = dt_HR)
 #'
 #' param <- list(objective = "binary:logistic", base_score = 0.5, max_depth = 2)
-#' xgb.model <- xgboost( param = param, data = sm, label = dt_HR[, left] == 1, nrounds = 50, verbose = FALSE)
+#' xgb.model <- xgboost(sm, params = param, label = dt_HR[, left] == 1, nrounds = 50, verbose = FALSE)
 #'
 #' inter <- interactionsTable(xgb.model, sm,		option = "interactions")
 #' inter

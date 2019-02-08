@@ -1,6 +1,6 @@
-#' Importance table
+#' Importance of variables and interactions in the model
 #'
-#' Importance table
+#' The table with different measures of importance for variables and interactions.
 #'
 #' Available measures:
 #'\itemize{
@@ -21,7 +21,7 @@
 #'
 #' @param xgb.model a xgboost or lightgbm model
 #' @param data a data table with data used to train the model
-#' @param option if "variables" then table includes only single variable,
+#' @param option if "variables" then table includes only single variables,
 #'            if "interactions", then only interactions
 #'            if "both", then both single variable and interactons.
 #'            Default "both".
@@ -39,7 +39,7 @@
 #' sm <- sparse.model.matrix(left ~ . - 1,  data = dt_HR)
 #'
 #' param <- list(objective = "binary:logistic", base_score = 0.5, max_depth = 2)
-#' xgb.model <- xgboost( param = param, data = sm, label = dt_HR[, left] == 1, nrounds = 50, verbose = FALSE)
+#' xgb.model <- xgboost(sm, params = param, label = dt_HR[, left] == 1, nrounds = 50, verbose = FALSE)
 #'
 #' imp <- importanceTable(xgb.model, sm, option = "both")
 #' imp

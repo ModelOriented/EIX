@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_interactionsTable.R
 \name{plot.interactionsTable}
 \alias{plot.interactionsTable}
-\title{Interactions plot}
+\title{Plot importance of interactions or pairs}
 \usage{
 \method{plot}{interactionsTable}(x, ...)
 }
@@ -15,7 +15,7 @@
 a ggplot object
 }
 \description{
-Interactions Plot
+This function visualizes the importance ranking of interactions and pairs in the model.
 }
 \details{
 NOTE: High gain of pair for \code{option="pairs"} can be a result of high gain of down variable (child).
@@ -23,7 +23,7 @@ NOTE: High gain of pair for \code{option="pairs"} can be a result of high gain o
      where variable on the bottom (child) has higher gain than variable on the top (parent).
 }
 \examples{
-#' library("EIX")
+library("EIX")
 library("Matrix")
 library("data.table")
 library("xgboost")
@@ -32,7 +32,7 @@ dt_HR <- data.table(HR_data)
 sm <- sparse.model.matrix(left ~ . - 1,  data = dt_HR)
 
 param <- list(objective = "binary:logistic", base_score = 0.5, max_depth = 2)
-xgb.model <- xgboost( param = param, data = sm, label = dt_HR[, left] == 1, nrounds = 50, verbose = FALSE)
+xgb.model <- xgboost(sm, params = param, label = dt_HR[, left] == 1, nrounds = 50, verbose = FALSE)
 
 inter <- interactionsTable(xgb.model, sm,		option = "interactions")
 inter

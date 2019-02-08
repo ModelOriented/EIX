@@ -1,6 +1,7 @@
 #' Visualiation of the model
 #'
-#' Visualiation of the model
+#' The lollipop plot is used to visualize the model in such a way
+#' that the most important variables and interactions are visible.
 #'
 #' @param x a result of `EIX_lollipop` function
 #' @param labels if "topAll" then labels for the most important interactions (vertical label)
@@ -27,7 +28,7 @@
 #' sm <- sparse.model.matrix(left ~ . - 1,  data = dt_HR)
 #'
 #' param <- list(objective = "binary:logistic", base_score = 0.5, max_depth = 2)
-#' xgb.model <- xgboost( param = param, data = sm, label = dt_HR[, left] == 1, nrounds = 50, verbose = FALSE)
+#' xgb.model <- xgboost(sm, params = param, label = dt_HR[, left] == 1, nrounds = 50, verbose = FALSE)
 #'
 #' lolli <- EIX_lollipop(xgb.model, sm)
 #' plot(lolli, labels = "topAll", log_scale = TRUE)

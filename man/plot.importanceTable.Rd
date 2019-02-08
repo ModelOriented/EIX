@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_importanceTable.R
 \name{plot.importanceTable}
 \alias{plot.importanceTable}
-\title{Importance plot}
+\title{Plot importance measures}
 \usage{
 \method{plot}{importanceTable}(x, ..., top = 10, radar = TRUE,
   xmeasure = "sumCover", ymeasure = "sumGain")
@@ -15,9 +15,9 @@
 \item{top}{number of positions on the plot or NULL for all variable. Default 10.}
 
 \item{radar}{TRUE/FALSE. If TRUE the plot shows
-six measures of variables' importance in the model.
+six measures of variables' or interactions' importance in the model.
 If FALSE the plot containing two chosen measures
-of variables' importance in the model.}
+of variables' or interactions' importance in the model.}
 
 \item{xmeasure}{measure on the x-axis.Available for `radar=FALSE`. Default "sumCover"}
 
@@ -27,7 +27,8 @@ of variables' importance in the model.}
 a ggplot object
 }
 \description{
-Importance plot
+The importance plot shows different measures of importance for variables and interactions.
+It is possible to visualise importance measures in two ways depending on the \code{radar} parameter.
 }
 \details{
 Available measures:
@@ -57,7 +58,7 @@ dt_HR <- data.table(HR_data)
 sm <- sparse.model.matrix(left ~ . - 1,  data = dt_HR)
 
 param <- list(objective = "binary:logistic", base_score = 0.5, max_depth = 2)
-xgb.model <- xgboost( param = param, data = sm, label = dt_HR[, left] == 1, nrounds = 50, verbose = FALSE)
+xgb.model <- xgboost(sm, params = param, label = dt_HR[, left] == 1, nrounds = 50, verbose = FALSE)
 
 imp <- importanceTable(xgb.model, sm, option = "both")
 imp
@@ -65,7 +66,7 @@ plot(imp,  top = 10)
 
 imp <- importanceTable(xgb.model, sm, option = "variables")
 imp
-plot(imp,  top = 10)
+plot(imp,  top = nrow(imp))
 
  imp <- importanceTable(xgb.model, sm, option = "interactions")
  imp
@@ -73,6 +74,6 @@ plot(imp,  top = 10)
 
  imp <- importanceTable(xgb.model, sm, option = "variables")
  imp
- plot(imp, top = 10, radar = FALSE, xmeasure = "sumCover", ymeasure = "sumGain")
+ plot(imp, top = nrow(imp), radar = FALSE, xmeasure = "sumCover", ymeasure = "sumGain")
 
 }

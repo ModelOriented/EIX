@@ -2,7 +2,7 @@
 % Please edit documentation in R/interactionsTable.R
 \name{interactionsTable}
 \alias{interactionsTable}
-\title{Interactions table}
+\title{Importance of interactions and pairs in the model}
 \usage{
 interactionsTable(xgb.model, data, option = "interactions")
 }
@@ -11,13 +11,26 @@ interactionsTable(xgb.model, data, option = "interactions")
 
 \item{data}{a data table with data used to train the model}
 
-\item{option}{"interactions", "pairs"}
+\item{option}{if "interactions", the table contains interactions,
+if "pairs", this table contains all the pairs in the model.
+Default "interactions".}
 }
 \value{
 a data table
 }
 \description{
-Interactions table
+The table with two measures of importance for interactions and pairs in the model.
+}
+\details{
+Available measures:
+\itemize{
+\item "sumGain" - sum of Gain value in all nodes, in which given variable occurs
+\item "freqency" - number of occurrences in the nodes for given variable
+}
+
+NOTE: High gain of pair for \code{option="pairs"} can be a result of high gain of down variable (child).
+     As strong interactions should be considered only these pairs of variables,
+     where variable on the bottom (child) has higher gain than variable on the top (parent).
 }
 \examples{
 library("EIX")
@@ -29,13 +42,13 @@ dt_HR <- data.table(HR_data)
 sm <- sparse.model.matrix(left ~ . - 1,  data = dt_HR)
 
 param <- list(objective = "binary:logistic", base_score = 0.5, max_depth = 2)
-xgb.model <- xgboost( param = param, data = sm, label = dt_HR[, left] == 1, nrounds = 50, verbose = FALSE)
+xgb.model <- xgboost(sm, params = param, label = dt_HR[, left] == 1, nrounds = 50, verbose = FALSE)
 
-inter <- interactionsTable(xgb.model, sm,		option = "interactions")
+inter <- interactionsTable(xgb.model, sm, option = "interactions")
 inter
 plot(inter)
 
-inter <- interactionsTable(xgb.model, sm,		option = "pairs")
+inter <- interactionsTable(xgb.model, sm, option = "pairs")
 inter
 plot(inter)
 

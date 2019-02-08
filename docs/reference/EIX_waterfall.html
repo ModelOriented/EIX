@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>EIX_waterfall — EIX_waterfall • EIX</title>
+<title>Explain prediction of a single observation — EIX_waterfall • EIX</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -48,7 +48,7 @@
 	  <a class = "navbar-mi2logo" href="http://mi2.mini.pw.edu.pl/">
         <img src = "https://github.com/mi2-warsaw/MI2template/blob/master/inst/pkgdown/assets/MI2logo.jpg?raw=true" alt = "MI2" height = 46 title = "MI2">
 	  </a>
-      <a class="navbar-brand navbar-mi2" href="../index.html">EIX_waterfall</a>
+      <a class="navbar-brand navbar-mi2" href="../index.html">Explain prediction of a single observation</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="navbar-mi2 nav navbar-nav">
@@ -76,11 +76,12 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>EIX_waterfall</h1>
+    <h1>Explain prediction of a single observation</h1>
     </div>
 
     
-    <p>Function <code>EIX_waterfall</code></p>
+    <p>The Table with influence of variables and interactions
+on the prediction of a given observation.</p>
     
 
     <pre class="usage"><span class='fu'>EIX_waterfall</span>(<span class='no'>xgb.model</span>, <span class='no'>new_observation</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"interactions"</span>,
@@ -99,11 +100,15 @@
     </tr>
     <tr>
       <th>option</th>
-      <td><p>"interaction" or "variables"</p></td>
+      <td><p>if "variables", the plot includes only single variables,
+if "interactions", then only interactions.
+Default "interaction".</p></td>
     </tr>
     <tr>
       <th>baseline</th>
-      <td><p>number that specifies on which level the baseline line should be plotted</p></td>
+      <td><p>a number or a character "Intercept" (for model intercept).
+The baseline for the plot, where the rectangles should start.
+Default 0.</p></td>
     </tr>
     </table>
     
@@ -114,8 +119,8 @@
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Function contains code or pieces of code
-from `breakDown` code created by Przemysław Biecek
-and`xgboostExplainer` code created by David Foster.</p>
+from <code>breakDown</code> code created by Przemysław Biecek
+and <code>xgboostExplainer</code> code created by David Foster.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -128,10 +133,31 @@ and`xgboostExplainer` code created by David Foster.</p>
 <span class='no'>sm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/Matrix/topics/sparse.model.matrix'>sparse.model.matrix</a></span>(<span class='no'>left</span> ~ <span class='no'>.</span> - <span class='fl'>1</span>,  <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>dt_HR</span>)
 
 <span class='no'>param</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>objective</span> <span class='kw'>=</span> <span class='st'>"binary:logistic"</span>, <span class='kw'>base_score</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>max_depth</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-<span class='no'>xgb.model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/xgboost/topics/xgb.train'>xgboost</a></span>( <span class='kw'>param</span> <span class='kw'>=</span> <span class='no'>param</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>sm</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='no'>dt_HR</span>[, <span class='no'>left</span>] <span class='kw'>==</span> <span class='fl'>1</span>, <span class='kw'>nrounds</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='no'>xgb.model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/xgboost/topics/xgb.train'>xgboost</a></span>(<span class='no'>sm</span>, <span class='kw'>params</span> <span class='kw'>=</span> <span class='no'>param</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='no'>dt_HR</span>[, <span class='no'>left</span>] <span class='kw'>==</span> <span class='fl'>1</span>, <span class='kw'>nrounds</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='no'>new_observation</span> <span class='kw'>&lt;-</span> <span class='no'>sm</span>[<span class='fl'>9</span>,]
-<span class='no'>wf</span> <span class='kw'>&lt;-</span> <span class='fu'>EIX_waterfall</span>(<span class='no'>xgb.model</span>, <span class='no'>new_observation</span>,  <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"interactions "</span>)</div><div class='output co'>#&gt; <span class='error'>Error in rbindlist(tree_list): nie znaleziono obiektu 'tree_list'</span></div><div class='input'><span class='no'>wf</span></div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): nie znaleziono obiektu 'wf'</span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>wf</span>)</div><div class='output co'>#&gt; <span class='error'>Error in plot(wf): nie znaleziono obiektu 'wf'</span></div><div class='input'>
+<span class='no'>wf</span> <span class='kw'>&lt;-</span> <span class='fu'>EIX_waterfall</span>(<span class='no'>xgb.model</span>, <span class='no'>new_observation</span>,  <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"interactions"</span>)
+<span class='no'>wf</span></div><div class='output co'>#&gt;                                         contribution
+#&gt; intercept                                     -1.530
+#&gt; time_spend_company                             1.519
+#&gt; last_evaluation                                1.485
+#&gt; Work_accident                                 -0.736
+#&gt; satisfaction_level:time_spend_company          0.406
+#&gt; last_evaluation:time_spend_company             0.316
+#&gt; number_project:last_evaluation                 0.258
+#&gt; satisfaction_level                            -0.238
+#&gt; last_evaluation:average_montly_hours           0.227
+#&gt; number_project                                -0.224
+#&gt; salarylow                                      0.166
+#&gt; average_montly_hours:last_evaluation          -0.156
+#&gt; last_evaluation:satisfaction_level             0.111
+#&gt; average_montly_hours:time_spend_company        0.098
+#&gt; time_spend_company:last_evaluation             0.095
+#&gt; average_montly_hours:number_project            0.094
+#&gt; average_montly_hours                          -0.048
+#&gt; satisfaction_level:number_project             -0.003
+#&gt; final_prognosis                                1.839
+#&gt; baseline:  0 </div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>wf</span>)</div><div class='img'><img src='EIX_waterfall-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

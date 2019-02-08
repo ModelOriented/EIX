@@ -1,15 +1,20 @@
-#' EIX_waterfall
+#' Explain prediction of a single observation
 #'
-#' Function \code{EIX_waterfall}
+#' The Table with influence of variables and interactions
+#' on the prediction of a given observation.
 #'
 #' Function contains code or pieces of code
-#' from `breakDown` code created by Przemysław Biecek
-#' and`xgboostExplainer` code created by David Foster.
+#' from \code{breakDown} code created by Przemysław Biecek
+#' and \code{xgboostExplainer} code created by David Foster.
 #'
 #' @param xgb.model a xgboost or lightgbm model
 #' @param new_observation a new observation
-#' @param option  "interaction" or "variables"
-#' @param baseline number that specifies on which level the baseline line should be plotted
+#' @param option  if "variables", the plot includes only single variables,
+#'            if "interactions", then only interactions.
+#'            Default "interaction".
+#' @param baseline a number or a character "Intercept" (for model intercept).
+#'                The baseline for the plot, where the rectangles should start.
+#'                Default 0.
 #'
 #' @return an object of the broken class
 #'
@@ -27,16 +32,16 @@
 #' sm <- sparse.model.matrix(left ~ . - 1,  data = dt_HR)
 #'
 #' param <- list(objective = "binary:logistic", base_score = 0.5, max_depth = 2)
-#' xgb.model <- xgboost( param = param, data = sm, label = dt_HR[, left] == 1, nrounds = 50, verbose = FALSE)
+#' xgb.model <- xgboost(sm, params = param, label = dt_HR[, left] == 1, nrounds = 50, verbose = FALSE)
 #'
 #' new_observation <- sm[9,]
-#' wf <- EIX_waterfall(xgb.model, new_observation,  option = "interactions ")
+#' wf <- EIX_waterfall(xgb.model, new_observation,  option = "interactions")
 #' wf
 #' plot(wf)
 #'
 #' @export
 
-EIX_waterfall<-function(xgb.model,new_observation, option="interactions", baseline=0){
+EIX_waterfall <- function(xgb.model, new_observation, option = "interactions", baseline = 0){
   #uses pieces of breakDown code created by Przemysław Biecek
   Feature <- NULL
 
@@ -67,7 +72,6 @@ EIX_waterfall<-function(xgb.model,new_observation, option="interactions", baseli
   df <- df[-which(df[, 3] == "intercept"), ]
 
   broken_sorted <- rbind(df_intercept, df)
-
   breakDown:::create.broken(broken_sorted, baseline)
 }
 

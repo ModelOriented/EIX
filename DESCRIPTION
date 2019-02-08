@@ -24,8 +24,9 @@ Imports:
     DALEX,
     ggrepel,
     ggiraphExtra,
-    breakDown
-RoxygenNote: 6.0.1
+    breakDown,
+    Matrix
+RoxygenNote: 6.1.1
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr

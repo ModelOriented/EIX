@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Importance plot — plot.importanceTable • EIX</title>
+<title>Plot importance measures — plot.importanceTable • EIX</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -48,7 +48,7 @@
 	  <a class = "navbar-mi2logo" href="http://mi2.mini.pw.edu.pl/">
         <img src = "https://github.com/mi2-warsaw/MI2template/blob/master/inst/pkgdown/assets/MI2logo.jpg?raw=true" alt = "MI2" height = 46 title = "MI2">
 	  </a>
-      <a class="navbar-brand navbar-mi2" href="../index.html">Importance plot</a>
+      <a class="navbar-brand navbar-mi2" href="../index.html">Plot importance measures</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="navbar-mi2 nav navbar-nav">
@@ -76,11 +76,12 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Importance plot</h1>
+    <h1>Plot importance measures</h1>
     </div>
 
     
-    <p>Importance plot</p>
+    <p>The importance plot shows different measures of importance for variables and interactions.
+It is possible to visualise importance measures in two ways depending on the <code>radar</code> parameter.</p>
     
 
     <pre class="usage"><span class='co'># S3 method for importanceTable</span>
@@ -105,9 +106,9 @@
     <tr>
       <th>radar</th>
       <td><p>TRUE/FALSE. If TRUE the plot shows
-six measures of variables' importance in the model.
+six measures of variables' or interactions' importance in the model.
 If FALSE the plot containing two chosen measures
-of variables' importance in the model.</p></td>
+of variables' or interactions' importance in the model.</p></td>
     </tr>
     <tr>
       <th>xmeasure</th>
@@ -150,7 +151,7 @@ of variables' importance in the model.</p></td>
 <span class='no'>sm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/Matrix/topics/sparse.model.matrix'>sparse.model.matrix</a></span>(<span class='no'>left</span> ~ <span class='no'>.</span> - <span class='fl'>1</span>,  <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>dt_HR</span>)
 
 <span class='no'>param</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>objective</span> <span class='kw'>=</span> <span class='st'>"binary:logistic"</span>, <span class='kw'>base_score</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>max_depth</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-<span class='no'>xgb.model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/xgboost/topics/xgb.train'>xgboost</a></span>( <span class='kw'>param</span> <span class='kw'>=</span> <span class='no'>param</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>sm</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='no'>dt_HR</span>[, <span class='no'>left</span>] <span class='kw'>==</span> <span class='fl'>1</span>, <span class='kw'>nrounds</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='no'>xgb.model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/xgboost/topics/xgb.train'>xgboost</a></span>(<span class='no'>sm</span>, <span class='kw'>params</span> <span class='kw'>=</span> <span class='no'>param</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='no'>dt_HR</span>[, <span class='no'>left</span>] <span class='kw'>==</span> <span class='fl'>1</span>, <span class='kw'>nrounds</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='no'>imp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='importanceTable.html'>importanceTable</a></span>(<span class='no'>xgb.model</span>, <span class='no'>sm</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"both"</span>)
 <span class='no'>imp</span></div><div class='output co'>#&gt;                                     Feature  sumGain sumCover meanGain
@@ -223,7 +224,7 @@ of variables' importance in the model.</p></td>
 #&gt; 5:    92.40    1014.0        19    209.80
 #&gt; 6:    57.81     992.9         4     57.81
 #&gt; 7:    44.13    1005.0         3     44.13
-#&gt; 8:    29.84     523.4         2     29.84</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>imp</span>,  <span class='kw'>top</span> <span class='kw'>=</span> <span class='fl'>10</span>)</div><div class='output co'>#&gt; <span class='error'>Error in if (zero_range(as.numeric(limits))) {    breaks &lt;- limits[1]} else if (is.waive(self$breaks)) {    breaks &lt;- self$trans$breaks(limits)} else if (is.function(self$breaks)) {    breaks &lt;- self$breaks(limits)} else {    breaks &lt;- self$breaks}: brakuje wartości tam, gdzie wymagane jest TRUE/FALSE</span></div><div class='input'>
+#&gt; 8:    29.84     523.4         2     29.84</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>imp</span>,  <span class='kw'>top</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/nrow'>nrow</a></span>(<span class='no'>imp</span>))</div><div class='img'><img src='plot.importanceTable-2.png' alt='' width='700' height='433' /></div><div class='input'>
  <span class='no'>imp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='importanceTable.html'>importanceTable</a></span>(<span class='no'>xgb.model</span>, <span class='no'>sm</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"interactions"</span>)
  <span class='no'>imp</span></div><div class='output co'>#&gt;                                     Feature sumGain sumCover meanGain meanCover
 #&gt;  1:    last_evaluation:average_montly_hours  745.60   1767.0   372.80     883.7
@@ -258,7 +259,7 @@ of variables' importance in the model.</p></td>
 #&gt; 13:         1     87.10
 #&gt; 14:         1     39.78
 #&gt; 15:         1     19.03
-#&gt; 16:         1     14.39</div><div class='input'> <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>imp</span>,  <span class='kw'>top</span> <span class='kw'>=</span> <span class='fl'>10</span>)</div><div class='img'><img src='plot.importanceTable-2.png' alt='' width='700' height='433' /></div><div class='input'>
+#&gt; 16:         1     14.39</div><div class='input'> <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>imp</span>,  <span class='kw'>top</span> <span class='kw'>=</span> <span class='fl'>10</span>)</div><div class='img'><img src='plot.importanceTable-3.png' alt='' width='700' height='433' /></div><div class='input'>
  <span class='no'>imp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='importanceTable.html'>importanceTable</a></span>(<span class='no'>xgb.model</span>, <span class='no'>sm</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"variables"</span>)
  <span class='no'>imp</span></div><div class='output co'>#&gt;                 Feature numberOfRoots weightedRoot meanDepth  sumGain sumCover
 #&gt; 1:   satisfaction_level            16      12.3800   0.21160 10920.00    47480
@@ -277,7 +278,7 @@ of variables' importance in the model.</p></td>
 #&gt; 5:    92.40    1014.0        19    209.80
 #&gt; 6:    57.81     992.9         4     57.81
 #&gt; 7:    44.13    1005.0         3     44.13
-#&gt; 8:    29.84     523.4         2     29.84</div><div class='input'> <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>imp</span>, <span class='kw'>top</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>radar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>xmeasure</span> <span class='kw'>=</span> <span class='st'>"sumCover"</span>, <span class='kw'>ymeasure</span> <span class='kw'>=</span> <span class='st'>"sumGain"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Removed 2 rows containing missing values (geom_point).</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Removed 2 rows containing missing values (geom_label_repel).</span></div><div class='img'><img src='plot.importanceTable-3.png' alt='' width='700' height='433' /></div><div class='input'>
+#&gt; 8:    29.84     523.4         2     29.84</div><div class='input'> <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>imp</span>, <span class='kw'>top</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/nrow'>nrow</a></span>(<span class='no'>imp</span>), <span class='kw'>radar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>xmeasure</span> <span class='kw'>=</span> <span class='st'>"sumCover"</span>, <span class='kw'>ymeasure</span> <span class='kw'>=</span> <span class='st'>"sumGain"</span>)</div><div class='img'><img src='plot.importanceTable-4.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
