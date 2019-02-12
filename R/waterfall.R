@@ -1,14 +1,14 @@
 #' Explain prediction of a single observation
 #'
-#' The Table with influence of variables and interactions
+#' This function calculates a table with influence of variables and interactions
 #' on the prediction of a given observation.
 #'
 #' Function contains code or pieces of code
 #' from \code{breakDown} code created by Przemysław Biecek
 #' and \code{xgboostExplainer} code created by David Foster.
 #'
-#' @param xgb.model a xgboost or lightgbm model
-#' @param new_observation a new observation
+#' @param xgb.model a xgboost model.
+#' @param new_observation a new observation.
 #' @param option  if "variables", the plot includes only single variables,
 #'            if "interactions", then only interactions.
 #'            Default "interaction".
@@ -25,23 +25,20 @@
 #' @examples
 #' library("EIX")
 #' library("Matrix")
-#' library("data.table")
+#' sm <- sparse.model.matrix(left ~ . - 1,  data = HR_data)
+#'
 #' library("xgboost")
-#'
-#' dt_HR <- data.table(HR_data)
-#' sm <- sparse.model.matrix(left ~ . - 1,  data = dt_HR)
-#'
-#' param <- list(objective = "binary:logistic", base_score = 0.5, max_depth = 2)
-#' xgb.model <- xgboost(sm, params = param, label = dt_HR[, left] == 1, nrounds = 50, verbose = FALSE)
+#' param <- list(objective = "binary:logistic", max_depth = 2)
+#' xgb.model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 50, verbose=0)
 #'
 #' new_observation <- sm[9,]
-#' wf <- EIX_waterfall(xgb.model, new_observation,  option = "interactions")
+#' wf <- waterfall(xgb.model, new_observation,  option = "interactions")
 #' wf
 #' plot(wf)
 #'
 #' @export
 
-EIX_waterfall <- function(xgb.model, new_observation, option = "interactions", baseline = 0){
+waterfall <- function(xgb.model, new_observation, option = "interactions", baseline = 0){
   #uses pieces of breakDown code created by Przemysław Biecek
   Feature <- NULL
 

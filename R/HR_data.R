@@ -17,6 +17,6 @@
 #' }
 #'
 #' @name HR_data
-#' @format A data frame with 14999 rows and 10 variables
+#' @format A data table with 14999 rows and 10 variables
 #' @source \url{https://www.kaggle.com/ludobenistant/hr-analytics/data}
  NULL

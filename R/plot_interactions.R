@@ -1,13 +1,14 @@
 #' Plot importance of interactions or pairs
 #'
-#' This function visualizes the importance ranking of interactions and pairs in the model.
+#' This function plots the importance ranking of interactions and pairs in the model.
 #'
-#' NOTE: High gain of pair for \code{option="pairs"} can be a result of high gain of down variable (child).
+#' NOTE: Be careful use of this function with \code{option="pairs"} parameter,
+#'       because high gain of pair can be a result of high gain of child variable.
 #'      As strong interactions should be considered only these pairs of variables,
 #'      where variable on the bottom (child) has higher gain than variable on the top (parent).
 #'
-#' @param x a result of `interactionsTable` function
-#' @param ... other parameters
+#' @param x a result from the `interactions` function.
+#' @param ... other parameters.
 #'
 #' @return a ggplot object
 #'
@@ -19,27 +20,24 @@
 #' @examples
 #' library("EIX")
 #' library("Matrix")
-#' library("data.table")
+#' sm <- sparse.model.matrix(left ~ . - 1,  data = HR_data)
+#'
 #' library("xgboost")
+#' param <- list(objective = "binary:logistic", max_depth = 2)
+#' xgb.model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 50, verbose=0)
 #'
-#' dt_HR <- data.table(HR_data)
-#' sm <- sparse.model.matrix(left ~ . - 1,  data = dt_HR)
-#'
-#' param <- list(objective = "binary:logistic", base_score = 0.5, max_depth = 2)
-#' xgb.model <- xgboost(sm, params = param, label = dt_HR[, left] == 1, nrounds = 50, verbose = FALSE)
-#'
-#' inter <- interactionsTable(xgb.model, sm,		option = "interactions")
+#' inter <- interactions(xgb.model, sm,		option = "interactions")
 #' inter
 #' plot(inter)
 #'
-#' inter <- interactionsTable(xgb.model, sm,		option = "pairs")
+#' inter <- interactions(xgb.model, sm,		option = "pairs")
 #' inter
 #' plot(inter)
 #'
 #' @export
 
 
-plot.interactionsTable <- function(x, ...) {
+plot.interactions <- function(x, ...) {
   Feature <- sumGain <- Child <- Parent <- breaks <- NULL
 
   sumGain <- x$sumGain

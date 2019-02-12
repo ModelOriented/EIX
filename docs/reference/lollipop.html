@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Visualiation of the model — plot.lollipop • EIX</title>
+<title>Tables needed for lollipop plot — lollipop • EIX</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -48,7 +48,7 @@
 	  <a class = "navbar-mi2logo" href="http://mi2.mini.pw.edu.pl/">
         <img src = "https://github.com/mi2-warsaw/MI2template/blob/master/inst/pkgdown/assets/MI2logo.jpg?raw=true" alt = "MI2" height = 46 title = "MI2">
 	  </a>
-      <a class="navbar-brand navbar-mi2" href="../index.html">Visualiation of the model</a>
+      <a class="navbar-brand navbar-mi2" href="../index.html">Tables needed for lollipop plot</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="navbar-mi2 nav navbar-nav">
@@ -76,43 +76,34 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Visualiation of the model</h1>
+    <h1>Tables needed for lollipop plot</h1>
     </div>
 
     
-    <p>The lollipop plots the model with the most important interactions and variables in the roots.</p>
+    <p>This function calculates two tables needed to generate lollipop plot, which visualise the model.
+The first table contains information about all nodes in the trees forming a model.
+It includes gain value, depth and ID of each nodes.
+The second table contains similarly information about roots in the trees.</p>
     
 
-    <pre class="usage"><span class='co'># S3 method for lollipop</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>labels</span> <span class='kw'>=</span> <span class='st'>"topAll"</span>, <span class='kw'>log</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>lollipop</span>(<span class='no'>xgb.model</span>, <span class='no'>data</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>a result from the `lollipop` function.</p></td>
+      <th>xgb.model</th>
+      <td><p>a xgboost or lightgbm model.</p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p>other parameters.</p></td>
-    </tr>
-    <tr>
-      <th>labels</th>
-      <td><p>if "topAll" then labels for the most important interactions (vertical label)
-and variables in the roots (horizontal label) will be displayed,
-if "interactions" then labels for all interactions,
-if "roots" then labels for all variables in the root.</p></td>
-    </tr>
-    <tr>
-      <th>log</th>
-      <td><p>TRUE/FALSE logarithmic scale on the plot. Default TRUE.</p></td>
+      <th>data</th>
+      <td><p>a data table with data used to train the model.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a ggplot object</p>
+    <p>an object of the lollipop class</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -124,8 +115,8 @@ if "roots" then labels for all variables in the root.</p></td>
 <span class='no'>param</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>objective</span> <span class='kw'>=</span> <span class='st'>"binary:logistic"</span>, <span class='kw'>max_depth</span> <span class='kw'>=</span> <span class='fl'>2</span>)
 <span class='no'>xgb.model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/xgboost/topics/xgb.train'>xgboost</a></span>(<span class='no'>sm</span>, <span class='kw'>params</span> <span class='kw'>=</span> <span class='no'>param</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='no'>HR_data</span>[, <span class='no'>left</span>] <span class='kw'>==</span> <span class='fl'>1</span>, <span class='kw'>nrounds</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>0</span>)
 
-<span class='no'>lolli</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='lollipop.html'>lollipop</a></span>(<span class='no'>xgb.model</span>, <span class='no'>sm</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>lolli</span>, <span class='kw'>labels</span> <span class='kw'>=</span> <span class='st'>"topAll"</span>, <span class='kw'>log_scale</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous x-axis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous x-axis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous x-axis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous x-axis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous x-axis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous x-axis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Removed 7 rows containing missing values (geom_text_repel).</span></div><div class='img'><img src='plot.lollipop-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='no'>lolli</span> <span class='kw'>&lt;-</span> <span class='fu'>lollipop</span>(<span class='no'>xgb.model</span>, <span class='no'>sm</span>)
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>lolli</span>, <span class='kw'>labels</span> <span class='kw'>=</span> <span class='st'>"topAll"</span>, <span class='kw'>log_scale</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous x-axis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous x-axis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous x-axis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous x-axis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous x-axis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous x-axis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Removed 7 rows containing missing values (geom_text_repel).</span></div><div class='img'><img src='lollipop-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

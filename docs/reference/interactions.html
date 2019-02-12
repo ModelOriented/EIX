@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Importance of interactions and pairs in the model — interactionsTable • EIX</title>
+<title>Importance of interactions and pairs in the model — interactions • EIX</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -83,7 +83,7 @@
     <p>This function calculates a table with two measures of importance for interactions and pairs in the model.</p>
     
 
-    <pre class="usage"><span class='fu'>interactionsTable</span>(<span class='no'>xgb.model</span>, <span class='no'>data</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"interactions"</span>)</pre>
+    <pre class="usage"><span class='fu'>interactions</span>(<span class='no'>xgb.model</span>, <span class='no'>data</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"interactions"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -111,10 +111,11 @@ Default "interactions".</p></td>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Available measures:</p><ul>
-<li><p>"sumGain" - sum of Gain value in all nodes, in which given variable occurs</p></li>
-<li><p>"freqency" - number of occurrences in the nodes for given variable</p></li>
+<li><p>"sumGain" - sum of Gain value in all nodes, in which given variable occurs,</p></li>
+<li><p>"freqency" - number of occurrences in the nodes for given variable.</p></li>
 </ul>
-    <p>NOTE: Be careful: High gain of pair for <code>option="pairs"</code> can be a result of high gain of child variable.
+    <p>NOTE: Be careful use of this function with <code>option="pairs"</code> parameter,
+      because high gain of pair can be a result of high gain of child variable.
      As strong interactions should be considered only these pairs of variables,
      where variable on the bottom (child) has higher gain than variable on the top (parent).</p>
     
@@ -126,57 +127,9 @@ Default "interactions".</p></td>
 
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='st'>"xgboost"</span>)
 <span class='no'>param</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>objective</span> <span class='kw'>=</span> <span class='st'>"binary:logistic"</span>, <span class='kw'>max_depth</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-<span class='no'>xgb.model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/xgboost/topics/xgb.train'>xgboost</a></span>(<span class='no'>sm</span>, <span class='kw'>params</span> <span class='kw'>=</span> <span class='no'>param</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='no'>HR_data</span>[, <span class='no'>left</span>] <span class='kw'>==</span> <span class='fl'>1</span>, <span class='kw'>nrounds</span> <span class='kw'>=</span> <span class='fl'>50</span>)</div><div class='output co'>#&gt; [1]	train-error:0.150077 
-#&gt; [2]	train-error:0.098007 
-#&gt; [3]	train-error:0.098007 
-#&gt; [4]	train-error:0.098007 
-#&gt; [5]	train-error:0.098007 
-#&gt; [6]	train-error:0.098007 
-#&gt; [7]	train-error:0.098007 
-#&gt; [8]	train-error:0.095873 
-#&gt; [9]	train-error:0.095873 
-#&gt; [10]	train-error:0.095606 
-#&gt; [11]	train-error:0.095473 
-#&gt; [12]	train-error:0.093406 
-#&gt; [13]	train-error:0.061271 
-#&gt; [14]	train-error:0.059404 
-#&gt; [15]	train-error:0.055137 
-#&gt; [16]	train-error:0.063271 
-#&gt; [17]	train-error:0.043070 
-#&gt; [18]	train-error:0.042670 
-#&gt; [19]	train-error:0.039203 
-#&gt; [20]	train-error:0.038536 
-#&gt; [21]	train-error:0.037669 
-#&gt; [22]	train-error:0.037869 
-#&gt; [23]	train-error:0.036802 
-#&gt; [24]	train-error:0.037336 
-#&gt; [25]	train-error:0.036602 
-#&gt; [26]	train-error:0.036402 
-#&gt; [27]	train-error:0.036669 
-#&gt; [28]	train-error:0.035802 
-#&gt; [29]	train-error:0.035402 
-#&gt; [30]	train-error:0.032202 
-#&gt; [31]	train-error:0.031869 
-#&gt; [32]	train-error:0.031469 
-#&gt; [33]	train-error:0.030935 
-#&gt; [34]	train-error:0.030602 
-#&gt; [35]	train-error:0.030269 
-#&gt; [36]	train-error:0.029402 
-#&gt; [37]	train-error:0.029269 
-#&gt; [38]	train-error:0.028802 
-#&gt; [39]	train-error:0.028802 
-#&gt; [40]	train-error:0.028535 
-#&gt; [41]	train-error:0.028269 
-#&gt; [42]	train-error:0.028202 
-#&gt; [43]	train-error:0.027935 
-#&gt; [44]	train-error:0.027669 
-#&gt; [45]	train-error:0.027669 
-#&gt; [46]	train-error:0.027402 
-#&gt; [47]	train-error:0.028269 
-#&gt; [48]	train-error:0.027268 
-#&gt; [49]	train-error:0.026668 
-#&gt; [50]	train-error:0.026335 </div><div class='input'>
-<span class='no'>inter</span> <span class='kw'>&lt;-</span> <span class='fu'>interactionsTable</span>(<span class='no'>xgb.model</span>, <span class='no'>sm</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"interactions"</span>)
+<span class='no'>xgb.model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/xgboost/topics/xgb.train'>xgboost</a></span>(<span class='no'>sm</span>, <span class='kw'>params</span> <span class='kw'>=</span> <span class='no'>param</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='no'>HR_data</span>[, <span class='no'>left</span>] <span class='kw'>==</span> <span class='fl'>1</span>, <span class='kw'>nrounds</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>0</span>)
+
+<span class='no'>inter</span> <span class='kw'>&lt;-</span> <span class='fu'>interactions</span>(<span class='no'>xgb.model</span>, <span class='no'>sm</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"interactions"</span>)
 <span class='no'>inter</span></div><div class='output co'>#&gt;                   Parent                Child   sumGain frequency
 #&gt;  1:      last_evaluation average_montly_hours 745.59427         2
 #&gt;  2:      last_evaluation   satisfaction_level 708.87227         4
@@ -193,8 +146,8 @@ Default "interactions".</p></td>
 #&gt; 13:   satisfaction_level       number_project  87.09535         1
 #&gt; 14:   time_spend_company       number_project  39.78419         1
 #&gt; 15:       number_project      last_evaluation  19.02951         1
-#&gt; 16:            salarylow         salarymedium  14.38998         1</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>inter</span>)</div><div class='img'><img src='interactionsTable-1.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='no'>inter</span> <span class='kw'>&lt;-</span> <span class='fu'>interactionsTable</span>(<span class='no'>xgb.model</span>, <span class='no'>sm</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"pairs"</span>)
+#&gt; 16:            salarylow         salarymedium  14.38998         1</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>inter</span>)</div><div class='img'><img src='interactions-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='no'>inter</span> <span class='kw'>&lt;-</span> <span class='fu'>interactions</span>(<span class='no'>xgb.model</span>, <span class='no'>sm</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"pairs"</span>)
 <span class='no'>inter</span></div><div class='output co'>#&gt;                   Parent                Child     sumGain frequency
 #&gt;  1:   satisfaction_level       number_project 3573.869457         6
 #&gt;  2:   satisfaction_level   time_spend_company 3421.167467         5
@@ -225,7 +178,7 @@ Default "interactions".</p></td>
 #&gt; 27:            salarylow        Work_accident   11.632748         1
 #&gt; 28:        Work_accident      last_evaluation    6.214535         1
 #&gt; 29:       number_project   satisfaction_level    3.267536         2
-#&gt;                   Parent                Child     sumGain frequency</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>inter</span>)</div><div class='img'><img src='interactionsTable-2.png' alt='' width='700' height='433' /></div><div class='input'>
+#&gt;                   Parent                Child     sumGain frequency</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>inter</span>)</div><div class='img'><img src='interactions-2.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

@@ -1,15 +1,14 @@
 #' Visualiation of the model
 #'
-#' The lollipop plot is used to visualize the model in such a way
-#' that the most important variables and interactions are visible.
+#' The lollipop plots the model with the most important interactions and variables in the roots.
 #'
-#' @param x a result of `EIX_lollipop` function
+#' @param x a result from the `lollipop` function.
 #' @param labels if "topAll" then labels for the most important interactions (vertical label)
-#'               and variables in the roots(horizontal label) will be displayed,
+#'               and variables in the roots (horizontal label) will be displayed,
 #'               if "interactions" then labels for all interactions,
 #'               if "roots" then labels for all variables in the root.
 #' @param log  TRUE/FALSE logarithmic scale on the plot. Default TRUE.
-#' @param ... other parameters
+#' @param ... other parameters.
 #'
 #' @return a ggplot object
 #'
@@ -21,16 +20,13 @@
 #' @examples
 #' library("EIX")
 #' library("Matrix")
-#' library("data.table")
+#' sm <- sparse.model.matrix(left ~ . - 1,  data = HR_data)
+#'
 #' library("xgboost")
+#' param <- list(objective = "binary:logistic", max_depth = 2)
+#' xgb.model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 50, verbose=0)
 #'
-#' dt_HR <- data.table(HR_data)
-#' sm <- sparse.model.matrix(left ~ . - 1,  data = dt_HR)
-#'
-#' param <- list(objective = "binary:logistic", base_score = 0.5, max_depth = 2)
-#' xgb.model <- xgboost(sm, params = param, label = dt_HR[, left] == 1, nrounds = 50, verbose = FALSE)
-#'
-#' lolli <- EIX_lollipop(xgb.model, sm)
+#' lolli <- lollipop(xgb.model, sm)
 #' plot(lolli, labels = "topAll", log_scale = TRUE)
 #'
 #' @export

@@ -1,19 +1,20 @@
 #' Importance of interactions and pairs in the model
 #'
-#' The table with two measures of importance for interactions and pairs in the model.
+#' This function calculates a table with two measures of importance for interactions and pairs in the model.
 #'
 #' Available measures:
 #'\itemize{
-#'\item "sumGain" - sum of Gain value in all nodes, in which given variable occurs
-#'\item "freqency" - number of occurrences in the nodes for given variable
+#'\item "sumGain" - sum of Gain value in all nodes, in which given variable occurs,
+#'\item "freqency" - number of occurrences in the nodes for given variable.
 #'}
 #'
-#' NOTE: High gain of pair for \code{option="pairs"} can be a result of high gain of down variable (child).
+#' NOTE: Be careful use of this function with \code{option="pairs"} parameter,
+#'       because high gain of pair can be a result of high gain of child variable.
 #'      As strong interactions should be considered only these pairs of variables,
 #'      where variable on the bottom (child) has higher gain than variable on the top (parent).
 #'
-#' @param xgb.model a xgboost or lightgbm model
-#' @param data a data table with data used to train the model
+#' @param xgb.model a xgboost or lightgbm model.
+#' @param data a data table with data used to train the model.
 #' @param option if "interactions", the table contains interactions,
 #'            if "pairs", this table contains all the pairs in the model.
 #'            Default "interactions".
@@ -29,20 +30,17 @@
 #' @examples
 #' library("EIX")
 #' library("Matrix")
-#' library("data.table")
+#' sm <- sparse.model.matrix(left ~ . - 1,  data = HR_data)
+#'
 #' library("xgboost")
+#' param <- list(objective = "binary:logistic", max_depth = 2)
+#' xgb.model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 50, verbose=0)
 #'
-#' dt_HR <- data.table(HR_data)
-#' sm <- sparse.model.matrix(left ~ . - 1,  data = dt_HR)
-#'
-#' param <- list(objective = "binary:logistic", base_score = 0.5, max_depth = 2)
-#' xgb.model <- xgboost(sm, params = param, label = dt_HR[, left] == 1, nrounds = 50, verbose = FALSE)
-#'
-#' inter <- interactionsTable(xgb.model, sm, option = "interactions")
+#' inter <- interactions(xgb.model, sm, option = "interactions")
 #' inter
 #' plot(inter)
 #'
-#' inter <- interactionsTable(xgb.model, sm, option = "pairs")
+#' inter <- interactions(xgb.model, sm, option = "pairs")
 #' inter
 #' plot(inter)
 #'
@@ -50,7 +48,7 @@
 #'
 #'
 
-interactionsTable <- function(xgb.model, data, option = "interactions"){
+interactions <- function(xgb.model, data, option = "interactions"){
   Child <- Parent <- Feature <- sumGain <- . <- NULL
 
   if (option == "interactions") {
@@ -63,7 +61,7 @@ interactionsTable <- function(xgb.model, data, option = "interactions"){
   if (option == "pairs") {
     gainTable <- calculatePairsGainTable(xgb.model, data)
   }
-  class(gainTable) <- c("interactionsTable", "data.table")
+  class(gainTable) <- c("interactions", "data.table")
   return(gainTable)
 
 }

@@ -89,11 +89,11 @@ tableOfTrees <- function(model, data){
     return(xgb.model.dt.tree(colnames(data), model)[])
   }
   if (class(model)[1] == "lgb.Booster") {
-    lgb.trees <- lgb.model.dt.tree(model)
+    lgb.trees <- lightgbm::lgb.model.dt.tree(model)
 
-    lgb.trees <- lgb.trees[, count := ifelse(is.na(split_feature), leaf_count, internal_count)]
+    lgb.trees <- lightgbm::lgb.trees[, count := ifelse(is.na(split_feature), leaf_count, internal_count)]
 
-    lgb.trees <- lgb.trees[, max := max(split_index, na.rm = TRUE), by = tree_index]
+    lgb.trees <- lightgbm::lgb.trees[, max := max(split_index, na.rm = TRUE), by = tree_index]
 
     #UWAGA: nie jest tu istotne rodzaj nierówności, interesuje nas, że ktoś jest rodzicem, a nie, czy idzie w prawo i w lewo, dlatego losowe przypisanie Yes, No
 

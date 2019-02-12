@@ -1,7 +1,7 @@
 Package: EIX
 Title: EIX: Explain Interactions in XGBoost
        Structure mining for XGBoost and LightGBM models
-Version: 0.0.0.9000
+Version: 0.1
 Authors@R: c(
   person("Ewelina", "Karbowiak", email = "ewelina.karbowiak12@gmail.com", role = c("aut", "cre")),
   person("Przemyslaw", "Biecek", email = "przemyslaw.biecek@gmail.com", role = c("aut","ths"))
@@ -28,5 +28,6 @@ Imports:
     Matrix
 RoxygenNote: 6.1.1
 Suggests: knitr,
-    rmarkdown
+    rmarkdown,
+    lightgbm
 VignetteBuilder: knitr

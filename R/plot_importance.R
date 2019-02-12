@@ -1,34 +1,35 @@
 #' Plot importance measures
 #'
-#' The importance plot shows different measures of importance for variables and interactions.
-#' It is possible to visualise importance measures in two ways depending on the \code{radar} parameter.
+#' This functions plots selected measures of importance for variables and interactions.
+#' It is possible to visualise importance table in two ways: radar plot with six measures
+#' and scatter plot with two choosen measures.
 #'
 #' Available measures:
 #'\itemize{
-#'\item "sumGain" - sum of Gain value in all nodes, in which given variable occurs
-#'\item "sumCover" - sum of Cover value in all nodes, in which given variable occurs; for LightGBM models: number of observation, which pass through the node
-#'\item "mean5Gain" - mean gain from 5 occurrences of given variable with the highest gain
-#'\item "meanGain" - mean Gain value in all nodes, in which given variable occurs
-#'\item "meanCover" - mean Cover value in all nodes, in which given variable occurs; for LightGBM models: mean number of observation, which pass through the node
-#'\item "freqency" - number of occurrences in the nodes for given variable
+#'\item "sumGain" - sum of Gain value in all nodes, in which given variable occurs,
+#'\item "sumCover" - sum of Cover value in all nodes, in which given variable occurs; for LightGBM models: number of observation, which pass through the node,
+#'\item "mean5Gain" - mean gain from 5 occurrences of given variable with the highest gain,
+#'\item "meanGain" - mean Gain value in all nodes, in which given variable occurs,
+#'\item "meanCover" - mean Cover value in all nodes, in which given variable occurs; for LightGBM models: mean number of observation, which pass through the node,
+#'\item "freqency" - number of occurrences in the nodes for given variable.
 #'}
 #'
 #' Additionally for plots with single variables:
 #'\itemize{
-#'\item "meanDepth"  - mean depth weighted by gain
-#'\item "numberOfRoots" - number of occurrences in the root
-#'\item "weightedRoot" - mean number of occurrences in the root, which is weighted by gain
+#'\item "meanDepth"  - mean depth weighted by gain,
+#'\item "numberOfRoots" - number of occurrences in the root,
+#'\item "weightedRoot" - mean number of occurrences in the root, which is weighted by gain.
 #'}
 #'
-#' @param x a result of `importanceTable` function
+#' @param x a result from the `importance` function.
 #' @param top number of positions on the plot or NULL for all variable. Default 10.
 #' @param radar TRUE/FALSE. If TRUE the plot shows
 #'               six measures of variables' or interactions' importance in the model.
 #'               If FALSE the plot containing two chosen measures
 #'               of variables' or interactions' importance in the model.
-#' @param xmeasure measure on the x-axis.Available for `radar=FALSE`. Default "sumCover"
-#' @param ymeasure measure on the y-axis. Available for `radar=FALSE`. Default "sumGain"
-#' @param ... other parameters
+#' @param xmeasure measure on the x-axis.Available for `radar=FALSE`. Default "sumCover".
+#' @param ymeasure measure on the y-axis. Available for `radar=FALSE`. Default "sumGain".
+#' @param ... other parameters.
 #'
 #' @return a ggplot object
 #'
@@ -41,35 +42,32 @@
 #' @examples
 #' library("EIX")
 #' library("Matrix")
-#' library("data.table")
+#' sm <- sparse.model.matrix(left ~ . - 1,  data = HR_data)
+#'
 #' library("xgboost")
+#' param <- list(objective = "binary:logistic", max_depth = 2)
+#' xgb.model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 50, verbose=0)
 #'
-#' dt_HR <- data.table(HR_data)
-#' sm <- sparse.model.matrix(left ~ . - 1,  data = dt_HR)
-#'
-#' param <- list(objective = "binary:logistic", base_score = 0.5, max_depth = 2)
-#' xgb.model <- xgboost(sm, params = param, label = dt_HR[, left] == 1, nrounds = 50, verbose = FALSE)
-#'
-#' imp <- importanceTable(xgb.model, sm, option = "both")
+#' imp <- importance(xgb.model, sm, option = "both")
 #' imp
 #' plot(imp,  top = 10)
 #'
-#' imp <- importanceTable(xgb.model, sm, option = "variables")
+#' imp <- importance(xgb.model, sm, option = "variables")
 #' imp
 #' plot(imp,  top = nrow(imp))
 #'
-#'  imp <- importanceTable(xgb.model, sm, option = "interactions")
+#'  imp <- importance(xgb.model, sm, option = "interactions")
 #'  imp
 #'  plot(imp,  top = 10)
 #'
-#'  imp <- importanceTable(xgb.model, sm, option = "variables")
+#'  imp <- importance(xgb.model, sm, option = "variables")
 #'  imp
 #'  plot(imp, top = nrow(imp), radar = FALSE, xmeasure = "sumCover", ymeasure = "sumGain")
 #'
 #' @export
 
 
-plot.importanceTable <- function(x, ...,  top = 10, radar = TRUE,
+plot.importance <- function(x, ...,  top = 10, radar = TRUE,
                                  xmeasure = "sumCover", ymeasure = "sumGain"){
 
   Feature <- sumGain <- sumCover <- meanGain <- meanCover <-

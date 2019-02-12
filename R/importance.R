@@ -1,26 +1,27 @@
 #' Importance of variables and interactions in the model
 #'
-#' The table with different measures of importance for variables and interactions.
+#' This functions calculates a table with selected measures of importance
+#' for variables and interactions.
 #'
 #' Available measures:
 #'\itemize{
-#'\item "sumGain" - sum of Gain value in all nodes, in which given variable occurs
-#'\item "sumCover" - sum of Cover value in all nodes, in which given variable occurs; for LightGBM models: number of observation, which pass through the node
-#'\item "mean5Gain" - mean gain from 5 occurrences of given variable with the highest gain
-#'\item "meanGain" - mean Gain value in all nodes, in which given variable occurs
-#'\item "meanCover" - mean Cover value in all nodes, in which given variable occurs; for LightGBM models: mean number of observation, which pass through the node
-#'\item "freqency" - number of occurrences in the nodes for given variable
+#'\item "sumGain" - sum of Gain value in all nodes, in which given variable occurs,
+#'\item "sumCover" - sum of Cover value in all nodes, in which given variable occurs; for LightGBM models: number of observation, which pass through the node,
+#'\item "mean5Gain" - mean gain from 5 occurrences of given variable with the highest gain,
+#'\item "meanGain" - mean Gain value in all nodes, in which given variable occurs,
+#'\item "meanCover" - mean Cover value in all nodes, in which given variable occurs; for LightGBM models: mean number of observation, which pass through the node,
+#'\item "freqency" - number of occurrences in the nodes for given variable.
 #'}
 #'
 #' Additionally for table with single variables:
 #'\itemize{
-#'\item "meanDepth"  - mean depth weighted by gain
-#'\item "numberOfRoots" - number of occurrences in the root
-#'\item "weightedRoot" - mean number of occurrences in the root, which is weighted by gain
+#'\item "meanDepth"  - mean depth weighted by gain,
+#'\item "numberOfRoots" - number of occurrences in the root,
+#'\item "weightedRoot" - mean number of occurrences in the root, which is weighted by gain.
 #'}
 #'
-#' @param xgb.model a xgboost or lightgbm model
-#' @param data a data table with data used to train the model
+#' @param xgb.model a xgboost or lightgbm model.
+#' @param data a data table with data used to train the model.
 #' @param option if "variables" then table includes only single variables,
 #'            if "interactions", then only interactions
 #'            if "both", then both single variable and interactons.
@@ -32,34 +33,31 @@
 #' @examples
 #' library("EIX")
 #' library("Matrix")
-#' library("data.table")
+#' sm <- sparse.model.matrix(left ~ . - 1,  data = HR_data)
+#'
 #' library("xgboost")
+#' param <- list(objective = "binary:logistic", max_depth = 2)
+#' xgb.model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 50, verbose=0)
 #'
-#' dt_HR <- data.table(HR_data)
-#' sm <- sparse.model.matrix(left ~ . - 1,  data = dt_HR)
-#'
-#' param <- list(objective = "binary:logistic", base_score = 0.5, max_depth = 2)
-#' xgb.model <- xgboost(sm, params = param, label = dt_HR[, left] == 1, nrounds = 50, verbose = FALSE)
-#'
-#' imp <- importanceTable(xgb.model, sm, option = "both")
+#' imp <- importance(xgb.model, sm, option = "both")
 #' imp
 #' plot(imp,  top = 10)
 #'
-#' imp <- importanceTable(xgb.model, sm, option = "variables")
+#' imp <- importance(xgb.model, sm, option = "variables")
 #' imp
 #' plot(imp,  top = nrow(imp))
 #'
-#'  imp <- importanceTable(xgb.model, sm, option = "interactions")
+#'  imp <- importance(xgb.model, sm, option = "interactions")
 #'  imp
 #' plot(imp,  top = 10)
 #'
-#'  imp <- importanceTable(xgb.model, sm, option = "variables")
+#'  imp <- importance(xgb.model, sm, option = "variables")
 #'  imp
 #' plot(imp, top = 10, radar = FALSE, xmeasure = "sumCover", ymeasure = "sumGain")
 #'
 #' @export
 
-importanceTable <- function(xgb.model, data, option = "both"){
+importance <- function(xgb.model, data, option = "both"){
   importance <- NULL
 
   if (option == "both") {
@@ -75,7 +73,7 @@ importanceTable <- function(xgb.model, data, option = "both"){
   importance <- cbind(importance[, 1], signif(importance[, -1], digits = 4))
   #importance <- unlist(importance)
 
-  class(importance) <- c("importanceTable", "data.table")
+  class(importance) <- c("importance", "data.table")
 
   return(importance[])
 

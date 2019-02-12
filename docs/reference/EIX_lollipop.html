@@ -80,9 +80,10 @@
     </div>
 
     
-    <p>Two tables needed to generate lollipop plot, which visualise the model.
+    <p>This function calculates two tables needed to generate lollipop plot, which visualise the model.
 The first table contains information about all nodes in the trees forming a model.
-The second table includes information about roots in the trees.</p>
+It includes gain value, depth and ID of each nodes.
+The second table contains similarly information about roots in the trees.</p>
     
 
     <pre class="usage"><span class='fu'>EIX_lollipop</span>(<span class='no'>xgb.model</span>, <span class='no'>data</span>)</pre>
@@ -92,11 +93,11 @@ The second table includes information about roots in the trees.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>xgb.model</th>
-      <td><p>a xgboost or lightgbm model</p></td>
+      <td><p>a xgboost or lightgbm model.</p></td>
     </tr>
     <tr>
       <th>data</th>
-      <td><p>a data table with data used to train the model</p></td>
+      <td><p>a data table with data used to train the model.</p></td>
     </tr>
     </table>
     
@@ -107,13 +108,59 @@ The second table includes information about roots in the trees.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='st'>"EIX"</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='st'>"Matrix"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: pakiet 'Matrix' został zbudowany w wersji R 3.4.4</span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='st'>"data.table"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: pakiet 'data.table' został zbudowany w wersji R 3.4.4</span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='st'>"xgboost"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: pakiet 'xgboost' został zbudowany w wersji R 3.4.4</span></div><div class='input'>
-<span class='no'>dt_HR</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/data.table/topics/data.table'>data.table</a></span>(<span class='no'>HR_data</span>)
-<span class='no'>sm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/Matrix/topics/sparse.model.matrix'>sparse.model.matrix</a></span>(<span class='no'>left</span> ~ <span class='no'>.</span> - <span class='fl'>1</span>,  <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>dt_HR</span>)
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='st'>"Matrix"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: pakiet 'Matrix' został zbudowany w wersji R 3.4.4</span></div><div class='input'><span class='no'>sm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/Matrix/topics/sparse.model.matrix'>sparse.model.matrix</a></span>(<span class='no'>left</span> ~ <span class='no'>.</span> - <span class='fl'>1</span>,  <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>HR_data</span>)
 
-<span class='no'>param</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>objective</span> <span class='kw'>=</span> <span class='st'>"binary:logistic"</span>, <span class='kw'>base_score</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>max_depth</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-<span class='no'>xgb.model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/xgboost/topics/xgb.train'>xgboost</a></span>(<span class='no'>sm</span>, <span class='kw'>params</span> <span class='kw'>=</span> <span class='no'>param</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='no'>dt_HR</span>[, <span class='no'>left</span>] <span class='kw'>==</span> <span class='fl'>1</span>, <span class='kw'>nrounds</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='st'>"xgboost"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: pakiet 'xgboost' został zbudowany w wersji R 3.4.4</span></div><div class='input'><span class='no'>param</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>objective</span> <span class='kw'>=</span> <span class='st'>"binary:logistic"</span>, <span class='kw'>max_depth</span> <span class='kw'>=</span> <span class='fl'>2</span>)
+<span class='no'>xgb.model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/xgboost/topics/xgb.train'>xgboost</a></span>(<span class='no'>sm</span>, <span class='kw'>params</span> <span class='kw'>=</span> <span class='no'>param</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='no'>HR_data</span>[, <span class='no'>left</span>] <span class='kw'>==</span> <span class='fl'>1</span>, <span class='kw'>nrounds</span> <span class='kw'>=</span> <span class='fl'>50</span>)</div><div class='output co'>#&gt; [1]	train-error:0.150077 
+#&gt; [2]	train-error:0.098007 
+#&gt; [3]	train-error:0.098007 
+#&gt; [4]	train-error:0.098007 
+#&gt; [5]	train-error:0.098007 
+#&gt; [6]	train-error:0.098007 
+#&gt; [7]	train-error:0.098007 
+#&gt; [8]	train-error:0.095873 
+#&gt; [9]	train-error:0.095873 
+#&gt; [10]	train-error:0.095606 
+#&gt; [11]	train-error:0.095473 
+#&gt; [12]	train-error:0.093406 
+#&gt; [13]	train-error:0.061271 
+#&gt; [14]	train-error:0.059404 
+#&gt; [15]	train-error:0.055137 
+#&gt; [16]	train-error:0.063271 
+#&gt; [17]	train-error:0.043070 
+#&gt; [18]	train-error:0.042670 
+#&gt; [19]	train-error:0.039203 
+#&gt; [20]	train-error:0.038536 
+#&gt; [21]	train-error:0.037669 
+#&gt; [22]	train-error:0.037869 
+#&gt; [23]	train-error:0.036802 
+#&gt; [24]	train-error:0.037336 
+#&gt; [25]	train-error:0.036602 
+#&gt; [26]	train-error:0.036402 
+#&gt; [27]	train-error:0.036669 
+#&gt; [28]	train-error:0.035802 
+#&gt; [29]	train-error:0.035402 
+#&gt; [30]	train-error:0.032202 
+#&gt; [31]	train-error:0.031869 
+#&gt; [32]	train-error:0.031469 
+#&gt; [33]	train-error:0.030935 
+#&gt; [34]	train-error:0.030602 
+#&gt; [35]	train-error:0.030269 
+#&gt; [36]	train-error:0.029402 
+#&gt; [37]	train-error:0.029269 
+#&gt; [38]	train-error:0.028802 
+#&gt; [39]	train-error:0.028802 
+#&gt; [40]	train-error:0.028535 
+#&gt; [41]	train-error:0.028269 
+#&gt; [42]	train-error:0.028202 
+#&gt; [43]	train-error:0.027935 
+#&gt; [44]	train-error:0.027669 
+#&gt; [45]	train-error:0.027669 
+#&gt; [46]	train-error:0.027402 
+#&gt; [47]	train-error:0.028269 
+#&gt; [48]	train-error:0.027268 
+#&gt; [49]	train-error:0.026668 
+#&gt; [50]	train-error:0.026335 </div><div class='input'>
 <span class='no'>lolli</span> <span class='kw'>&lt;-</span> <span class='fu'>EIX_lollipop</span>(<span class='no'>xgb.model</span>, <span class='no'>sm</span>)
 <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>lolli</span>, <span class='kw'>labels</span> <span class='kw'>=</span> <span class='st'>"topAll"</span>, <span class='kw'>log_scale</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous x-axis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous x-axis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous x-axis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous x-axis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous x-axis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous x-axis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Removed 7 rows containing missing values (geom_text_repel).</span></div><div class='img'><img src='EIX_lollipop-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
