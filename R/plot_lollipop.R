@@ -14,8 +14,9 @@
 #'
 #' @import data.table
 #' @import ggplot2
-#' @import DALEX
-#' @import ggrepel
+#' @importFrom DALEX theme_mi2
+#' @importFrom ggrepel geom_label_repel
+#' @importFrom ggrepel geom_text_repel
 #'
 #' @examples
 #' library("EIX")
@@ -24,10 +25,20 @@
 #'
 #' library("xgboost")
 #' param <- list(objective = "binary:logistic", max_depth = 2)
-#' xgb.model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 50, verbose=0)
+#' xgb_model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 50, verbose=0)
 #'
-#' lolli <- lollipop(xgb.model, sm)
+#' lolli <- lollipop(xgb_model, sm)
 #' plot(lolli, labels = "topAll", log_scale = TRUE)
+#'
+#' \dontrun{
+#'library(lightgbm)
+#'train_data <- lgb.Dataset(sm, label =  HR_data[, left] == 1)
+#'params <- list(objective = "binary", max_depth = 3)
+#'lgb_model <- lgb.train(params, train_data, 50)
+#'
+#' lolli <- lollipop(lgb_model, sm)
+#' plot(lolli, labels = "topAll", log_scale = TRUE)
+#'}
 #'
 #' @export
 

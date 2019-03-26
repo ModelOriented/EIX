@@ -8,49 +8,47 @@
 #' @return a list
 #'
 #' @import data.table
-#' @import stats
-#' @import utils
-#' @import xgboost
 #'
 #' @keywords internal
 #'
 
+# @import stats
+# @import utils
 calculateGain <- function(xgb.model, data) {
 
   leaf <- Feature <- Yes <- No <- ID <- parentsGain <- Quality <- parentsCover <-
     Cover <- name_pair <- childsGain <- depth <- parentsName <- NULL
 
-  trees = tableOfTrees(model = xgb.model, data)
+  trees = tableOfTrees(xgb.model, data)
   trees[, leaf := Feature == "Leaf"]
   trees$depth <- 0
   treeList = split(trees, as.factor(trees$Tree))
 
   for (tree in treeList) {
     num_nodes = nrow(tree)
-    non_leaf_rows = rev(which(tree[, leaf] == F))
+    non_leaf_rows = which(tree[, leaf] == F)
     for (r in non_leaf_rows) {
       left = tree[r, Yes]
       right = tree[r, No]
       if (tree[ID == left, leaf] == F) {
-
-        newDepth <- tree[r , depth] + 1
+       # newDepth <- tree[r , depth] + 1
         tree[ID == left,`:=`(parentsGain = tree[r, Quality],
                              parentsCover = tree[r, Cover],
                              name_pair = paste(tree[r, Feature], tree[ID == left, Feature], sep = ":"),
                              childsGain = Quality,
-                             depth = newDepth,
+                             depth = tree[r , depth] + 1,
                              parentsName = tree[r, Feature])]
         tree[ID == left, interaction := ((parentsGain < childsGain) & (Feature != parentsName))]
       }
 
       if (tree[ID == right, leaf]==F) {
 
-        newDepth <- tree[r , depth] + 1
+        #newDepth <- tree[r , depth] + 1
         tree[ID == right, `:=`(parentsGain = tree[r, Quality],
                                parentsCover = tree[r, Cover],
                                name_pair = paste(tree[r, Feature], tree[ID == right, Feature], sep = ":"),
                                childsGain = Quality,
-                               depth = newDepth,
+                               depth = tree[r , depth] + 1,
                                parentsName = tree[r, Feature])]
         tree[ID == right, interaction := ((parentsGain < childsGain) & (Feature != parentsName))]
       }
@@ -70,7 +68,7 @@ calculateGain <- function(xgb.model, data) {
 #' @return a data table
 #'
 #' @import data.table
-#' @import xgboost
+#' @importFrom xgboost xgb.model.dt.tree
 #'
 #' @keywords internal
 #'
@@ -82,7 +80,7 @@ tableOfTrees <- function(model, data){
     split_index <- tree_index <- leaf_index <- threshold <-
     leaf_value <- split_gain <- flag <- node_parent <- leaf_parent<-
     Node <- Feature <- . <- Cover <- Yes <- No <- ID <-
-    Tree<- Quality <- Missing <- Split <- NULL
+    Tree<- Quality <- Missing <-Leaf_old_num<- Split <- NULL
 
 
   if(class(model)[1] == "xgb.Booster") {
@@ -91,9 +89,9 @@ tableOfTrees <- function(model, data){
   if (class(model)[1] == "lgb.Booster") {
     lgb.trees <- lightgbm::lgb.model.dt.tree(model)
 
-    lgb.trees <- lightgbm::lgb.trees[, count := ifelse(is.na(split_feature), leaf_count, internal_count)]
+    lgb.trees <- lgb.trees[, count := ifelse(is.na(split_feature), leaf_count, internal_count)]
 
-    lgb.trees <- lightgbm::lgb.trees[, max := max(split_index, na.rm = TRUE), by = tree_index]
+    lgb.trees <- lgb.trees[, max := max(split_index, na.rm = TRUE), by = tree_index]
 
     #UWAGA: nie jest tu istotne rodzaj nierówności, interesuje nas, że ktoś jest rodzicem, a nie, czy idzie w prawo i w lewo, dlatego losowe przypisanie Yes, No
 
@@ -101,7 +99,8 @@ tableOfTrees <- function(model, data){
                               Node = ifelse(is.na(split_index), max + leaf_index + 1, split_index),
                               Feature = ifelse(is.na(split_feature), "Leaf", split_feature),
                               Split = threshold, Missing = NA, Quality = ifelse(is.na(split_feature), leaf_value, split_gain),
-                              Cover = count)]
+                              Cover = (1/4)*count,
+                              Leaf_old_num=leaf_index)]
     trees[, `:=`(ID = paste(Tree, Node, sep = "-"))]
 
     trees[, flag := FALSE]
@@ -130,7 +129,7 @@ tableOfTrees <- function(model, data){
     }
     trees <- rbindlist(treeList)
     trees[, .(Tree, Node, ID, Feature, Split,  Yes, No, Missing,   Quality, Cover)]
-    return(trees[, .(Tree, Node, ID, Feature, Split,  Yes, No, Missing,   Quality, Cover)][])
+    return(trees[, .(Tree, Node, ID, Feature, Split,  Yes, No, Missing,   Quality, Cover,Leaf_old_num)][])
   }
   if (class(model)[1] != "xgb.Booster" || "lgb.Booster") {
     return(cat( "You should choose one of two available models: xgboost, lightgbm \n" ))

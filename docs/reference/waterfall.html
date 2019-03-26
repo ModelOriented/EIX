@@ -59,6 +59,9 @@
   </a>
 </li>
 <li>
+  <a href="../articles/EIX.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
@@ -81,17 +84,17 @@
 
     
     <p>This function calculates a table with influence of variables and interactions
-on the prediction of a given observation.</p>
+on the prediction of a given observation. It supports only xgboost models.</p>
     
 
-    <pre class="usage"><span class='fu'>waterfall</span>(<span class='no'>xgb.model</span>, <span class='no'>new_observation</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"interactions"</span>, <span class='kw'>baseline</span> <span class='kw'>=</span> <span class='fl'>0</span>)</pre>
+    <pre class="usage"><span class='fu'>waterfall</span>(<span class='no'>xgb_model</span>, <span class='no'>new_observation</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"interactions"</span>, <span class='kw'>baseline</span> <span class='kw'>=</span> <span class='fl'>0</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>xgb.model</th>
-      <td><p>a xgboost or lightgbm model.</p></td>
+      <th>xgb_model</th>
+      <td><p>a xgboost model.</p></td>
     </tr>
     <tr>
       <th>new_observation</th>
@@ -117,7 +120,7 @@ Default 0.</p></td>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Function contains code or pieces of code
+    <p>The function contains code or pieces of code
 from <code>breakDown</code> code created by Przemysław Biecek
 and <code>xgboostExplainer</code> code created by David Foster.</p>
     
@@ -129,30 +132,30 @@ and <code>xgboostExplainer</code> code created by David Foster.</p>
 
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='st'>"xgboost"</span>)
 <span class='no'>param</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>objective</span> <span class='kw'>=</span> <span class='st'>"binary:logistic"</span>, <span class='kw'>max_depth</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-<span class='no'>xgb.model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/xgboost/topics/xgb.train'>xgboost</a></span>(<span class='no'>sm</span>, <span class='kw'>params</span> <span class='kw'>=</span> <span class='no'>param</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='no'>HR_data</span>[, <span class='no'>left</span>] <span class='kw'>==</span> <span class='fl'>1</span>, <span class='kw'>nrounds</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>0</span>)
+<span class='no'>xgb_model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/xgboost/topics/xgb.train'>xgboost</a></span>(<span class='no'>sm</span>, <span class='kw'>params</span> <span class='kw'>=</span> <span class='no'>param</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='no'>HR_data</span>[, <span class='no'>left</span>] <span class='kw'>==</span> <span class='fl'>1</span>, <span class='kw'>nrounds</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>0</span>)
 
 <span class='no'>new_observation</span> <span class='kw'>&lt;-</span> <span class='no'>sm</span>[<span class='fl'>9</span>,]
-<span class='no'>wf</span> <span class='kw'>&lt;-</span> <span class='fu'>waterfall</span>(<span class='no'>xgb.model</span>, <span class='no'>new_observation</span>,  <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"interactions"</span>)
-<span class='no'>wf</span></div><div class='output co'>#&gt;                                         contribution
-#&gt; intercept                                     -1.530
-#&gt; time_spend_company                             1.519
-#&gt; last_evaluation                                1.485
-#&gt; Work_accident                                 -0.736
-#&gt; satisfaction_level:time_spend_company          0.406
-#&gt; last_evaluation:time_spend_company             0.316
-#&gt; number_project:last_evaluation                 0.258
-#&gt; satisfaction_level                            -0.238
-#&gt; last_evaluation:average_montly_hours           0.227
-#&gt; number_project                                -0.224
-#&gt; salarylow                                      0.166
-#&gt; average_montly_hours:last_evaluation          -0.156
-#&gt; last_evaluation:satisfaction_level             0.111
-#&gt; average_montly_hours:time_spend_company        0.098
-#&gt; time_spend_company:last_evaluation             0.095
-#&gt; average_montly_hours:number_project            0.094
-#&gt; average_montly_hours                          -0.048
-#&gt; satisfaction_level:number_project             -0.003
-#&gt; final_prognosis                                1.839
+<span class='no'>wf</span> <span class='kw'>&lt;-</span> <span class='fu'>waterfall</span>(<span class='no'>xgb_model</span>, <span class='no'>new_observation</span>,  <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"interactions"</span>)
+<span class='no'>wf</span></div><div class='output co'>#&gt;                                                 contribution
+#&gt; (Intercept)                                           -1.530
+#&gt; time_spend_company = 5                                 1.519
+#&gt; last_evaluation = 1                                    1.485
+#&gt; Work_accident = 0                                     -0.736
+#&gt; satisfaction_level:time_spend_company = 0.89:5         0.406
+#&gt; last_evaluation:time_spend_company = 1:5               0.316
+#&gt; number_project:last_evaluation = 5:1                   0.258
+#&gt; satisfaction_level = 0.89                             -0.238
+#&gt; last_evaluation:average_montly_hours = 1:224           0.227
+#&gt; number_project = 5                                    -0.224
+#&gt; salarylow = 1                                          0.166
+#&gt; average_montly_hours:last_evaluation = 224:1          -0.156
+#&gt; last_evaluation:satisfaction_level = 1:0.89            0.111
+#&gt; average_montly_hours:time_spend_company = 224:5        0.098
+#&gt; time_spend_company:last_evaluation = 5:1               0.095
+#&gt; average_montly_hours:number_project = 224:5            0.094
+#&gt; average_montly_hours = 224                            -0.048
+#&gt; satisfaction_level:number_project = 0.89:5            -0.003
+#&gt; final_prognosis                                        1.839
 #&gt; baseline:  0 </div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>wf</span>)</div><div class='img'><img src='waterfall-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>

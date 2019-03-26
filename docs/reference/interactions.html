@@ -59,6 +59,9 @@
   </a>
 </li>
 <li>
+  <a href="../articles/EIX.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
@@ -83,13 +86,13 @@
     <p>This function calculates a table with two measures of importance for interactions and pairs in the model.</p>
     
 
-    <pre class="usage"><span class='fu'>interactions</span>(<span class='no'>xgb.model</span>, <span class='no'>data</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"interactions"</span>)</pre>
+    <pre class="usage"><span class='fu'>interactions</span>(<span class='no'>xgb_model</span>, <span class='no'>data</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"interactions"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>xgb.model</th>
+      <th>xgb_model</th>
       <td><p>a xgboost or lightgbm model.</p></td>
     </tr>
     <tr>
@@ -127,9 +130,9 @@ Default "interactions".</p></td>
 
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='st'>"xgboost"</span>)
 <span class='no'>param</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>objective</span> <span class='kw'>=</span> <span class='st'>"binary:logistic"</span>, <span class='kw'>max_depth</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-<span class='no'>xgb.model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/xgboost/topics/xgb.train'>xgboost</a></span>(<span class='no'>sm</span>, <span class='kw'>params</span> <span class='kw'>=</span> <span class='no'>param</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='no'>HR_data</span>[, <span class='no'>left</span>] <span class='kw'>==</span> <span class='fl'>1</span>, <span class='kw'>nrounds</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>0</span>)
+<span class='no'>xgb_model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/xgboost/topics/xgb.train'>xgboost</a></span>(<span class='no'>sm</span>, <span class='kw'>params</span> <span class='kw'>=</span> <span class='no'>param</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='no'>HR_data</span>[, <span class='no'>left</span>] <span class='kw'>==</span> <span class='fl'>1</span>, <span class='kw'>nrounds</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>0</span>)
 
-<span class='no'>inter</span> <span class='kw'>&lt;-</span> <span class='fu'>interactions</span>(<span class='no'>xgb.model</span>, <span class='no'>sm</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"interactions"</span>)
+<span class='no'>inter</span> <span class='kw'>&lt;-</span> <span class='fu'>interactions</span>(<span class='no'>xgb_model</span>, <span class='no'>sm</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"interactions"</span>)
 <span class='no'>inter</span></div><div class='output co'>#&gt;                   Parent                Child   sumGain frequency
 #&gt;  1:      last_evaluation average_montly_hours 745.59427         2
 #&gt;  2:      last_evaluation   satisfaction_level 708.87227         4
@@ -147,7 +150,7 @@ Default "interactions".</p></td>
 #&gt; 14:   time_spend_company       number_project  39.78419         1
 #&gt; 15:       number_project      last_evaluation  19.02951         1
 #&gt; 16:            salarylow         salarymedium  14.38998         1</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>inter</span>)</div><div class='img'><img src='interactions-1.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='no'>inter</span> <span class='kw'>&lt;-</span> <span class='fu'>interactions</span>(<span class='no'>xgb.model</span>, <span class='no'>sm</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"pairs"</span>)
+<span class='no'>inter</span> <span class='kw'>&lt;-</span> <span class='fu'>interactions</span>(<span class='no'>xgb_model</span>, <span class='no'>sm</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"pairs"</span>)
 <span class='no'>inter</span></div><div class='output co'>#&gt;                   Parent                Child     sumGain frequency
 #&gt;  1:   satisfaction_level       number_project 3573.869457         6
 #&gt;  2:   satisfaction_level   time_spend_company 3421.167467         5
@@ -179,6 +182,51 @@ Default "interactions".</p></td>
 #&gt; 28:        Work_accident      last_evaluation    6.214535         1
 #&gt; 29:       number_project   satisfaction_level    3.267536         2
 #&gt;                   Parent                Child     sumGain frequency</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>inter</span>)</div><div class='img'><img src='interactions-2.png' alt='' width='700' height='433' /></div><div class='input'>
+</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>lightgbm</span>)
+<span class='no'>train_data</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/lightgbm/topics/lgb.Dataset'>lgb.Dataset</a></span>(<span class='no'>sm</span>, <span class='kw'>label</span> <span class='kw'>=</span>  <span class='no'>HR_data</span>[, <span class='no'>left</span>] <span class='kw'>==</span> <span class='fl'>1</span>)
+<span class='no'>params</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>objective</span> <span class='kw'>=</span> <span class='st'>"binary"</span>, <span class='kw'>max_depth</span> <span class='kw'>=</span> <span class='fl'>2</span>)
+<span class='no'>lgb_model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/lightgbm/topics/lgb.train'>lgb.train</a></span>(<span class='no'>params</span>, <span class='no'>train_data</span>, <span class='fl'>50</span>)
+
+<span class='no'>inter</span> <span class='kw'>&lt;-</span> <span class='fu'>interactions</span>(<span class='no'>lgb_model</span>, <span class='no'>sm</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"interactions"</span>)
+<span class='no'>inter</span></div><div class='output co'>#&gt;                   Parent                Child   sumGain frequency
+#&gt;  1:   satisfaction_level   time_spend_company 2434.0047         3
+#&gt;  2:      last_evaluation   satisfaction_level 1595.2254         5
+#&gt;  3:      last_evaluation average_montly_hours 1328.0190         3
+#&gt;  4:      last_evaluation   time_spend_company 1042.6180         2
+#&gt;  5: average_montly_hours   time_spend_company  819.9025         2
+#&gt;  6: average_montly_hours       number_project  453.4923         1
+#&gt;  7: average_montly_hours      last_evaluation  419.0138         1
+#&gt;  8:       number_project      last_evaluation  411.0702         2
+#&gt;  9:   time_spend_company      last_evaluation  341.3317         1
+#&gt; 10: average_montly_hours   satisfaction_level  292.9402         2
+#&gt; 11:   satisfaction_level average_montly_hours  117.5836         1
+#&gt; 12:        Work_accident            salarylow  101.0511         1</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>inter</span>)</div><div class='img'><img src='interactions-3.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='no'>inter</span> <span class='kw'>&lt;-</span> <span class='fu'>interactions</span>(<span class='no'>lgb_model</span>, <span class='no'>sm</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"pairs"</span>)
+<span class='no'>inter</span></div><div class='output co'>#&gt;                   Parent                Child    sumGain frequency
+#&gt;  1:   satisfaction_level       number_project 9845.23985        21
+#&gt;  2:   satisfaction_level   time_spend_company 8171.72215        11
+#&gt;  3:   satisfaction_level   satisfaction_level 2052.78421         5
+#&gt;  4:      last_evaluation   satisfaction_level 1676.85531         6
+#&gt;  5:      last_evaluation average_montly_hours 1328.01895         3
+#&gt;  6:      last_evaluation   time_spend_company 1167.64834         4
+#&gt;  7:   time_spend_company   time_spend_company 1161.58576         6
+#&gt;  8: average_montly_hours   time_spend_company  819.90253         2
+#&gt;  9:   time_spend_company      last_evaluation  612.09506         2
+#&gt; 10: average_montly_hours       number_project  485.28049         4
+#&gt; 11: average_montly_hours      last_evaluation  419.01379         1
+#&gt; 12:       number_project      last_evaluation  411.07022         2
+#&gt; 13: average_montly_hours   satisfaction_level  390.77878         3
+#&gt; 14:   satisfaction_level      last_evaluation  251.55655        10
+#&gt; 15:        Work_accident      last_evaluation  135.70107         1
+#&gt; 16:      last_evaluation      last_evaluation  130.07451         1
+#&gt; 17:        Work_accident average_montly_hours  120.72714         1
+#&gt; 18:   satisfaction_level average_montly_hours  117.58363         1
+#&gt; 19:        Work_accident            salarylow  101.05111         1
+#&gt; 20:   time_spend_company       number_project   78.45094         7
+#&gt; 21:        Work_accident   satisfaction_level   36.56250         3
+#&gt; 22:      last_evaluation       number_project   27.50140         4
+#&gt; 23:   time_spend_company   satisfaction_level   10.43890         1
+#&gt;                   Parent                Child    sumGain frequency</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>inter</span>)</div><div class='img'><img src='interactions-4.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

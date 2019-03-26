@@ -20,7 +20,7 @@
 #'\item "weightedRoot" - mean number of occurrences in the root, which is weighted by gain.
 #'}
 #'
-#' @param xgb.model a xgboost or lightgbm model.
+#' @param xgb_model a xgboost or lightgbm model.
 #' @param data a data table with data used to train the model.
 #' @param option if "variables" then table includes only single variables,
 #'            if "interactions", then only interactions
@@ -28,7 +28,10 @@
 #'            Default "both".
 #'
 #' @return a data table
+#'
 #' @import data.table
+#' @importFrom stats frequency
+#' @importFrom stats weighted.mean
 #'
 #' @examples
 #' library("EIX")
@@ -37,37 +40,53 @@
 #'
 #' library("xgboost")
 #' param <- list(objective = "binary:logistic", max_depth = 2)
-#' xgb.model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 50, verbose=0)
+#' xgb_model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 50, verbose=0)
 #'
-#' imp <- importance(xgb.model, sm, option = "both")
+#' imp <- importance(xgb_model, sm, option = "both")
 #' imp
 #' plot(imp,  top = 10)
 #'
-#' imp <- importance(xgb.model, sm, option = "variables")
+#' imp <- importance(xgb_model, sm, option = "variables")
 #' imp
 #' plot(imp,  top = nrow(imp))
 #'
-#'  imp <- importance(xgb.model, sm, option = "interactions")
+#'  imp <- importance(xgb_model, sm, option = "interactions")
 #'  imp
 #' plot(imp,  top = 10)
 #'
-#'  imp <- importance(xgb.model, sm, option = "variables")
+#'  imp <- importance(xgb_model, sm, option = "variables")
 #'  imp
 #' plot(imp, top = 10, radar = FALSE, xmeasure = "sumCover", ymeasure = "sumGain")
 #'
+#'\dontrun{
+#'library(lightgbm)
+#'train_data <- lgb.Dataset(sm, label =  HR_data[, left] == 1)
+#'params <- list(objective = "binary", max_depth = 2)
+#'lgb_model <- lgb.train(params, train_data, 50)
+#'
+#' imp <- importance(lgb_model, sm, option = "both")
+#' imp
+#' plot(imp,  top = 10)
+#'
+#' imp <- importance(lgb_model, sm, option = "variables")
+#' imp
+#' plot(imp, top = 10, radar = FALSE, xmeasure = "sumCover", ymeasure = "sumGain")
+#'
+#'}
+#'
 #' @export
 
-importance <- function(xgb.model, data, option = "both"){
+importance <- function(xgb_model, data, option = "both"){
   importance <- NULL
 
   if (option == "both") {
-    importance <- importanceTableMixed(xgb.model, data)
+    importance <- importanceTableMixed(xgb_model, data)
   }
   if (option == "variables") {
-    importance <- importanceSingleVariable(xgb.model, data)
+    importance <- importanceSingleVariable(xgb_model, data)
   }
   if (option == "interactions") {
-    importance <- importanceInteraction(xgb.model, data)
+    importance <- importanceInteraction(xgb_model, data)
   }
 
   importance <- cbind(importance[, 1], signif(importance[, -1], digits = 4))
@@ -79,11 +98,11 @@ importance <- function(xgb.model, data, option = "both"){
 
 }
 
-importanceTableMixed <- function(xgb.model, data){
+importanceTableMixed <- function(xgb_model, data){
   parentsGain <- childsGain <- name_pair <- Cover <- Feature <-
     Gain <- indx <- . <- Quality <- NULL
 
-  trees <- noLeavesGainTable(xgb.model, data)
+  trees <- noLeavesGainTable(xgb_model, data)
 
   #single variables
   importanceSingle <-
@@ -109,10 +128,10 @@ importanceTableMixed <- function(xgb.model, data){
 }
 
 
-importanceInteraction <- function(xgb.model, data) {
+importanceInteraction <- function(xgb_model, data) {
   parentsGain <- childsGain <- name_pair <- Cover <- . <- Feature <- Gain <- indx <- NULL
 
-  trees <- noLeavesGainTable(xgb.model, data)
+  trees <- noLeavesGainTable(xgb_model, data)
   trees <- trees[interaction == TRUE]
   tress <- trees[, `:=`(Feature = name_pair, Gain = childsGain)]
   tress <- trees[, .(Feature, Gain, Cover)]
@@ -129,10 +148,10 @@ importanceInteraction <- function(xgb.model, data) {
 }
 
 
-importanceSingleVariable <- function(xgb.model, data) {
+importanceSingleVariable <- function(xgb_model, data) {
   Feature <- Gain <- Quality <- Cover <- indx <- . <- NULL
 
-  trees <- noLeavesGainTable(xgb.model, data)
+  trees <- noLeavesGainTable(xgb_model, data)
   trees[, Gain := Quality]
 
   importance1 <- merge(countRoots(trees),calculateWeightedDepth(trees), by = "Feature", all = TRUE)[, -"sumGain"]
@@ -190,11 +209,11 @@ calculateWeightedDepth <- function(trees) {
 }
 
 
-noLeavesGainTable <- function(xgb.model, data) {
+noLeavesGainTable <- function(xgb_model, data) {
   parentsName <- Feature <- Tree <- name_pair <- parentsGain <- childsGain <-
     . <- Cover <- parentsCover <- interaction <- Node <- Quality <- depth <- NULL
 
-  treeList <- calculateGain(xgb.model, data)
+  treeList <- calculateGain(xgb_model, data)
   trees <- rbindlist(treeList)
   trees <- trees[Feature != "Leaf", .(Tree, Node, name_pair, parentsGain, childsGain, Cover,
                                       parentsCover, Feature, Quality, parentsName, interaction, depth)]

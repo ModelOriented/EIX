@@ -19,13 +19,13 @@ Imports:
     ggplot2,
     data.table,
     purrr,
-    tidyr,
     xgboost,
     DALEX,
     ggrepel,
     ggiraphExtra,
     breakDown,
-    Matrix
+    Matrix,
+    tidyr
 RoxygenNote: 6.1.1
 Suggests: knitr,
     rmarkdown,

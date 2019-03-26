@@ -1,3 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^cheatsheets$
+^.*README.*$
+^_pkgdown\.yml$
+^docs$

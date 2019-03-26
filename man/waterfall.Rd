@@ -4,10 +4,10 @@
 \alias{waterfall}
 \title{Explain prediction of a single observation}
 \usage{
-waterfall(xgb.model, new_observation, option = "interactions", baseline = 0)
+waterfall(xgb_model, new_observation, option = "interactions", baseline = 0)
 }
 \arguments{
-\item{xgb.model}{a xgboost or lightgbm model.}
+\item{xgb_model}{a xgboost model.}
 
 \item{new_observation}{a new observation.}
 
@@ -24,10 +24,10 @@ an object of the broken class
 }
 \description{
 This function calculates a table with influence of variables and interactions
-on the prediction of a given observation.
+on the prediction of a given observation. It supports only xgboost models.
 }
 \details{
-Function contains code or pieces of code
+The function contains code or pieces of code
 from \code{breakDown} code created by Przemysław Biecek
 and \code{xgboostExplainer} code created by David Foster.
 }
@@ -38,10 +38,10 @@ sm <- sparse.model.matrix(left ~ . - 1,  data = HR_data)
 
 library("xgboost")
 param <- list(objective = "binary:logistic", max_depth = 2)
-xgb.model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 50, verbose=0)
+xgb_model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 50, verbose=0)
 
 new_observation <- sm[9,]
-wf <- waterfall(xgb.model, new_observation,  option = "interactions")
+wf <- waterfall(xgb_model, new_observation,  option = "interactions")
 wf
 plot(wf)
 

@@ -5,15 +5,12 @@
 #' It includes gain value, depth and ID of each nodes.
 #' The second table contains similarly information about roots in the trees.
 #'
-#' @param xgb.model a xgboost or lightgbm model.
+#' @param xgb_model a xgboost or lightgbm model.
 #' @param data a data table with data used to train the model.
 #'
 #' @return an object of the lollipop class
 #'
 #' @import data.table
-#' @import ggplot2
-#' @import DALEX
-#' @import ggrepel
 #'
 #' @examples
 #' library("EIX")
@@ -22,19 +19,30 @@
 #'
 #' library("xgboost")
 #' param <- list(objective = "binary:logistic", max_depth = 2)
-#' xgb.model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 50, verbose=0)
+#' xgb_model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 50, verbose=0)
 #'
-#' lolli <- lollipop(xgb.model, sm)
+#' lolli <- lollipop(xgb_model, sm)
 #' plot(lolli, labels = "topAll", log_scale = TRUE)
+#'
+#'\dontrun{
+#'library(lightgbm)
+#'train_data <- lgb.Dataset(sm, label =  HR_data[, left] == 1)
+#'params <- list(objective = "binary", max_depth = 2)
+#'lgb_model <- lgb.train(params, train_data, 50)
+#'
+#' lolli <- lollipop(lgb_model, sm)
+#' plot(lolli, labels = "topAll", log_scale = TRUE)
+#'
+#'}
 #'
 #' @export
 
-lollipop <- function(xgb.model, data){
+lollipop <- function(xgb_model, data){
 
   Feature <- Quality <- Node <- Tree <- ID <- depth <-
     interaction <- . <- parentsName <- name_pair <- NULL
 
-  trees = rbindlist(calculateGain(xgb.model, data))
+  trees = rbindlist(calculateGain(xgb_model, data))
   roots <- trees[Node == 0, .(Quality, Feature, Tree, ID, depth)]
   nodes <- trees[Feature != "Leaf", .(Quality,
                                       Feature,

@@ -1,13 +1,13 @@
 #' Explain prediction of a single observation
 #'
 #' This function calculates a table with influence of variables and interactions
-#' on the prediction of a given observation.
+#' on the prediction of a given observation. It supports only xgboost models.
 #'
-#' Function contains code or pieces of code
+#' The function contains code or pieces of code
 #' from \code{breakDown} code created by Przemysław Biecek
 #' and \code{xgboostExplainer} code created by David Foster.
 #'
-#' @param xgb.model a xgboost model.
+#' @param xgb_model a xgboost model.
 #' @param new_observation a new observation.
 #' @param option  if "variables", the plot includes only single variables,
 #'            if "interactions", then only interactions.
@@ -19,8 +19,8 @@
 #' @return an object of the broken class
 #'
 #' @import data.table
-#' @import xgboost
-#' @import breakDown
+#' @importFrom xgboost slice
+#' @importFrom xgboost xgb.DMatrix
 #'
 #' @examples
 #' library("EIX")
@@ -29,21 +29,23 @@
 #'
 #' library("xgboost")
 #' param <- list(objective = "binary:logistic", max_depth = 2)
-#' xgb.model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 50, verbose=0)
+#' xgb_model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 50, verbose=0)
 #'
 #' new_observation <- sm[9,]
-#' wf <- waterfall(xgb.model, new_observation,  option = "interactions")
+#' wf <- waterfall(xgb_model, new_observation,  option = "interactions")
 #' wf
 #' plot(wf)
 #'
 #' @export
+#'
 
-waterfall <- function(xgb.model, new_observation, option = "interactions", baseline = 0){
+
+waterfall <- function(xgb_model, new_observation, option = "interactions", baseline = 0){
   #uses pieces of breakDown code created by Przemysław Biecek
-  Feature <- NULL
+  Feature <- intercept <- NULL
 
   col_names <- colnames(new_observation)
-  trees = xgb.model.dt.tree(col_names, model = xgb.model)
+  trees = xgb.model.dt.tree(col_names, model = xgb_model)
 
   if (option == "interactions") {
     tree_list = getStatsForTreesInter(trees, type = "binary", base_score = .5)
@@ -55,20 +57,38 @@ waterfall <- function(xgb.model, new_observation, option = "interactions", basel
   explainer = buildExplainerFromTreeList(tree_list,names(table(rbindlist(tree_list)[,Feature])))
   new_observation_DM <- slice(xgb.DMatrix(t(new_observation)), as.integer(1))
 
-  breakdown = explainPredictions(xgb.model, explainer, new_observation_DM)
-  df<-data.frame(
-    variable = colnames(breakdown), #,"=", sapply(new_observation_data[colnames(breakdown)], as.character)),
+  breakdown = explainPredictions(xgb_model, explainer, new_observation_DM)
+
+  #variable_value including interaction
+  ilabels <- grep(colnames(breakdown), pattern = ":", value = TRUE)
+  for (interact in ilabels) {
+    vars <- strsplit(interact, split = ":")[[1]]
+    new_observation[interact] <- paste0(new_observation[vars],collapse = ":")
+  }
+
+  df_intercept <- breakdown[,intercept]
+  breakdown <- breakdown[,`:=`(intercept = NULL, Leaf = NULL)]
+
+  df <- data.frame(
+    variable = paste(colnames(breakdown),  "=",
+                     sapply(new_observation[colnames(breakdown)], as.character)),
     contribution = as.numeric(breakdown),
     variable_name = colnames(breakdown),
-    variable_value = NA#sapply(new_observation_data[colnames(breakdown)], as.character)
+    variable_value = sapply(new_observation[colnames(breakdown)], as.character)
   )[as.numeric(breakdown) != 0, ]
   df <- df[order(abs(df[, 2]), decreasing = TRUE), ]
-  df <- as.data.frame(df)
+  broken_sorted <- as.data.frame(df)
 
-  df_intercept <- df[which(df[, 3] == "intercept"), ]
-  df <- df[-which(df[, 3] == "intercept"), ]
-
-  broken_sorted <- rbind(df_intercept, df)
+  if (tolower(baseline) == "intercept"){
+    baseline <- df_intercept
+  }else{
+    broken_sorted <- rbind(
+      data.frame(variable = "(Intercept)",
+                 contribution = df_intercept - baseline,
+                 variable_name = "Intercept",
+                 variable_value = 1),
+      broken_sorted)
+  }
   breakDown:::create.broken(broken_sorted, baseline)
 }
 
@@ -170,15 +190,15 @@ getStatsForTrees = function(trees, nodes.train,type = "binary", base_score = 0.5
 
 
   # The default cover (H) seems to lose precision so this loop recalculates it for each node of each tree
-  cat('\n\nRecalculating the cover for each non-leaf... \n')
-  pb <- txtProgressBar(style = 3)
-  j = 0
+  # cat('\n\nRecalculating the cover for each non-leaf... \n')
+  # pb <- txtProgressBar(style = 3)
+  # j = 0
   for (i in rev(non.leaves)) {
     left = tree_list[i, Yes]
     right = tree_list[i, No]
     tree_list[i, H := tree_list[ID == left, H] + tree_list[ID == right, H]]
-    j = j + 1
-    setTxtProgressBar(pb, j / length(non.leaves))
+    # j = j + 1
+    # setTxtProgressBar(pb, j / length(non.leaves))
   }
 
 
@@ -312,16 +332,16 @@ findPath = function(tree, currentnode, path = c()) {
 
 }
 
+#' @importFrom stats predict
 
-
-explainPredictions = function(xgb.model, explainer , data) {
+explainPredictions = function(xgb_model, explainer , data) {
 
   #code comes from xgboostExplainer package created by David Foster
   tree <- NULL
   #Accepts data table of the breakdown for each leaf of each tree and the node matrix
   #Returns the breakdown for each prediction as a data table
 
-  nodes = predict(xgb.model, data, predleaf = TRUE)
+  nodes = predict(xgb_model, data, predleaf = TRUE)
 
   colnames = names(explainer)[1:(ncol(explainer) - 2)]
 

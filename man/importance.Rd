@@ -4,10 +4,10 @@
 \alias{importance}
 \title{Importance of variables and interactions in the model}
 \usage{
-importance(xgb.model, data, option = "both")
+importance(xgb_model, data, option = "both")
 }
 \arguments{
-\item{xgb.model}{a xgboost or lightgbm model.}
+\item{xgb_model}{a xgboost or lightgbm model.}
 
 \item{data}{a data table with data used to train the model.}
 
@@ -48,22 +48,38 @@ sm <- sparse.model.matrix(left ~ . - 1,  data = HR_data)
 
 library("xgboost")
 param <- list(objective = "binary:logistic", max_depth = 2)
-xgb.model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 50, verbose=0)
+xgb_model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 50, verbose=0)
 
-imp <- importance(xgb.model, sm, option = "both")
+imp <- importance(xgb_model, sm, option = "both")
 imp
 plot(imp,  top = 10)
 
-imp <- importance(xgb.model, sm, option = "variables")
+imp <- importance(xgb_model, sm, option = "variables")
 imp
 plot(imp,  top = nrow(imp))
 
- imp <- importance(xgb.model, sm, option = "interactions")
+ imp <- importance(xgb_model, sm, option = "interactions")
  imp
 plot(imp,  top = 10)
 
- imp <- importance(xgb.model, sm, option = "variables")
+ imp <- importance(xgb_model, sm, option = "variables")
  imp
 plot(imp, top = 10, radar = FALSE, xmeasure = "sumCover", ymeasure = "sumGain")
+
+\dontrun{
+library(lightgbm)
+train_data <- lgb.Dataset(sm, label =  HR_data[, left] == 1)
+params <- list(objective = "binary", max_depth = 2)
+lgb_model <- lgb.train(params, train_data, 50)
+
+imp <- importance(lgb_model, sm, option = "both")
+imp
+plot(imp,  top = 10)
+
+imp <- importance(lgb_model, sm, option = "variables")
+imp
+plot(imp, top = 10, radar = FALSE, xmeasure = "sumCover", ymeasure = "sumGain")
+
+}
 
 }

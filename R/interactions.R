@@ -13,7 +13,7 @@
 #'      As strong interactions should be considered only these pairs of variables,
 #'      where variable on the bottom (child) has higher gain than variable on the top (parent).
 #'
-#' @param xgb.model a xgboost or lightgbm model.
+#' @param xgb_model a xgboost or lightgbm model.
 #' @param data a data table with data used to train the model.
 #' @param option if "interactions", the table contains interactions,
 #'            if "pairs", this table contains all the pairs in the model.
@@ -21,11 +21,9 @@
 #'
 #' @return a data table
 #'
-#' @import stats
-#' @import utils
 #' @import data.table
-#' @import purrr
-#' @import tidyr
+#' @importFrom purrr map
+#' @importFrom stats frequency
 #'
 #' @examples
 #' library("EIX")
@@ -34,32 +32,47 @@
 #'
 #' library("xgboost")
 #' param <- list(objective = "binary:logistic", max_depth = 2)
-#' xgb.model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 50, verbose=0)
+#' xgb_model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 50, verbose=0)
 #'
-#' inter <- interactions(xgb.model, sm, option = "interactions")
+#' inter <- interactions(xgb_model, sm, option = "interactions")
 #' inter
 #' plot(inter)
 #'
-#' inter <- interactions(xgb.model, sm, option = "pairs")
+#' inter <- interactions(xgb_model, sm, option = "pairs")
 #' inter
 #' plot(inter)
+#'
+#' \dontrun{
+#'library(lightgbm)
+#'train_data <- lgb.Dataset(sm, label =  HR_data[, left] == 1)
+#'params <- list(objective = "binary", max_depth = 2)
+#'lgb_model <- lgb.train(params, train_data, 50)
+#'
+#' inter <- interactions(lgb_model, sm, option = "interactions")
+#' inter
+#' plot(inter)
+#'
+#' inter <- interactions(lgb_model, sm, option = "pairs")
+#' inter
+#' plot(inter)
+#'}
 #'
 #' @export
 #'
 #'
 
-interactions <- function(xgb.model, data, option = "interactions"){
+interactions <- function(xgb_model, data, option = "interactions"){
   Child <- Parent <- Feature <- sumGain <- . <- NULL
 
   if (option == "interactions") {
-    gainTable <- importanceInteraction(xgb.model, data)[, .(Feature, sumGain, frequency)]
+    gainTable <- importanceInteraction(xgb_model, data)[, .(Feature, sumGain, frequency)]
     gainTable <-gainTable[, `:=`(Parent = as.vector(unlist(map(strsplit(gainTable[, Feature], "[:]"), 1))),
                                  Child = as.vector(unlist(map(strsplit(gainTable[, Feature], "[:]"), 2))))]
     gainTable <- gainTable[, -1]
     gainTable <- gainTable[,.(Parent, Child, sumGain, frequency)]
   }
   if (option == "pairs") {
-    gainTable <- calculatePairsGainTable(xgb.model, data)
+    gainTable <- calculatePairsGainTable(xgb_model, data)
   }
   class(gainTable) <- c("interactions", "data.table")
   return(gainTable)
@@ -67,10 +80,10 @@ interactions <- function(xgb.model, data, option = "interactions"){
 }
 
 #calculatePairsGainTable containing gains of all variables' pairs occur in the model.
-calculatePairsGainTable <- function(xgb.model, data) {
+calculatePairsGainTable <- function(xgb_model, data) {
   name_pair <- childsGain <- Parent <- Child <- sumGain <- N <- . <- NULL
 
-  treeList <- calculateGain(xgb.model, data)
+  treeList <- calculateGain(xgb_model, data)
   trees <- rbindlist(treeList)
 
   importanceCount <- data.table(table(trees[, "name_pair"],dnn = "name_pair"))
