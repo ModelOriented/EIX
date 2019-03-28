@@ -27,6 +27,8 @@
 #'               six measures of variables' or interactions' importance in the model.
 #'               If FALSE the plot containing two chosen measures
 #'               of variables' or interactions' importance in the model.
+#' @param text_start_point place, where the names of the particular feature start. Available for `radar=TRUE`. Range from 0 to 1. Default 0.5.
+#' @param text_size size of the text on the plot. Default 3.5.
 #' @param xmeasure measure on the x-axis.Available for `radar=FALSE`. Default "sumCover".
 #' @param ymeasure measure on the y-axis. Available for `radar=FALSE`. Default "sumGain".
 #' @param ... other parameters.
@@ -35,7 +37,7 @@
 #'
 #' @import ggplot2
 #' @import data.table
-#' @importFrom DALEX theme_mi2
+#' @importFrom DALEX theme_drwhy
 #' @importFrom ggrepel geom_label_repel
 #' @importFrom ggiraphExtra coord_radar
 #'
@@ -83,7 +85,7 @@
 #' @export
 
 
-plot.importance <- function(x, ...,  top = 10, radar = TRUE,
+plot.importance <- function(x, ...,  top = 10, radar = TRUE, text_start_point = 0.5, text_size=3.5,
                                  xmeasure = "sumCover", ymeasure = "sumGain"){
 
   Feature <- sumGain <- sumCover <- meanGain <- meanCover <-
@@ -97,7 +99,7 @@ plot.importance <- function(x, ...,  top = 10, radar = TRUE,
     ggplot(data.frame(x[1:top, ]),
            aes_string(x = xmeasure, y = ymeasure, label = "Feature")) +
       geom_point() +
-      scale_size() + geom_label_repel() + theme_mi2()
+      scale_size() + geom_label_repel() + theme_drwhy()
 
   }else{
     import <- as.data.table(x[1:top, ])
@@ -108,25 +110,34 @@ plot.importance <- function(x, ...,  top = 10, radar = TRUE,
                               meanCover = meanCover / max(import[, meanCover]),
                               mean5Gain = mean5Gain / max(import[, mean5Gain]),
                               frequency = frequency / max(import[, frequency]))]
+    data<-import[,Feature:= ifelse(nchar(import[,Feature])>20, gsub(":", ": :",import[,Feature]),Feature)]
 
     import$Feature <- factor(import$Feature, levels = import$Feature[order(import$sumGain, decreasing = TRUE)])
-    data_to_plot <- melt(import, id = 1, measures = 2:6)
+
+    #angles and hjust of labels
+    numberOfBars=nrow(import)
+    angle= 90-360*(row(import)[,1]-0.5)/numberOfBars
+
+    import$hjust<-ifelse( angle < -90, 1, 0)
+    import$angle<-ifelse(angle < -90, angle+180, angle)
+
+    data_to_plot <- melt(import, id = c(1,8,9), measures = 2:6, value.factor = FALSE)
+    data<-data_to_plot[,.(hjust=mean(hjust),angle=mean(angle)), by=Feature]
 
     ggplot(data.frame(data_to_plot),
            aes(x = Feature, y = value, colour = variable, group = variable)) +
       geom_line(size = 1.5) +
       geom_point(size = 2.5) +
-      theme_mi2() +
+      theme_drwhy() +
       theme(axis.title.x = element_blank(),
             axis.title.y = element_blank(),
-            #axis.text.x = element_text(angle=45),
             legend.position = "bottom",
-            #axis.text.y = element_blank(),
             panel.grid.major.y = element_line(colour = "gray68", linetype = "dashed", size = 0.4),
             axis.line = element_blank(),
-            plot.margin = margin(40, 40, 40, 40)) +
-      labs(fill = "Measures") +
-      coord_radar()+
-      scale_x_discrete(labels = lapply(strwrap(import[,Feature], width = 10, simplify = FALSE), paste, collapse="\n"))
+            axis.text.x=element_blank(),) +
+      labs(fill = "Measures")+
+      coord_radar() +
+      geom_text(data=data, aes(x=Feature, y= rep(text_start_point,top), label=lapply(strwrap(data[,Feature], width = 10, simplify = FALSE), paste, collapse="\n"), hjust=hjust), color="#371ea3", fontface="bold",alpha=0.6, size=text_size, angle= data$angle, inherit.aes = FALSE )
+
   }
 }

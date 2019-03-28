@@ -90,7 +90,8 @@ and scatter plot with two choosen measures.</p>
 
     <pre class="usage"><span class='co'># S3 method for importance</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>top</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>radar</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>xmeasure</span> <span class='kw'>=</span> <span class='st'>"sumCover"</span>, <span class='kw'>ymeasure</span> <span class='kw'>=</span> <span class='st'>"sumGain"</span>)</pre>
+  <span class='kw'>text_start_point</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>text_size</span> <span class='kw'>=</span> <span class='fl'>3.5</span>, <span class='kw'>xmeasure</span> <span class='kw'>=</span> <span class='st'>"sumCover"</span>,
+  <span class='kw'>ymeasure</span> <span class='kw'>=</span> <span class='st'>"sumGain"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -113,6 +114,14 @@ and scatter plot with two choosen measures.</p>
 six measures of variables' or interactions' importance in the model.
 If FALSE the plot containing two chosen measures
 of variables' or interactions' importance in the model.</p></td>
+    </tr>
+    <tr>
+      <th>text_start_point</th>
+      <td><p>place, where the names of the particular feature start. Available for `radar=TRUE`. Range from 0 to 1. Default 0.5.</p></td>
+    </tr>
+    <tr>
+      <th>text_size</th>
+      <td><p>size of the text on the plot. Default 3.5.</p></td>
     </tr>
     <tr>
       <th>xmeasure</th>
@@ -340,7 +349,7 @@ of variables' or interactions' importance in the model.</p></td>
 #&gt; 4:    120.7      2228        26     303.5
 #&gt; 5:    223.3      3042        10     331.0
 #&gt; 6:    124.0      3750         3     124.0
-#&gt; 7:    101.1      3208         1     101.1</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>imp</span>, <span class='kw'>top</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>radar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>xmeasure</span> <span class='kw'>=</span> <span class='st'>"sumCover"</span>, <span class='kw'>ymeasure</span> <span class='kw'>=</span> <span class='st'>"sumGain"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Removed 3 rows containing missing values (geom_point).</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Removed 3 rows containing missing values (geom_label_repel).</span></div><div class='img'><img src='plot.importance-6.png' alt='' width='700' height='433' /></div><div class='input'>
+#&gt; 7:    101.1      3208         1     101.1</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>imp</span>, <span class='kw'>top</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>radar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>xmeasure</span> <span class='kw'>=</span> <span class='st'>"sumCover"</span>, <span class='kw'>ymeasure</span> <span class='kw'>=</span> <span class='st'>"sumGain"</span>)</div><div class='img'><img src='plot.importance-6.png' alt='' width='700' height='433' /></div><div class='input'>
 </div><div class='input'>
 </div></pre>
   </div>

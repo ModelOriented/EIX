@@ -7,6 +7,8 @@
 #'               and variables in the roots (horizontal label) will be displayed,
 #'               if "interactions" then labels for all interactions,
 #'               if "roots" then labels for all variables in the root.
+#' @param threshold  on the plot will occur only labels with Gain higher than `threshold` of the max Gain value in the model.
+#'                   The lower threshold, the more labels on the plot. Range from 0 to 1. Default 0.1.
 #' @param log  TRUE/FALSE logarithmic scale on the plot. Default TRUE.
 #' @param ... other parameters.
 #'
@@ -14,11 +16,12 @@
 #'
 #' @import data.table
 #' @import ggplot2
-#' @importFrom DALEX theme_mi2
+#' @importFrom DALEX theme_drwhy
 #' @importFrom ggrepel geom_label_repel
 #' @importFrom ggrepel geom_text_repel
 #'
 #' @examples
+#' options(warn = -1)
 #' library("EIX")
 #' library("Matrix")
 #' sm <- sparse.model.matrix(left ~ . - 1,  data = HR_data)
@@ -42,7 +45,7 @@
 #'
 #' @export
 
-plot.lollipop<-function(x, ..., labels = "topAll", log = TRUE){
+plot.lollipop<-function(x, ..., labels = "topAll", log = TRUE, threshold=0.1){
 
   Tree <- Quality <- depth <- Feature <- NULL
   nodes <- x[[1]]
@@ -57,24 +60,23 @@ plot.lollipop<-function(x, ..., labels = "topAll", log = TRUE){
     switch(labels,
            topAll = {
              p + geom_text_repel(data = data.frame(nodes),
-                                 aes(label = ifelse((interaction == TRUE) & (Quality > 0.1 * (max(nodes[, Quality]))), Feature, '')),
+                                 aes(label = ifelse((interaction == TRUE) & (Quality > threshold * (max(nodes[, Quality]))), Feature, '')),
                                  angle = 90, nudge_y = 0.05, direction  = "x", vjust = 0, segment.size = 0.2) +
                  geom_label_repel(data = data.frame(roots),
-                                aes(label = ifelse(Quality > 0.1 * (max(nodes[, Quality] )), Feature, '')))
+                                aes(label = ifelse(Quality > threshold * (max(nodes[, Quality] )), Feature, '')))
            },
            interactions = {
              p + geom_text_repel(data = data.frame(nodes),
-                                                 aes(label = ifelse(( interaction == TRUE ), Feature, '')),
+                                                 aes(label = ifelse(( interaction == TRUE ) & (Quality > threshold * (max(nodes[, Quality]))), Feature, '')),
                                                  angle = 90, nudge_y = 0.05, direction  = "x", vjust = 0, segment.size = 0.2 )
            },
            roots = {
-             p + geom_label_repel(data = data.frame(roots), aes(label = Feature))
+             p + geom_label_repel(data = data.frame(roots), aes(label = ifelse(Quality > threshold * (max(nodes[, Quality])), Feature, '')))
            })}
 
-  p <- p + theme_mi2() + ylab("Gain") +
+  p <- p + theme_drwhy()+ ylab("Gain") +
     scale_shape_discrete("Depth") +
     scale_colour_discrete("Depth") + if (log) {scale_x_continuous(trans = 'log10')}
-
   p
 }
 

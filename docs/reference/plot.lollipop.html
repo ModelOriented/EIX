@@ -87,7 +87,8 @@
     
 
     <pre class="usage"><span class='co'># S3 method for lollipop</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>labels</span> <span class='kw'>=</span> <span class='st'>"topAll"</span>, <span class='kw'>log</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>labels</span> <span class='kw'>=</span> <span class='st'>"topAll"</span>, <span class='kw'>log</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>threshold</span> <span class='kw'>=</span> <span class='fl'>0.1</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -111,6 +112,11 @@ if "roots" then labels for all variables in the root.</p></td>
       <th>log</th>
       <td><p>TRUE/FALSE logarithmic scale on the plot. Default TRUE.</p></td>
     </tr>
+    <tr>
+      <th>threshold</th>
+      <td><p>on the plot will occur only labels with Gain higher than `threshold` of the max Gain value in the model.
+The lower threshold, the more labels on the plot. Range from 0 to 1. Default 0.1.</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -119,7 +125,8 @@ if "roots" then labels for all variables in the root.</p></td>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='st'>"EIX"</span>)
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/options'>options</a></span>(<span class='kw'>warn</span> <span class='kw'>=</span> -<span class='fl'>1</span>)
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='st'>"EIX"</span>)
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='st'>"Matrix"</span>)
 <span class='no'>sm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/Matrix/topics/sparse.model.matrix'>sparse.model.matrix</a></span>(<span class='no'>left</span> ~ <span class='no'>.</span> - <span class='fl'>1</span>,  <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>HR_data</span>)
 
@@ -128,14 +135,14 @@ if "roots" then labels for all variables in the root.</p></td>
 <span class='no'>xgb_model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/xgboost/topics/xgb.train'>xgboost</a></span>(<span class='no'>sm</span>, <span class='kw'>params</span> <span class='kw'>=</span> <span class='no'>param</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='no'>HR_data</span>[, <span class='no'>left</span>] <span class='kw'>==</span> <span class='fl'>1</span>, <span class='kw'>nrounds</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>0</span>)
 
 <span class='no'>lolli</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='lollipop.html'>lollipop</a></span>(<span class='no'>xgb_model</span>, <span class='no'>sm</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>lolli</span>, <span class='kw'>labels</span> <span class='kw'>=</span> <span class='st'>"topAll"</span>, <span class='kw'>log_scale</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous x-axis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous x-axis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous x-axis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous x-axis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous x-axis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous x-axis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Removed 7 rows containing missing values (geom_text_repel).</span></div><div class='img'><img src='plot.lollipop-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>lolli</span>, <span class='kw'>labels</span> <span class='kw'>=</span> <span class='st'>"topAll"</span>, <span class='kw'>log_scale</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='plot.lollipop-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>lightgbm</span>)
 <span class='no'>train_data</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/lightgbm/topics/lgb.Dataset'>lgb.Dataset</a></span>(<span class='no'>sm</span>, <span class='kw'>label</span> <span class='kw'>=</span>  <span class='no'>HR_data</span>[, <span class='no'>left</span>] <span class='kw'>==</span> <span class='fl'>1</span>)
 <span class='no'>params</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>objective</span> <span class='kw'>=</span> <span class='st'>"binary"</span>, <span class='kw'>max_depth</span> <span class='kw'>=</span> <span class='fl'>3</span>)
 <span class='no'>lgb_model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/lightgbm/topics/lgb.train'>lgb.train</a></span>(<span class='no'>params</span>, <span class='no'>train_data</span>, <span class='fl'>50</span>)
 
 <span class='no'>lolli</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='lollipop.html'>lollipop</a></span>(<span class='no'>lgb_model</span>, <span class='no'>sm</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>lolli</span>, <span class='kw'>labels</span> <span class='kw'>=</span> <span class='st'>"topAll"</span>, <span class='kw'>log_scale</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous x-axis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous x-axis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous x-axis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous x-axis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous x-axis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Transformation introduced infinite values in continuous x-axis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Removed 15 rows containing missing values (geom_text_repel).</span></div><div class='img'><img src='plot.lollipop-2.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>lolli</span>, <span class='kw'>labels</span> <span class='kw'>=</span> <span class='st'>"topAll"</span>, <span class='kw'>log_scale</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='plot.lollipop-2.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

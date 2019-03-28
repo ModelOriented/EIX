@@ -14,7 +14,7 @@
 #'
 #' @import data.table
 #' @import ggplot2
-#' @importFrom DALEX theme_mi2
+#' @importFrom DALEX theme_drwhy
 #'
 #' @examples
 #' library("EIX")
@@ -65,11 +65,11 @@ plot.interactions <- function(x, ...) {
 
   ggplot(data.frame(x), aes(Child, Parent, sumGain)) +
     geom_tile(aes(fill = breaks)) +
-    theme_mi2() +
+    theme_drwhy() +
     theme(axis.text.x = element_text(hjust = 1, angle = 90),
           axis.text.y = element_text(hjust = 1, angle = 0)) +
     scale_fill_manual(name = "sumGain",
-                      values = c("#ffffff", "#ccccff", "#7f7fff", "#3232ff"),
+                      values = c("#f4f5ff", "#ccccff", "#7f7fff", "#3232ff"),
                       drop = FALSE,
                       breaks = levels(x$breaks),
                       labels = c("very low", "low", "medium", "high")) +

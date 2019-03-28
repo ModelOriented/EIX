@@ -21,6 +21,7 @@ It includes gain value, depth and ID of each nodes.
 The second table contains similarly information about roots in the trees.
 }
 \examples{
+options(warn = -1)
 library("EIX")
 library("Matrix")
 sm <- sparse.model.matrix(left ~ . - 1,  data = HR_data)

@@ -273,18 +273,6 @@ knitr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentat
 </tr>
 </tbody>
 </table>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># library("lightgbm")</span>
-<span class="co"># </span>
-<span class="co"># lgb.train.data &lt;- lgb.Dataset(sparse_matrix, label = label)</span>
-<span class="co"># lgb.params = list(objective = "binary",max_depth=4)</span>
-<span class="co"># </span>
-<span class="co"># lgb.model &lt;- lgb.train(lgb.params, lgb.train.data, 100)</span>
-<span class="co"># library(lightgbm)</span>
-<span class="co"># </span>
-<span class="co"># lgb.train.data &lt;- lgb.Dataset(sparse_matrix, label = label)</span>
-<span class="co"># lgb.params = list(objective = "binary",max_depth=2)</span>
-<span class="co"># </span>
-<span class="co"># xgb_model &lt;- lgb.train(lgb.params, lgb.train.data, 100)</span></code></pre></div>
 <p>Function <code><a href="https://www.rdocumentation.org/packages/xgboost/topics/xgb.importance">xgboost::xgb.importance</a></code> shows importance of single variables. <code>EIX</code> adds new measures of variables’ importance and shows also importance of interactions.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/knitr/topics/kable">kable</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(xgboost<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/xgboost/topics/xgb.importance">xgb.importance</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colnames">colnames</a></span>(sparse_matrix),xgb_model)))</code></pre></div>
 <table class="table">
@@ -343,8 +331,11 @@ knitr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentat
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lolli&lt;-<span class="kw"><a href="../reference/lollipop.html">lollipop</a></span>(xgb_model,sparse_matrix)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(lolli)</code></pre></div>
 <p><img src="EIX_files/figure-html/unnamed-chunk-6-1.png" width="576" style="display: block; margin: auto;"></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#plot(lolli, labels="roots")</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#plot(lolli, threshold=0.05)</span>
+<span class="co">#plot(lolli, labels="roots")</span>
 <span class="co">#plot(lolli, labels="interactions")</span>
+<span class="co">#plot(lolli, labels="roots", threshold=0.05)</span>
+<span class="co">#plot(lolli, labels="interactions",threshold=0.05)</span>
 <span class="co">#plot(lolli, log=FALSE)</span></code></pre></div>
 </div>
 <div id="interactions" class="section level2">
@@ -434,7 +425,9 @@ knitr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentat
 <p>The function <code>plot</code> with parameter <code>radar = TRUE</code> enables to compare different measures of variables and interactions importance on the radar plot from <code>ggiraphExtra</code> package. Bellow I attach the example of radar plot. On the outside of the circle there are names of variables or interactions. Colored lines represent various measures of importance. The positions on the plot are sorted decreasing. The variable with the highest <strong>sumGain</strong> value is on the right of 12 o’clock. Next the <strong>sumGain</strong> value decreases in a clockwise direction.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(importance)</code></pre></div>
 <p><img src="EIX_files/figure-html/unnamed-chunk-10-1.png" width="576" style="display: block; margin: auto;"></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#plot(importance, top=15)</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#plot(importance, text_start_point = 0.3)</span>
+<span class="co">#plot(importance, text_size = 4)</span>
+<span class="co">#plot(importance, top=15)</span></code></pre></div>
 </div>
 <div id="explanation-of-single-prediction-including-interactions" class="section level2">
 <h2 class="hasAnchor">

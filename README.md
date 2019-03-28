@@ -5,7 +5,7 @@ A set of tools to explain XGBoost and LightGBM models.
 
 Install from GitHub
 ```{r}
-devtools::install_github("ekarbowiak/EIX")
+devtools::install_github("ModelOriented/EIX")
 ```
 
 ## Cheatsheets

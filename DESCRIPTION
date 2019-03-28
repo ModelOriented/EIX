@@ -1,7 +1,7 @@
 Package: EIX
 Title: EIX: Explain Interactions in XGBoost
        Structure mining for XGBoost and LightGBM models
-Version: 0.1
+Version: 0.2
 Authors@R: c(
   person("Ewelina", "Karbowiak", email = "ewelina.karbowiak12@gmail.com", role = c("aut", "cre")),
   person("Przemyslaw", "Biecek", email = "przemyslaw.biecek@gmail.com", role = c("aut","ths"))

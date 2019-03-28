@@ -47,19 +47,6 @@ library("xgboost")
 param <- list(objective = "binary:logistic", max_depth = 2)
 xgb_model <- xgboost(sparse_matrix, params = param, label = HR_data[, left] == 1, nrounds = 50, verbose = FALSE)
 knitr::kable(head(xgboost::xgb.model.dt.tree(colnames(sparse_matrix),xgb_model)))
-
-# library("lightgbm")
-# 
-# lgb.train.data <- lgb.Dataset(sparse_matrix, label = label)
-# lgb.params = list(objective = "binary",max_depth=4)
-# 
-# lgb.model <- lgb.train(lgb.params, lgb.train.data, 100)
-# library(lightgbm)
-# 
-# lgb.train.data <- lgb.Dataset(sparse_matrix, label = label)
-# lgb.params = list(objective = "binary",max_depth=2)
-# 
-# xgb_model <- lgb.train(lgb.params, lgb.train.data, 100)
 ```
 
 Function `xgboost::xgb.importance` shows importance of single variables. `EIX` adds new measures of variables’ importance and shows also importance of interactions.
@@ -80,8 +67,11 @@ The plot is on a logarithmic scale because the initial trees usually are the mos
 ```{r, warning=FALSE, message=FALSE}
 lolli<-lollipop(xgb_model,sparse_matrix)
 plot(lolli)
+#plot(lolli, threshold=0.05)
 #plot(lolli, labels="roots")
 #plot(lolli, labels="interactions")
+#plot(lolli, labels="roots", threshold=0.05)
+#plot(lolli, labels="interactions",threshold=0.05)
 #plot(lolli, log=FALSE)
 ```
 
@@ -152,6 +142,8 @@ Bellow I attach the example of radar plot. On the outside of the circle there ar
 
 ```{r, warning=FALSE, message=FALSE}
 plot(importance)
+#plot(importance, text_start_point = 0.3)
+#plot(importance, text_size = 4)
 #plot(importance, top=15)
 ```
 

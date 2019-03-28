@@ -5,7 +5,8 @@
 \title{Plot importance measures}
 \usage{
 \method{plot}{importance}(x, ..., top = 10, radar = TRUE,
-  xmeasure = "sumCover", ymeasure = "sumGain")
+  text_start_point = 0.5, text_size = 3.5, xmeasure = "sumCover",
+  ymeasure = "sumGain")
 }
 \arguments{
 \item{x}{a result from the `importance` function.}
@@ -18,6 +19,10 @@
 six measures of variables' or interactions' importance in the model.
 If FALSE the plot containing two chosen measures
 of variables' or interactions' importance in the model.}
+
+\item{text_start_point}{place, where the names of the particular feature start. Available for `radar=TRUE`. Range from 0 to 1. Default 0.5.}
+
+\item{text_size}{size of the text on the plot. Default 3.5.}
 
 \item{xmeasure}{measure on the x-axis.Available for `radar=FALSE`. Default "sumCover".}
 
