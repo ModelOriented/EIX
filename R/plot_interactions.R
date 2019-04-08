@@ -7,7 +7,7 @@
 #'      As strong interactions should be considered only these pairs of variables,
 #'      where variable on the bottom (child) has higher gain than variable on the top (parent).
 #'
-#' @param x a result from the `interactions` function.
+#' @param x a result from the \code{interactions} function.
 #' @param ... other parameters.
 #'
 #' @return a ggplot object

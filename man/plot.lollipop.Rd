@@ -8,7 +8,7 @@
   threshold = 0.1)
 }
 \arguments{
-\item{x}{a result from the `lollipop` function.}
+\item{x}{a result from the \code{lollipop} function.}
 
 \item{...}{other parameters.}
 

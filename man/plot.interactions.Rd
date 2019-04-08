@@ -7,7 +7,7 @@
 \method{plot}{interactions}(x, ...)
 }
 \arguments{
-\item{x}{a result from the `interactions` function.}
+\item{x}{a result from the \code{interactions} function.}
 
 \item{...}{other parameters.}
 }

@@ -5,13 +5,15 @@
 \title{Why are our best and most experienced employees leaving prematurely?}
 \format{A data table with 14999 rows and 10 variables}
 \source{
-\url{https://www.kaggle.com/ludobenistant/hr-analytics/data}
+\url{https://www.kaggle.com/ludobenistant/hr-analytics/data}, \url{https://cran.r-project.org/web/packages/breakDown/index.html}
 }
 \description{
 A dataset from Kaggle competition Human Resources Analytics.
 https://www.kaggle.com/ludobenistant/hr-analytics/data
 }
 \details{
+The description of the dataset was copied from the \code{breakDown} package.
+
 \itemize{
    \item  satisfaction_level Level of satisfaction (0-1)
    \item  last_evaluation Time since last performance evaluation (in Years)

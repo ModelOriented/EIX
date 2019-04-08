@@ -21,7 +21,7 @@
 #'\item "weightedRoot" - mean number of occurrences in the root, which is weighted by gain.
 #'}
 #'
-#' @param x a result from the `importance` function.
+#' @param x a result from the \code{importance} function.
 #' @param top number of positions on the plot or NULL for all variable. Default 10.
 #' @param radar TRUE/FALSE. If TRUE the plot shows
 #'               six measures of variables' or interactions' importance in the model.

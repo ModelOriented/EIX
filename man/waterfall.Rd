@@ -4,12 +4,19 @@
 \alias{waterfall}
 \title{Explain prediction of a single observation}
 \usage{
-waterfall(xgb_model, new_observation, option = "interactions", baseline = 0)
+waterfall(xgb_model, new_observation, data, type = "binary",
+  option = "interactions", baseline = 0)
 }
 \arguments{
 \item{xgb_model}{a xgboost model.}
 
 \item{new_observation}{a new observation.}
+
+\item{data}{row from the original dataset with the new observation to explain (not one-hot-encoded).
+The param above has to be set to merge categorical features.
+If you dont wont to merge categorical features, set this parameter the same as \code{new_observation}.}
+
+\item{type}{the learning task of the model. Available tasks: "binary" for binary classification  or "regression" for linear regression.}
 
 \item{option}{if "variables", the plot includes only single variables,
 if "interactions", then only interactions.
@@ -40,8 +47,10 @@ library("xgboost")
 param <- list(objective = "binary:logistic", max_depth = 2)
 xgb_model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 50, verbose=0)
 
+require("iBreakDown")
+data <- HR_data[9,-7]
 new_observation <- sm[9,]
-wf <- waterfall(xgb_model, new_observation,  option = "interactions")
+wf <- waterfall(xgb_model, new_observation, data,  option = "interactions")
 wf
 plot(wf)
 

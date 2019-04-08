@@ -2,7 +2,7 @@
 #'
 #' The lollipop plots the model with the most important interactions and variables in the roots.
 #'
-#' @param x a result from the `lollipop` function.
+#' @param x a result from the \code{lollipop} function.
 #' @param labels if "topAll" then labels for the most important interactions (vertical label)
 #'               and variables in the roots (horizontal label) will be displayed,
 #'               if "interactions" then labels for all interactions,

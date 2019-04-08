@@ -9,6 +9,10 @@
 #'
 #' @param xgb_model a xgboost model.
 #' @param new_observation a new observation.
+#' @param data row from the original dataset with the new observation to explain (not one-hot-encoded).
+#'           The param above has to be set to merge categorical features.
+#'           If you dont wont to merge categorical features, set this parameter the same as \code{new_observation}.
+#' @param type the learning task of the model. Available tasks: "binary" for binary classification  or "regression" for linear regression.
 #' @param option  if "variables", the plot includes only single variables,
 #'            if "interactions", then only interactions.
 #'            Default "interaction".
@@ -31,16 +35,17 @@
 #' param <- list(objective = "binary:logistic", max_depth = 2)
 #' xgb_model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 50, verbose=0)
 #'
+#' require("iBreakDown")
+#' data <- HR_data[9,-7]
 #' new_observation <- sm[9,]
-#' wf <- waterfall(xgb_model, new_observation,  option = "interactions")
+#' wf <- waterfall(xgb_model, new_observation, data,  option = "interactions")
 #' wf
 #' plot(wf)
 #'
 #' @export
 #'
-
-
-waterfall <- function(xgb_model, new_observation, option = "interactions", baseline = 0){
+#'
+waterfall <- function(xgb_model, new_observation, data, type = "binary", option = "interactions", baseline = 0){
   #uses pieces of breakDown code created by Przemysław Biecek
   Feature <- intercept <- NULL
 
@@ -48,10 +53,10 @@ waterfall <- function(xgb_model, new_observation, option = "interactions", basel
   trees = xgb.model.dt.tree(col_names, model = xgb_model)
 
   if (option == "interactions") {
-    tree_list = getStatsForTreesInter(trees, type = "binary", base_score = .5)
+    tree_list = getStatsForTreesInter(trees, type, base_score = .5)
   }
   if (option == "variables") {
-    tree_list = getStatsForTrees(trees, type = "binary", base_score = .5)
+    tree_list = getStatsForTrees(trees, type, base_score = .5)
   }
 
   explainer = buildExplainerFromTreeList(tree_list,names(table(rbindlist(tree_list)[,Feature])))
@@ -59,13 +64,55 @@ waterfall <- function(xgb_model, new_observation, option = "interactions", basel
 
   breakdown = explainPredictions(xgb_model, explainer, new_observation_DM)
 
+
+  #merge categorical features
+  df <- as.data.frame(breakdown)
+  for (i in colnames(data)) {
+
+    indexVariable <- grepl(i, colnames(df)) & !(grepl("\\:", colnames(df))) #for single variables
+    if (length(which(indexVariable)) > 1) {
+      df[, i] = sum(df[, indexVariable])        #create new column
+      new_observation[i] <- as.data.frame(data)[, i]     #varianle_value for categorical  variable
+      ix <- which(names(new_observation) %in% names(df[, indexVariable]))       #!delete categorical  features from new observation
+      new_observation <- new_observation[-ix]
+      df <- df[, !(indexVariable)]                              #delete categorical  features from breakdown
+    }
+
+    if (length(which(indexVariable))  == 1) {     #for categorical  features with single occurenses and the rest features
+      new_observation[i] <- as.data.frame(data)[, i]
+      if (i != colnames(df)[indexVariable]) {
+        df[, i] <- df[, indexVariable]
+        df <- df[, !(indexVariable)]
+      }
+    }
+    indexInter <- grepl(i, colnames(df)) & (grepl("\\:", colnames(df))) # for interactions
+    if (length(which(indexInter)) > 1) {
+
+      indexInter1 <- grepl(i, colnames(df)) & (grepl("\\:", colnames(df))) &
+        (unlist(lapply(gregexpr(pattern = i, colnames(df)), `[[`, 1)) < unlist(lapply(gregexpr(pattern = ":", colnames(df)), `[[`, 1)))
+      child <- map(strsplit(colnames(df[, indexInter1, drop = FALSE]), "[:]"), 2)
+      colnames(df)[indexInter1] <- paste(i, child, sep = ":")
+
+      indexInter2 <- grepl(i, colnames(df)) & (grepl("\\:", colnames(df)))&
+        (!(unlist(lapply(gregexpr(pattern = i, colnames(df)), `[[`, 1)) < unlist(lapply(gregexpr(pattern = ":", colnames(df)), `[[`, 1))))
+      parent <- map(strsplit(colnames(df[, indexInter2, drop = FALSE]), "[:]"), 1)
+      colnames(df)[indexInter2] <- paste(parent, i, sep = ":")
+    }
+  }
+  prefixes = unique(gsub("\\.+[1-9]", "", colnames(df[, grepl("\\:", colnames(df))])))
+  interactions <- sapply(prefixes, function(x)sum(df[, startsWith(colnames(df), x)]))
+  single <- as.vector(t(df[, !grepl("\\:", colnames(df))]))
+  names(single) <- colnames(df[, !grepl("\\:", colnames(df))])
+  breakdown <- c(interactions, single)
+
   #variable_value including interaction
-  ilabels <- grep(colnames(breakdown), pattern = ":", value = TRUE)
+  ilabels <- grep(names(breakdown), pattern = ":", value = TRUE)
   for (interact in ilabels) {
     vars <- strsplit(interact, split = ":")[[1]]
     new_observation[interact] <- paste0(new_observation[vars],collapse = ":")
   }
 
+  breakdown <- data.table(t(breakdown))
   df_intercept <- breakdown[,intercept]
   breakdown <- breakdown[,`:=`(intercept = NULL, Leaf = NULL)]
 
@@ -83,21 +130,44 @@ waterfall <- function(xgb_model, new_observation, option = "interactions", basel
     baseline <- df_intercept
   }else{
     broken_sorted <- rbind(
-      data.frame(variable = "(Intercept)",
+      data.frame(variable = "intercept",
                  contribution = df_intercept - baseline,
-                 variable_name = "Intercept",
+                 variable_name = "intercept",
                  variable_value = 1),
       broken_sorted)
   }
-  breakDown:::create.broken(broken_sorted, baseline)
+
+
+  create.broken(broken_sorted, baseline)
+}
+
+create.broken <- function(broken_intercept, baseline = 0) {
+  #code was copied from breakDown package created by Przemysław Biecek (with small modyfications to can use plot from iBreakDown package)
+  broken_cumm <- data.frame(broken_intercept,
+                            cummulative = cumsum(as.numeric(broken_intercept$contribution)),
+                            sign = factor(sign(as.numeric(broken_intercept$contribution)), levels = c(-1, 0, 1)),
+                            position = length(broken_intercept$variable) - seq_along(broken_intercept$variable) + 2,
+                            label = rep("xgboost", nrow(broken_intercept)))
+  broken_cumm <- rbind(broken_cumm,
+                       data.frame(variable = "prediction",
+                                  contribution = sum(broken_cumm$contribution),
+                                  variable_name = "",
+                                  variable_value = "",
+                                  cummulative = sum(broken_cumm$contribution),
+                                  sign = "X",
+                                  position = 1,
+                                  label = "xgboost"))
+  attr(broken_cumm, "baseline") <- baseline
+  class(broken_cumm) <- c("break_down", "data.frame")
+  broken_cumm
 }
 
 getStatsForTreesInter = function(trees,type = "binary",  base_score = 0.5) {
- #code uses xgboostExplainer code created by David Foster
+  #code uses xgboostExplainer code created by David Foster
   leaf <- Feature <- H <- Cover <- Yes <- No <- ID <-
-  weight <- Quality <- previous_weight <- G <- parentsCover <-
-  name_pair <- childsGain <- uplift_weight <- parentsGain <-
-  parentsName <- NULL
+    weight <- Quality <- previous_weight <- G <- parentsCover <-
+    name_pair <- childsGain <- uplift_weight <- parentsGain <-
+    parentsName <- NULL
 
   treeList = copy(trees)
   treeList[, leaf := Feature == 'Leaf']
@@ -146,8 +216,8 @@ getStatsForTreesInter = function(trees,type = "binary",  base_score = 0.5) {
       tree[r, weight := w]
       tree[ID == left, previous_weight := w]
       tree[ID == right, previous_weight := w]
-
       if (tree[ID == left, leaf] == F) {
+
         tree[ID == left, `:=`(parentsGain = tree[r, Quality], parentsName = tree[r, Feature])]
         tree[ID == left, parentsCover := tree[r, Cover]]
         name_pair4 = paste(tree[r, Feature], tree[ID == left, Feature], sep = ":")
@@ -175,7 +245,7 @@ getStatsForTreesInter = function(trees,type = "binary",  base_score = 0.5) {
 
 
 getStatsForTrees = function(trees, nodes.train,type = "binary", base_score = 0.5) {
-  #code comes from xgboostExplainer package created by David Foster
+  #code was copied from xgboostExplainer package created by David Foster
   leaf <- Feature <- H <- Cover <- Yes <- No <- ID <-
     weight <- Quality <- previous_weight <- G <- uplift_weight <- NULL
 
@@ -245,7 +315,7 @@ getStatsForTrees = function(trees, nodes.train,type = "binary", base_score = 0.5
 
 buildExplainerFromTreeList = function(tree_list, col_names) {
 
-  #code comes from xgboostExplainer package created by David Foster
+  #code was copied from xgboostExplainer package created by David Foster
 
   ####accepts a list of trees and column names
   ####outputs a data table, of the impact of each variable + intercept, for each leaf
@@ -269,7 +339,7 @@ buildExplainerFromTreeList = function(tree_list, col_names) {
 }
 getTreeBreakdown = function(tree, col_names) {
 
-  #code comes from xgboostExplainer package created by David Foster
+  #code was copied from xgboostExplainer package created by David Foster
   Node <- NULL
   ####accepts a tree (data table), and column names
   ####outputs a data table, of the impact of each variable + intercept, for each leaf
@@ -293,7 +363,7 @@ getTreeBreakdown = function(tree, col_names) {
 
 
 getLeafBreakdown = function(tree, leaf, col_names) {
-  #code comes from xgboostExplainer package created by David Foster
+  #code was copied from xgboostExplainer package created by David Foster
 
   Node <- Feature <- . <- uplift_weight <- NULL
 
@@ -318,7 +388,7 @@ getLeafBreakdown = function(tree, leaf, col_names) {
 
 
 findPath = function(tree, currentnode, path = c()) {
-  #code comes from xgboostExplainer package created by David Foster
+  #code  was copied from xgboostExplainer package created by David Foster
   Node <- Yes <- No <- ID <- NULL
   #accepts a tree data table, and the node to reach
   #path is used in the recursive function - do not set this
@@ -336,7 +406,7 @@ findPath = function(tree, currentnode, path = c()) {
 
 explainPredictions = function(xgb_model, explainer , data) {
 
-  #code comes from xgboostExplainer package created by David Foster
+  #code was copied from xgboostExplainer package created by David Foster
   tree <- NULL
   #Accepts data table of the breakdown for each leaf of each tree and the node matrix
   #Returns the breakdown for each prediction as a data table
@@ -363,3 +433,4 @@ explainPredictions = function(xgb_model, explainer , data) {
   return (preds_breakdown)
 
 }
+

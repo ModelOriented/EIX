@@ -9,7 +9,7 @@
   ymeasure = "sumGain")
 }
 \arguments{
-\item{x}{a result from the `importance` function.}
+\item{x}{a result from the \code{importance} function.}
 
 \item{...}{other parameters.}
 
