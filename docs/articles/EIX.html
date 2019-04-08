@@ -42,6 +42,18 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+<li>
+      <a href="../articles/vignette_titanic.html">EIX: Titanic data </a>
+    </li>
+  </ul>
+</li>
       </ul>
 <ul class="nav navbar-nav navbar-right"></ul>
 </div>
@@ -74,8 +86,7 @@
 <a href="#data-info" class="anchor"></a>Data Info</h2>
 <p>This vignette shows usage of <code>EIX</code> package. It lets to explain XGBoost prediction model concerning departures of employees from company using HR_data. Dataset was taken from <a href="https://www.kaggle.com/ludobenistant/hr-analytics">kaggle</a> and consists 14999 observations and 10 variables. The dataset is also available in package <code>EIX</code> and there it is described more precisely.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">4</span>)
-data&lt;-HR_data
-knitr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/knitr/topics/kable">kable</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(data))</code></pre></div>
+knitr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/knitr/topics/kable">kable</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(HR_data))</code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">satisfaction_level</th>
@@ -327,7 +338,7 @@ knitr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentat
 <a href="#model-visualization" class="anchor"></a>Model visualization</h2>
 <p>The <code>lollipop</code> plot is used to visualize the model in such way that the most important variables and interactions are visible.</p>
 <p>On the x-axis, there are tree numbers and on the y-axis there is <strong>Gain</strong> measure for each node. One segment is one tree in the model and each point is one node. On the plot there are all nodes, which are not leaves. Shape of points signifies depth of node. All roots on the plot are connected by a red line. If in the same segment there is a variable with a higher depth above the variable with a lower depth, it means that interaction occurs.</p>
-<p>There is opportunity to set a different way of labeling. On the plot we can see the most important variables in roots (horizontal labels), and interactions (vertical labels), this is option <code>label="topAll"</code> which is default. Moreover, there are two additional options: <code>labels="roots"</code> - for variables in roots only, <code>labels="interactions"</code> for interactions only. The plot is on a logarithmic scale because the initial trees usually are the most important. You can change the scale of the plot by setting the parameter <code>log=FALSE</code>.</p>
+<p>There is opportunity to set a different way of labeling. On the plot we can see the most important variables in roots (horizontal labels), and interactions (vertical labels), this is option <code>labels="topAll"</code> which is default. Moreover, there are two additional options: <code>labels="roots"</code> - for variables in roots only, <code>labels="interactions"</code> for interactions only. The numbers of labels visible on the plot you can change by parametr <code>threshold</code> (range from 0 to 1, default 0.1). The plot is on a logarithmic scale because the initial trees usually are the most important. You can change the scale of the plot by setting the parameter <code>log=FALSE</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lolli&lt;-<span class="kw"><a href="../reference/lollipop.html">lollipop</a></span>(xgb_model,sparse_matrix)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(lolli)</code></pre></div>
 <p><img src="EIX_files/figure-html/unnamed-chunk-6-1.png" width="576" style="display: block; margin: auto;"></p>
@@ -422,7 +433,7 @@ knitr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentat
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(importance, <span class="dt">radar=</span><span class="ot">FALSE</span>)</code></pre></div>
 <p><img src="EIX_files/figure-html/unnamed-chunk-9-1.png" width="576" style="display: block; margin: auto;"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#plot(importance,  xmeasure = "mean5Gain", ymeasure = "sumGain",  top = 15, radar=FALSE)</span></code></pre></div>
-<p>The function <code>plot</code> with parameter <code>radar = TRUE</code> enables to compare different measures of variables and interactions importance on the radar plot from <code>ggiraphExtra</code> package. Bellow I attach the example of radar plot. On the outside of the circle there are names of variables or interactions. Colored lines represent various measures of importance. The positions on the plot are sorted decreasing. The variable with the highest <strong>sumGain</strong> value is on the right of 12 o’clock. Next the <strong>sumGain</strong> value decreases in a clockwise direction.</p>
+<p>The function <code>plot</code> with parameter <code>radar = TRUE</code> enables to compare different measures of variables and interactions importance on the radar plot from <code>ggiraphExtra</code> package. Bellow I attach the example of radar plot. On the outside of the circle there are names of variables or interactions. Colored lines represent various measures of importance. The positions on the plot are sorted decreasing. The variable with the highest <strong>sumGain</strong> value is on the right of 12 o’clock. Next the <strong>sumGain</strong> value decreases in a clockwise direction. On the plot it is possible to change place, where the features names start by parameter <code>text_start_point</code> (range from 0 to 1, default 0.5), and size of this text by parametrer <code>text_size</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(importance)</code></pre></div>
 <p><img src="EIX_files/figure-html/unnamed-chunk-10-1.png" width="576" style="display: block; margin: auto;"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#plot(importance, text_start_point = 0.3)</span>
@@ -434,62 +445,36 @@ knitr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentat
 <a href="#explanation-of-single-prediction-including-interactions" class="anchor"></a>Explanation of single prediction including interactions</h2>
 <p>For single prediction explaining package <code>EIX</code> uses two packages: <code>xgboostExplainer</code> i <code>breakDown</code>. The package <code>xgboostExplainer</code> is a tool to interpreting prediction of xgboost model. The package <code>EIX</code> uses its code and modifies it to include interactions. The methodology of plot creation comes from package <code>breakDown</code>.</p>
 <p>The function <code>waterfall</code> returns table with variables’ impact on the prediction of the model. Depending on the parameter <code>option</code>, the table includes interactions (<code>option="interactions"</code>- default) or does not (<code>option="variables"</code>). The function <code>plot</code> with <code>waterfall</code> object as an argument visualizes this table. On the y-axis there are: intercept (it is the probability that random variable from training dataset will be 1), variables (which have an impact on prediction) and final prognosis of the model. On the x-axis there is log-odds of impact each variables.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">new_observation &lt;-<span class="st"> </span>sparse_matrix[<span class="dv">9</span>,]
-wf&lt;-<span class="kw"><a href="../reference/waterfall.html">waterfall</a></span>(xgb_model, new_observation, <span class="dt">option =</span> <span class="st">"interactions"</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">require</a></span>(<span class="st">"iBreakDown"</span>)
+data &lt;-<span class="st"> </span>HR_data[<span class="dv">9</span>,]
+new_observation &lt;-<span class="st"> </span>sparse_matrix[<span class="dv">9</span>,]
+wf&lt;-<span class="kw"><a href="../reference/waterfall.html">waterfall</a></span>(xgb_model, new_observation, data, <span class="dt">option =</span> <span class="st">"interactions"</span>)
 wf</code></pre></div>
-<pre><code>##                                                 contribution
-## (Intercept)                                           -1.530
-## time_spend_company = 5                                 1.519
-## last_evaluation = 1                                    1.485
-## Work_accident = 0                                     -0.736
-## satisfaction_level:time_spend_company = 0.89:5         0.406
-## last_evaluation:time_spend_company = 1:5               0.316
-## number_project:last_evaluation = 5:1                   0.258
-## satisfaction_level = 0.89                             -0.238
-## last_evaluation:average_montly_hours = 1:224           0.227
-## number_project = 5                                    -0.224
-## salarylow = 1                                          0.166
-## average_montly_hours:last_evaluation = 224:1          -0.156
-## last_evaluation:satisfaction_level = 1:0.89            0.111
-## average_montly_hours:time_spend_company = 224:5        0.098
-## time_spend_company:last_evaluation = 5:1               0.095
-## average_montly_hours:number_project = 224:5            0.094
-## average_montly_hours = 224                            -0.048
-## satisfaction_level:number_project = 0.89:5            -0.003
-## final_prognosis                                        1.839
-## baseline:  0</code></pre>
+<pre><code>##                                                          contribution
+## xgboost: intercept                                             -1.530
+## xgboost: time_spend_company = 5                                 1.519
+## xgboost: last_evaluation = 1                                    1.485
+## xgboost: Work_accident = 0                                     -0.736
+## xgboost: satisfaction_level:time_spend_company = 0.89:5         0.406
+## xgboost: last_evaluation:time_spend_company = 1:5               0.316
+## xgboost: number_project:last_evaluation = 5:1                   0.258
+## xgboost: satisfaction_level = 0.89                             -0.238
+## xgboost: last_evaluation:average_montly_hours = 1:224           0.227
+## xgboost: number_project = 5                                    -0.224
+## xgboost: salary = 2                                             0.166
+## xgboost: average_montly_hours:last_evaluation = 224:1          -0.156
+## xgboost: last_evaluation:satisfaction_level = 1:0.89            0.111
+## xgboost: average_montly_hours:time_spend_company = 224:5        0.098
+## xgboost: time_spend_company:last_evaluation = 5:1               0.095
+## xgboost: average_montly_hours:number_project = 224:5            0.094
+## xgboost: average_montly_hours = 224                            -0.048
+## xgboost: satisfaction_level:number_project = 0.89:5            -0.003
+## xgboost: prediction                                             1.839</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(wf)</code></pre></div>
 <p><img src="EIX_files/figure-html/unnamed-chunk-11-1.png" width="576" style="display: block; margin: auto;"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#wf&lt;-waterfall(xgb_model, new_observation, option = "interactions", baseline = "intercept")</span>
 <span class="co">#wf</span>
-<span class="co">#plot(wf)</span>
-<span class="co">#wf&lt;-waterfall(xgb_model, new_observation, option = "interactions")</span>
-<span class="co">#wf</span>
-<span class="co">#plot(wf, trans = function(x) exp(x)/(1+exp(x)))</span>
-wf&lt;-<span class="kw"><a href="../reference/waterfall.html">waterfall</a></span>(xgb_model, new_observation, <span class="dt">option =</span> <span class="st">"interactions"</span>, <span class="dt">baseline =</span> <span class="st">"intercept"</span>)
-wf</code></pre></div>
-<pre><code>##                                                 contribution
-## time_spend_company = 5                                 1.519
-## last_evaluation = 1                                    1.485
-## Work_accident = 0                                     -0.736
-## satisfaction_level:time_spend_company = 0.89:5         0.406
-## last_evaluation:time_spend_company = 1:5               0.316
-## number_project:last_evaluation = 5:1                   0.258
-## satisfaction_level = 0.89                             -0.238
-## last_evaluation:average_montly_hours = 1:224           0.227
-## number_project = 5                                    -0.224
-## salarylow = 1                                          0.166
-## average_montly_hours:last_evaluation = 224:1          -0.156
-## last_evaluation:satisfaction_level = 1:0.89            0.111
-## average_montly_hours:time_spend_company = 224:5        0.098
-## time_spend_company:last_evaluation = 5:1               0.095
-## average_montly_hours:number_project = 224:5            0.094
-## average_montly_hours = 224                            -0.048
-## satisfaction_level:number_project = 0.89:5            -0.003
-## final_prognosis                                        3.369
-## baseline:  -1.530202</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(wf, <span class="dt">trans =</span> <span class="cf">function</span>(x) <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">exp</a></span>(x)<span class="op">/</span>(<span class="dv">1</span><span class="op">+</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">exp</a></span>(x)))</code></pre></div>
-<p><img src="EIX_files/figure-html/unnamed-chunk-11-2.png" width="576" style="display: block; margin: auto;"></p>
+<span class="co">#plot(wf)</span></code></pre></div>
 </div>
   </div>
 

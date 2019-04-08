@@ -1,0 +1,86 @@
+---
+title: "EIX: Titanic data "
+author: "Ewelina Karbowiak"
+date: "2018-29-03"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(fig.height = 6, fig.width = 6, fig.align = "center")
+#devtools :: install_github("ekarbowiak/EIX")
+library("EIX")
+```
+
+## Data Info
+This vignette shows usage of `EIX` package for titanic data. This dataset was copied from `stablelearner` package. With `EIX` package we explain XGBoost classification model concerning the survival problem. More details about `EIX` package [here](https://modeloriented.github.io/EIX/articles/EIX.html).
+
+
+```{r, warning=FALSE, message=FALSE}
+library(data.table)
+set.seed(4)
+titanic_data<-data.table(na.omit(titanic_data))
+knitr::kable(head(titanic_data))
+
+library("Matrix")
+sparse_matrix <- sparse.model.matrix(survived ~ . - 1,  data = titanic_data)
+```
+
+
+## Xgboost model creation
+
+
+```{r, warning=FALSE, message=FALSE}
+library("xgboost")
+param <- list(objective = "binary:logistic", max_depth = 2)
+xgb_model <- xgboost(sparse_matrix, params = param, label = titanic_data[, "survived"] == "yes", nrounds = 50, verbose = FALSE)
+```
+
+
+## Model visualization
+
+First let's plot the model.
+
+```{r, warning=FALSE, message=FALSE}
+lolli<-lollipop(xgb_model,sparse_matrix)
+plot(lolli, threshold=0.02)
+```
+
+
+## Interactions
+
+Next we explore interactions using `interactions()` functions and its plot.
+
+```{r, warning=FALSE, message=FALSE}
+interactions<-interactions(xgb_model, sparse_matrix, option = "interactions")
+head(interactions, 15)
+plot(interactions)
+```
+
+## Variables' and interactions’ importance
+
+```{r, warning=FALSE, message=FALSE}
+importance<-importance(xgb_model, sparse_matrix, option = "both")
+head(importance, 15)
+plot(importance, radar=FALSE)
+```
+
+```{r, warning=FALSE, message=FALSE}
+plot(importance)
+```
+
+## Explanation of the single prediction including interactions
+
+Let's see an explanation of the prediction for an 18-year-old from England who has traveled 3rd class.
+
+```{r, warning=FALSE, message=FALSE}
+require("iBreakDown")
+data <- titanic_data[27,]
+new_observation <- sparse_matrix[27,]
+wf<-waterfall(xgb_model, new_observation, data, option = "interactions")
+wf
+plot(wf)
+```

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Why are our best and most experienced employees leaving prematurely? — HR_data • EIX</title>
+<title>Passengers and Crew on the RMS Titanic — titanic • EIX</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -48,7 +48,7 @@
 	  <a class = "navbar-mi2logo" href="http://mi2.mini.pw.edu.pl/">
         <img src = "https://github.com/mi2-warsaw/MI2template/blob/master/inst/pkgdown/assets/MI2logo.jpg?raw=true" alt = "MI2" height = 46 title = "MI2">
 	  </a>
-      <a class="navbar-brand navbar-mi2" href="../index.html">Why are our best and most experienced employees leaving prematurely?</a>
+      <a class="navbar-brand navbar-mi2" href="../index.html">Passengers and Crew on the RMS Titanic</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="navbar-mi2 nav navbar-nav">
@@ -91,38 +91,57 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Why are our best and most experienced employees leaving prematurely?</h1>
+    <h1>Passengers and Crew on the RMS Titanic</h1>
     </div>
 
     
-    <p>A dataset from Kaggle competition Human Resources Analytics.
-https://www.kaggle.com/ludobenistant/hr-analytics/data</p>
+    <p>The <code>titanic</code> data is a complete list of passengers and crew members on  the RMS Titanic.
+It includes a variable indicating whether a person did  survive the sinking of the RMS
+Titanic on April 15, 1912.</p>
     
 
+    <pre class="usage"><span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/data'>data</a></span>(<span class='no'>titanic</span>)</pre>
         
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A data table with 14999 rows and 10 variables</p>
+    <p>a data frame with 2207 rows and 11 columns</p>
     
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
 
-    <p><a href='https://www.kaggle.com/ludobenistant/hr-analytics/data'>https://www.kaggle.com/ludobenistant/hr-analytics/data</a>, <a href='https://cran.r-project.org/web/packages/breakDown/index.html'>https://cran.r-project.org/web/packages/breakDown/index.html</a></p>
+    <p>The description of dataset was copied from the <code>DALEX</code> package.
+This dataset was copied from the <code>stablelearner</code> package and went through few variable
+transformations. The complete list of persons on the RMS titanic was downloaded from
+<a href='https://www.encyclopedia-titanica.org'>https://www.encyclopedia-titanica.org</a> on April 5, 2016. The  information given
+in <code>sibsp</code> and <code>parch</code> was adopoted from a data set obtained from <a href='http://biostat.mc.vanderbilt.edu/DataSets'>http://biostat.mc.vanderbilt.edu/DataSets</a>.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The description of the dataset was copied from the <code>breakDown</code> package.</p>
+    <p>The description of the dataset was copied from the <code>DALEX</code> package.</p>
+<p>This dataset was copied from the <code>stablelearner</code> package and went through few variable
+transformations. Levels in <code>embarked</code> was replaced with full names, <code>sibsp</code>, <code>parch</code> and <code>fare</code>
+were converted to numerical variables and values for crew were replaced with 0.
+If you use this dataset please cite the original package.</p>
+<p>From <code>stablelearner</code>: The website <a href='https://www.encyclopedia-titanica.org'>https://www.encyclopedia-titanica.org</a> offers detailed  information about passengers and crew
+members on the RMS Titanic. According to the website 1317 passengers and 890 crew member were abord.
+8 musicians and 9 employees of the shipyard company are listed as passengers, but travelled with a
+free ticket, which is why they have <code>NA</code> values in <code>fare</code>. In addition to that, <code>fare</code>
+is truely missing for a few regular passengers.</p>
 <ul>
-<li><p>satisfaction_level Level of satisfaction (0-1)</p></li>
-<li><p>last_evaluation Time since last performance evaluation (in Years)</p></li>
-<li><p>number_project  Number of projects completed while at work</p></li>
-<li><p>average_montly_hours  Average monthly hours at workplace</p></li>
-<li><p>time_spend_company  Number of years spent in the company</p></li>
-<li><p>Work_accident  Whether the employee had a workplace accident</p></li>
-<li><p>left  Whether the employee left the workplace or not (1 or 0) Factor</p></li>
-<li><p>promotion_last_5years  Whether the employee was promoted in the last five years</p></li>
-<li><p>sales  Department in which they work for</p></li>
-<li><p>salary  Relative level of salary (high)</p></li>
+<li><p>gender a factor with levels <code>male</code> and <code>female</code>.</p></li>
+<li><p>age a numeric value with the persons age on the day of the sinking.</p></li>
+<li><p>class a factor specifying the class for passengers or the type of service aboard for crew members.</p></li>
+<li><p>embarked a factor with the persons place of of embarkment (Belfast/Cherbourg/Queenstown/Southampton).</p></li>
+<li><p>country a factor with the persons home country.</p></li>
+<li><p>fare a numeric value with the ticket price (<code>0</code> for crew members, musicians and employees of the shipyard company).</p></li>
+<li><p>sibsp an ordered factor specifying the number if siblings/spouses aboard; adopted from Vanderbild data set (see below).</p></li>
+<li><p>parch an ordered factor specifying the number of parents/children aboard; adopted from Vanderbild data set (see below).</p></li>
+<li><p>survived a factor with two levels (<code>no</code> and <code>yes</code>) specifying whether the person has survived the sinking.</p></li>
 </ul>
+    
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p><a href='https://www.encyclopedia-titanica.org'>https://www.encyclopedia-titanica.org</a>, <a href='http://biostat.mc.vanderbilt.edu/DataSets'>http://biostat.mc.vanderbilt.edu/DataSets</a>,
+<a href='https://CRAN.R-project.org/package=stablelearner'>https://CRAN.R-project.org/package=stablelearner</a>, <a href='https://cran.r-project.org/web/packages/DALEX/index.html'>https://cran.r-project.org/web/packages/DALEX/index.html</a>.</p>
     
 
   </div>
@@ -135,6 +154,8 @@ https://www.kaggle.com/ludobenistant/hr-analytics/data</p>
       <li><a href="#source">Source</a></li>
 
       <li><a href="#details">Details</a></li>
+
+      <li><a href="#references">References</a></li>
           </ul>
 
   </div>
