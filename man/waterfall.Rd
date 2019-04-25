@@ -39,6 +39,7 @@ from \code{breakDown} code created by Przemysław Biecek
 and \code{xgboostExplainer} code created by David Foster.
 }
 \examples{
+\dontrun{
 library("EIX")
 library("Matrix")
 sm <- sparse.model.matrix(left ~ . - 1,  data = HR_data)
@@ -47,11 +48,10 @@ library("xgboost")
 param <- list(objective = "binary:logistic", max_depth = 2)
 xgb_model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 50, verbose=0)
 
-require("iBreakDown")
 data <- HR_data[9,-7]
 new_observation <- sm[9,]
 wf <- waterfall(xgb_model, new_observation, data,  option = "interactions")
 wf
 plot(wf)
-
+}
 }

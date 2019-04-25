@@ -9,7 +9,7 @@
 #'               if "roots" then labels for all variables in the root.
 #' @param threshold  on the plot will occur only labels with Gain higher than `threshold` of the max Gain value in the model.
 #'                   The lower threshold, the more labels on the plot. Range from 0 to 1. Default 0.1.
-#' @param log  TRUE/FALSE logarithmic scale on the plot. Default TRUE.
+#' @param log_scale  TRUE/FALSE logarithmic scale on the plot. Default TRUE.
 #' @param ... other parameters.
 #'
 #' @return a ggplot object
@@ -28,7 +28,7 @@
 #'
 #' library("xgboost")
 #' param <- list(objective = "binary:logistic", max_depth = 2)
-#' xgb_model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 50, verbose=0)
+#' xgb_model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 50, verbose = 0)
 #'
 #' lolli <- lollipop(xgb_model, sm)
 #' plot(lolli, labels = "topAll", log_scale = TRUE)
@@ -45,7 +45,7 @@
 #'
 #' @export
 
-plot.lollipop<-function(x, ..., labels = "topAll", log = TRUE, threshold=0.1){
+plot.lollipop<-function(x, ..., labels = "topAll", log_scale = TRUE, threshold=0.1){
 
   Tree <- Quality <- depth <- Feature <- NULL
   nodes <- x[[1]]
@@ -76,7 +76,7 @@ plot.lollipop<-function(x, ..., labels = "topAll", log = TRUE, threshold=0.1){
 
   p <- p + theme_drwhy()+ ylab("Gain") +
     scale_shape_discrete("Depth") +
-    scale_colour_discrete("Depth") + if (log) {scale_x_continuous(trans = 'log10')}
+    scale_colour_discrete("Depth") + if (log_scale) {scale_x_continuous(trans = 'log10')}
   p
 }
 

@@ -55,6 +55,7 @@ Additionally for plots with single variables:
 }
 }
 \examples{
+\dontrun{
 library("EIX")
 library("Matrix")
 sm <- sparse.model.matrix(left ~ . - 1,  data = HR_data)
@@ -79,7 +80,6 @@ plot(imp,  top = nrow(imp))
  imp
  plot(imp, top = nrow(imp), radar = FALSE, xmeasure = "sumCover", ymeasure = "sumGain")
 
-\dontrun{
 library(lightgbm)
 train_data <- lgb.Dataset(sm, label =  HR_data[, left] == 1)
 params <- list(objective = "binary", max_depth = 2)

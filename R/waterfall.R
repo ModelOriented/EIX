@@ -23,10 +23,12 @@
 #' @return an object of the broken class
 #'
 #' @import data.table
+#' @import iBreakDown
 #' @importFrom xgboost slice
 #' @importFrom xgboost xgb.DMatrix
 #'
 #' @examples
+#' \dontrun{
 #' library("EIX")
 #' library("Matrix")
 #' sm <- sparse.model.matrix(left ~ . - 1,  data = HR_data)
@@ -35,13 +37,12 @@
 #' param <- list(objective = "binary:logistic", max_depth = 2)
 #' xgb_model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 50, verbose=0)
 #'
-#' require("iBreakDown")
 #' data <- HR_data[9,-7]
 #' new_observation <- sm[9,]
 #' wf <- waterfall(xgb_model, new_observation, data,  option = "interactions")
 #' wf
 #' plot(wf)
-#'
+#'}
 #' @export
 #'
 #'

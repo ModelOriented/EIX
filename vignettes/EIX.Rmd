@@ -60,8 +60,8 @@ The `lollipop` plot is used to visualize the model in such way that the most imp
 
 On the x-axis, there are tree numbers and on the y-axis there is **Gain** measure for each node. One segment is one tree in the model and each point is one node. On the plot there are all nodes, which are not leaves. Shape of points signifies depth of node. All roots on the plot are connected by a red line. If in the same segment there is a variable with a higher depth above the variable with a lower depth, it means that interaction occurs.
 
-There is opportunity to set a different way of labeling. On the plot we can see the most important variables in roots (horizontal labels), and interactions (vertical labels), this is option `labels="topAll"` which is default. Moreover, there are two additional options: `labels="roots"` - for variables in roots only, `labels="interactions"` for interactions only. The numbers of labels visible on the plot you can change by parametr `threshold` (range from 0 to 1, default 0.1).
-The plot is on a logarithmic scale because the initial trees usually are the most important. You can change the scale of the plot by setting the parameter `log=FALSE`.
+There is opportunity to set a different way of labeling. On the plot we can see the most important variables in roots (horizontal labels), and interactions (vertical labels), this is option `labels = "topAll"` which is default. Moreover, there are two additional options: `labels = "roots"` - for variables in roots only, `labels = "interactions"` for interactions only. The numbers of labels visible on the plot you can change by parametr `threshold` (range from 0 to 1, default 0.1).
+The plot is on a logarithmic scale because the initial trees usually are the most important. You can change the scale of the plot by setting the parameter `log_scale = FALSE`.
 
 ```{r, warning=FALSE, message=FALSE}
 lolli<-lollipop(xgb_model,sparse_matrix)
@@ -71,13 +71,13 @@ plot(lolli)
 #plot(lolli, labels="interactions")
 #plot(lolli, labels="roots", threshold=0.05)
 #plot(lolli, labels="interactions",threshold=0.05)
-#plot(lolli, log=FALSE)
+#plot(lolli, log_scale = FALSE)
 ```
 
 
 ## Interactions
 
-We can consider interactions in two ways. In first approach we can explore all pairs of variable, which occur in the model one above the other. This approach is not the best one, because we cannot distinguish if pair of variables are real interaction or not. In this approach high gain of pair can be a result of high gain of down variable (child). To explore pairs of variables you can generate table with them using function `interactions` with parametr `option="pairs"`. This table includes **Gain** measure and  number of occurrences of pairs. You can also use the function `plot` to visualize **Gain** measure.
+We can consider interactions in two ways. In first approach we can explore all pairs of variable, which occur in the model one above the other. This approach is not the best one, because we cannot distinguish if pair of variables are real interaction or not. In this approach high gain of pair can be a result of high gain of down variable (child). To explore pairs of variables you can generate table with them using function `interactions` with parametr `option = "pairs"`. This table includes **Gain** measure and  number of occurrences of pairs. You can also use the function `plot` to visualize **Gain** measure.
 
 ```{r, warning=FALSE, message=FALSE}
 pairs<-interactions(xgb_model, sparse_matrix, option = "pairs")
@@ -87,7 +87,7 @@ plot(pairs)
 
 The `interactions` plot is a matrix plot with a child from the pair on the x-axis and the parent on the y-axis. The color of the square at the intersection of two variables means value of **sumGain** measure. The darker square, the higher **sumGain** of variable pairs. The range of **sumGain** measure is divided into four equal parts: `very low, low, medium, high`.
 
-In second approach, to find strong interactions, we can consider only these pairs of variables, where variable on the bottom (child) has higher gain than variable on the top (parent). We can also create ranking of interactions using function `importance` with parameter `option="interactions"`. More details in the next section.
+In second approach, to find strong interactions, we can consider only these pairs of variables, where variable on the bottom (child) has higher gain than variable on the top (parent). We can also create ranking of interactions using function `importance` with parameter `option = "interactions"`. More details in the next section.
 
 ```{r, warning=FALSE, message=FALSE}
 interactions<-interactions(xgb_model, sparse_matrix, option = "interactions")
@@ -150,16 +150,15 @@ plot(importance)
 
 For single prediction explaining package `EIX` uses two packages: `xgboostExplainer` i `breakDown`. The package `xgboostExplainer` is a tool to interpreting prediction of xgboost model. The package `EIX` uses its code and modifies it to include interactions. The methodology of plot creation comes from package `breakDown`.
 
-The function `waterfall` returns table with variables’ impact on the prediction of the model.  Depending on the parameter `option`, the table includes interactions (`option="interactions"`- default) or does not (`option="variables"`). The function `plot` with `waterfall` object as an argument visualizes this table. On the y-axis there are: intercept (it is the probability that random variable from training dataset will be 1), variables (which have an impact on prediction) and final prognosis of the model. On the x-axis there is log-odds of impact each variables.
+The function `waterfall` returns table with variables’ impact on the prediction of the model.  Depending on the parameter `option`, the table includes interactions (`option = "interactions"`- default) or does not (`option = "variables"`). The function `plot` with `waterfall` object as an argument visualizes this table. On the y-axis there are: intercept (it is the probability that random variable from training dataset will be 1), variables (which have an impact on prediction) and final prognosis of the model. On the x-axis there is log-odds of impact each variables.
 
 ```{r, warning=FALSE, message=FALSE}
-require("iBreakDown")
 data <- HR_data[9,]
 new_observation <- sparse_matrix[9,]
 wf<-waterfall(xgb_model, new_observation, data, option = "interactions")
 wf
 plot(wf)
-#wf<-waterfall(xgb_model, new_observation, option = "interactions", baseline = "intercept")
+#wf<-waterfall(xgb_model, new_observation, data, option = "interactions", baseline = "intercept")
 #wf
 #plot(wf)
 ```

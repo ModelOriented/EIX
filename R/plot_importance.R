@@ -42,6 +42,7 @@
 #' @importFrom ggiraphExtra coord_radar
 #'
 #' @examples
+#' \dontrun{
 #' library("EIX")
 #' library("Matrix")
 #' sm <- sparse.model.matrix(left ~ . - 1,  data = HR_data)
@@ -66,7 +67,6 @@
 #'  imp
 #'  plot(imp, top = nrow(imp), radar = FALSE, xmeasure = "sumCover", ymeasure = "sumGain")
 #'
-#'\dontrun{
 #'library(lightgbm)
 #'train_data <- lgb.Dataset(sm, label =  HR_data[, left] == 1)
 #'params <- list(objective = "binary", max_depth = 2)
@@ -89,7 +89,7 @@ plot.importance <- function(x, ...,  top = 10, radar = TRUE, text_start_point = 
                                  xmeasure = "sumCover", ymeasure = "sumGain"){
 
   Feature <- sumGain <- sumCover <- meanGain <- meanCover <-
-    mean5Gain <- . <- value <- variable <- NULL
+    mean5Gain <- . <- value <- variable <- hjust <- NULL
 
   if (top == "NULL")
     top <- nrow(x)

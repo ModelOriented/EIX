@@ -157,7 +157,7 @@ and <code>xgboostExplainer</code> code created by David Foster.</p>
 <span class='no'>param</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>objective</span> <span class='kw'>=</span> <span class='st'>"binary:logistic"</span>, <span class='kw'>max_depth</span> <span class='kw'>=</span> <span class='fl'>2</span>)
 <span class='no'>xgb_model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/xgboost/topics/xgb.train'>xgboost</a></span>(<span class='no'>sm</span>, <span class='kw'>params</span> <span class='kw'>=</span> <span class='no'>param</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='no'>HR_data</span>[, <span class='no'>left</span>] <span class='kw'>==</span> <span class='fl'>1</span>, <span class='kw'>nrounds</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>0</span>)
 
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>require</a></span>(<span class='st'>"iBreakDown"</span>)</div><div class='output co'>#&gt; <span class='message'>Ładowanie wymaganego pakietu: iBreakDown</span></div><div class='input'><span class='no'>data</span> <span class='kw'>&lt;-</span> <span class='no'>HR_data</span>[<span class='fl'>9</span>,-<span class='fl'>7</span>]
+<span class='no'>data</span> <span class='kw'>&lt;-</span> <span class='no'>HR_data</span>[<span class='fl'>9</span>,-<span class='fl'>7</span>]
 <span class='no'>new_observation</span> <span class='kw'>&lt;-</span> <span class='no'>sm</span>[<span class='fl'>9</span>,]
 <span class='no'>wf</span> <span class='kw'>&lt;-</span> <span class='fu'>waterfall</span>(<span class='no'>xgb_model</span>, <span class='no'>new_observation</span>, <span class='no'>data</span>,  <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"interactions"</span>)
 <span class='no'>wf</span></div><div class='output co'>#&gt;                                                          contribution
@@ -179,8 +179,7 @@ and <code>xgboostExplainer</code> code created by David Foster.</p>
 #&gt; xgboost: average_montly_hours:number_project = 224:5            0.094
 #&gt; xgboost: average_montly_hours = 224                            -0.048
 #&gt; xgboost: satisfaction_level:number_project = 0.89:5            -0.003
-#&gt; xgboost: prediction                                             1.839</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>wf</span>)</div><div class='img'><img src='waterfall-1.png' alt='' width='700' height='433' /></div><div class='input'>
-</div></pre>
+#&gt; xgboost: prediction                                             1.839</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>wf</span>)</div><div class='img'><img src='waterfall-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

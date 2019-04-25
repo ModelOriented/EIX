@@ -77,7 +77,6 @@ plot(importance)
 Let's see an explanation of the prediction for an 18-year-old from England who has traveled 3rd class.
 
 ```{r, warning=FALSE, message=FALSE}
-require("iBreakDown")
 data <- titanic_data[27,]
 new_observation <- sparse_matrix[27,]
 wf<-waterfall(xgb_model, new_observation, data, option = "interactions")

@@ -4,7 +4,7 @@
 \alias{plot.lollipop}
 \title{Visualiation of the model}
 \usage{
-\method{plot}{lollipop}(x, ..., labels = "topAll", log = TRUE,
+\method{plot}{lollipop}(x, ..., labels = "topAll", log_scale = TRUE,
   threshold = 0.1)
 }
 \arguments{
@@ -17,7 +17,7 @@ and variables in the roots (horizontal label) will be displayed,
 if "interactions" then labels for all interactions,
 if "roots" then labels for all variables in the root.}
 
-\item{log}{TRUE/FALSE logarithmic scale on the plot. Default TRUE.}
+\item{log_scale}{TRUE/FALSE logarithmic scale on the plot. Default TRUE.}
 
 \item{threshold}{on the plot will occur only labels with Gain higher than `threshold` of the max Gain value in the model.
 The lower threshold, the more labels on the plot. Range from 0 to 1. Default 0.1.}
@@ -36,7 +36,7 @@ sm <- sparse.model.matrix(left ~ . - 1,  data = HR_data)
 
 library("xgboost")
 param <- list(objective = "binary:logistic", max_depth = 2)
-xgb_model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 50, verbose=0)
+xgb_model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 50, verbose = 0)
 
 lolli <- lollipop(xgb_model, sm)
 plot(lolli, labels = "topAll", log_scale = TRUE)
