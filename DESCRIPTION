@@ -6,16 +6,17 @@ Authors@R: c(
   person("Ewelina", "Karbowiak", email = "ewelina.karbowiak12@gmail.com", role = c("aut", "cre")),
   person("Przemyslaw", "Biecek", email = "przemyslaw.biecek@gmail.com", role = c("aut","ths"))
   )
-Description: The EIX package supports structure mining from XGBoost and LightGBM models.
+Description: The 'EIX' package supports structure mining from 'XGBoost' and 'LightGBM' models.
     Key functionalities of this package cover: viualisation of tree-based ensembles models,
     identification of interactions, measuring of variable importance,
     measuring of interaction importance, explanation of single prediction 
-    with break down plots (based on xgboostExplainer and breakDown packages).
-Depends: R (>= 3.4.0), MASS
+    with break down plots (based on 'xgboostExplainer' and 'breakDown' packages).
+Depends: R (>= 3.4.0)
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
 Imports:
+    MASS,
     ggplot2,
     data.table,
     purrr,
