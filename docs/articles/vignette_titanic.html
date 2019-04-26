@@ -55,7 +55,14 @@
   </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/ModelOriented/EIX">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -72,7 +79,7 @@
             
             <h4 class="date">2018-29-03</h4>
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/ModelOriented/EIX/blob/master/../vignettes/vignette_titanic.Rmd"><code>../vignettes/vignette_titanic.Rmd</code></a></small>
       <div class="hidden name"><code>vignette_titanic.Rmd</code></div>
 
     </div>
@@ -257,8 +264,7 @@ xgb_model &lt;-<span class="st"> </span><span class="kw">xgboost</span>(sparse_m
 <h2 class="hasAnchor">
 <a href="#explanation-of-the-single-prediction-including-interactions" class="anchor"></a>Explanation of the single prediction including interactions</h2>
 <p>Let’s see an explanation of the prediction for an 18-year-old from England who has traveled 3rd class.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#require("iBreakDown")</span>
-data &lt;-<span class="st"> </span>titanic_data[<span class="dv">27</span>,]
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data &lt;-<span class="st"> </span>titanic_data[<span class="dv">27</span>,]
 new_observation &lt;-<span class="st"> </span>sparse_matrix[<span class="dv">27</span>,]
 wf&lt;-<span class="kw"><a href="../reference/waterfall.html">waterfall</a></span>(xgb_model, new_observation, data, <span class="dt">option =</span> <span class="st">"interactions"</span>)
 wf</code></pre></div>
