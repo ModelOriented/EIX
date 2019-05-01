@@ -4,7 +4,7 @@ author: "Ewelina Karbowiak"
 date: "2018-12-07"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{EIX Explain Interactions in XGBoost}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -21,7 +21,7 @@ Almost all `EIX` functions require only two parameters: a XGBoost or LightGBM mo
 
 ## Data Info
 
-This vignette shows usage of `EIX` package. It lets to explain XGBoost prediction model concerning departures of employees from company using HR_data. Dataset was taken from [kaggle](https://www.kaggle.com/ludobenistant/hr-analytics) and consists 14999 observations and 10 variables. The dataset is also available in package `EIX` and there it is described more precisely.
+This vignette shows usage of `EIX` package. It lets to explain XGBoost prediction model concerning departures of employees from company using HR_data. Dataset was taken from kaggle and consists 14999 observations and 10 variables. The dataset is also available in package `EIX` and there it is described more precisely.
 
 ```{r, warning=FALSE, message=FALSE}
 set.seed(4)

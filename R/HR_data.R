@@ -20,5 +20,5 @@
 #'
 #' @name HR_data
 #' @format A data table with 14999 rows and 10 variables
-#' @source \url{https://www.kaggle.com/ludobenistant/hr-analytics/data}, \url{https://cran.r-project.org/web/packages/breakDown/index.html}
+#' @source https://www.kaggle.com/ludobenistant/hr-analytics/data, \url{https://cran.r-project.org/package=breakDown}
  NULL

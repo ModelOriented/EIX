@@ -17,6 +17,7 @@
 #' @importFrom DALEX theme_drwhy
 #'
 #' @examples
+#' \dontrun{
 #' library("EIX")
 #' library("Matrix")
 #' sm <- sparse.model.matrix(left ~ . - 1,  data = HR_data)
@@ -33,7 +34,6 @@
 #' inter
 #' plot(inter)
 #'
-#'\dontrun{
 #'library(lightgbm)
 #'train_data <- lgb.Dataset(sm, label =  HR_data[, left] == 1)
 #'params <- list(objective = "binary", max_depth = 2)

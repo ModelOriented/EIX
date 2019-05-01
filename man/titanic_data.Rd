@@ -48,6 +48,6 @@ is truely missing for a few regular passengers.
 }
 \references{
 \url{https://www.encyclopedia-titanica.org}, \url{http://biostat.mc.vanderbilt.edu/DataSets},
-\url{https://CRAN.R-project.org/package=stablelearner}, \url{https://cran.r-project.org/web/packages/DALEX/index.html}.
+\url{https://CRAN.R-project.org/package=stablelearner}, \url{https://cran.r-project.org/package=DALEX}.
 }
 \keyword{titanic_data}

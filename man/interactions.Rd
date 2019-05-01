@@ -34,6 +34,7 @@ NOTE: Be careful use of this function with \code{option="pairs"} parameter,
      where variable on the bottom (child) has higher gain than variable on the top (parent).
 }
 \examples{
+\dontrun{
 library("EIX")
 library("Matrix")
 sm <- sparse.model.matrix(left ~ . - 1,  data = HR_data)
@@ -50,7 +51,6 @@ inter <- interactions(xgb_model, sm, option = "pairs")
 inter
 plot(inter)
 
-\dontrun{
 library(lightgbm)
 train_data <- lgb.Dataset(sm, label =  HR_data[, left] == 1)
 params <- list(objective = "binary", max_depth = 2)

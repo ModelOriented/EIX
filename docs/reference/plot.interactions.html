@@ -72,7 +72,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/vignette_titanic.html">EIX: Titanic data </a>
+      <a href="../articles/titanic_data.html">EIX: Titanic data </a>
     </li>
   </ul>
 </li>
@@ -190,7 +190,7 @@
 #&gt; 28:        Work_accident      last_evaluation    6.214535         1
 #&gt; 29:       number_project   satisfaction_level    3.267536         2
 #&gt;                   Parent                Child     sumGain frequency</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>inter</span>)</div><div class='img'><img src='plot.interactions-2.png' alt='' width='700' height='433' /></div><div class='input'>
-</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>lightgbm</span>)
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>lightgbm</span>)
 <span class='no'>train_data</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/lightgbm/topics/lgb.Dataset'>lgb.Dataset</a></span>(<span class='no'>sm</span>, <span class='kw'>label</span> <span class='kw'>=</span>  <span class='no'>HR_data</span>[, <span class='no'>left</span>] <span class='kw'>==</span> <span class='fl'>1</span>)
 <span class='no'>params</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>objective</span> <span class='kw'>=</span> <span class='st'>"binary"</span>, <span class='kw'>max_depth</span> <span class='kw'>=</span> <span class='fl'>2</span>)
 <span class='no'>lgb_model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/lightgbm/topics/lgb.train'>lgb.train</a></span>(<span class='no'>params</span>, <span class='no'>train_data</span>, <span class='fl'>50</span>)

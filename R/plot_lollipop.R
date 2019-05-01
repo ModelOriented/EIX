@@ -51,32 +51,35 @@ plot.lollipop<-function(x, ..., labels = "topAll", log_scale = TRUE, threshold=0
   nodes <- x[[1]]
   roots <- x[[2]]
 
-  p <- ggplot(data = data.frame(nodes), aes(x = Tree, y = Quality, group = as.factor(depth), label = Feature)) +
+  p <- ggplot(data = data.frame(nodes), aes(x = Tree, y = Quality, group = as.factor(depth))) +
     geom_line(data = data.frame(roots), color = "red", size = 1.25, alpha = .5) +
     geom_segment(aes(x = Tree, xend = Tree, y = 0, yend = Quality), size = 1.25) +
     geom_point(aes(shape = as.factor(depth), color = as.factor(depth)), size = 3)
 
+nodes_labels <- nodes[(interaction == TRUE) & (Quality > threshold * (max(nodes[, Quality]))),]
+roots_labels <- roots[Quality > threshold * (max(nodes[, Quality])),]
+
   p <- {
     switch(labels,
            topAll = {
-             p + geom_text_repel(data = data.frame(nodes),
-                                 aes(label = ifelse((interaction == TRUE) & (Quality > threshold * (max(nodes[, Quality]))), Feature, '')),
+             p + geom_text_repel(data = data.frame(nodes_labels),
+                                 aes(label = Feature),
                                  angle = 90, nudge_y = 0.05, direction  = "x", vjust = 0, segment.size = 0.2) +
-                 geom_label_repel(data = data.frame(roots),
-                                aes(label = ifelse(Quality > threshold * (max(nodes[, Quality] )), Feature, '')))
+                 geom_label_repel(data = data.frame(roots_labels),
+                                aes(label =  Feature))
            },
            interactions = {
-             p + geom_text_repel(data = data.frame(nodes),
-                                                 aes(label = ifelse(( interaction == TRUE ) & (Quality > threshold * (max(nodes[, Quality]))), Feature, '')),
+             p + geom_text_repel(data = data.frame(nodes_labels),
+                                                 aes(label=Feature),
                                                  angle = 90, nudge_y = 0.05, direction  = "x", vjust = 0, segment.size = 0.2 )
            },
            roots = {
-             p + geom_label_repel(data = data.frame(roots), aes(label = ifelse(Quality > threshold * (max(nodes[, Quality])), Feature, '')))
+             p + geom_label_repel(data = data.frame(roots_labels), aes(label = Feature))
            })}
 
-  p <- p + theme_drwhy()+ ylab("Gain") +
+  q <- p + theme_drwhy()+ ylab("Gain") +
     scale_shape_discrete("Depth") +
-    scale_colour_discrete("Depth") + if (log_scale) {scale_x_continuous(trans = 'log10')}
-  p
+    scale_colour_discrete("Depth") + if (log_scale) {scale_x_log10(limits = c(NA, max(nodes[,"Tree"])))}
+  q
 }
 

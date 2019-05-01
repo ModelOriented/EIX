@@ -4,7 +4,7 @@ author: "Ewelina Karbowiak"
 date: "2018-29-03"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{EIX for Titanic data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

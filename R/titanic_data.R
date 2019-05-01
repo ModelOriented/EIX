@@ -33,7 +33,7 @@
 #' @keywords titanic_data
 #' @name titanic_data
 #' @references   \url{https://www.encyclopedia-titanica.org}, \url{http://biostat.mc.vanderbilt.edu/DataSets},
-#' \url{https://CRAN.R-project.org/package=stablelearner}, \url{https://cran.r-project.org/web/packages/DALEX/index.html}.
+#' \url{https://CRAN.R-project.org/package=stablelearner}, \url{https://cran.r-project.org/package=DALEX}.
 #' @source The description of dataset was copied from the \code{DALEX} package.
 #' This dataset was copied from the \code{stablelearner} package and went through few variable
 #' transformations. The complete list of persons on the RMS titanic was downloaded from
