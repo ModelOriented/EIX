@@ -154,37 +154,37 @@ and <code>xgboostExplainer</code> code created by David Foster.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='st'>"EIX"</span>)
+    <pre class="examples"><div class='input'>
+</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='st'>"EIX"</span>)
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='st'>"Matrix"</span>)
 <span class='no'>sm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/Matrix/topics/sparse.model.matrix'>sparse.model.matrix</a></span>(<span class='no'>left</span> ~ <span class='no'>.</span> - <span class='fl'>1</span>,  <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>HR_data</span>)
 
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='st'>"xgboost"</span>)
 <span class='no'>param</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>objective</span> <span class='kw'>=</span> <span class='st'>"binary:logistic"</span>, <span class='kw'>max_depth</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-<span class='no'>xgb_model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/xgboost/topics/xgb.train'>xgboost</a></span>(<span class='no'>sm</span>, <span class='kw'>params</span> <span class='kw'>=</span> <span class='no'>param</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='no'>HR_data</span>[, <span class='no'>left</span>] <span class='kw'>==</span> <span class='fl'>1</span>, <span class='kw'>nrounds</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>0</span>)
+<span class='no'>xgb_model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/xgboost/topics/xgb.train'>xgboost</a></span>(<span class='no'>sm</span>, <span class='kw'>params</span> <span class='kw'>=</span> <span class='no'>param</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='no'>HR_data</span>[, <span class='no'>left</span>] <span class='kw'>==</span> <span class='fl'>1</span>, <span class='kw'>nrounds</span> <span class='kw'>=</span> <span class='fl'>25</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>0</span>)
 
 <span class='no'>data</span> <span class='kw'>&lt;-</span> <span class='no'>HR_data</span>[<span class='fl'>9</span>,-<span class='fl'>7</span>]
 <span class='no'>new_observation</span> <span class='kw'>&lt;-</span> <span class='no'>sm</span>[<span class='fl'>9</span>,]
+
 <span class='no'>wf</span> <span class='kw'>&lt;-</span> <span class='fu'>waterfall</span>(<span class='no'>xgb_model</span>, <span class='no'>new_observation</span>, <span class='no'>data</span>,  <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"interactions"</span>)
-<span class='no'>wf</span></div><div class='output co'>#&gt;                                                          contribution
-#&gt; xgboost: intercept                                             -1.530
-#&gt; xgboost: time_spend_company = 5                                 1.519
-#&gt; xgboost: last_evaluation = 1                                    1.485
-#&gt; xgboost: Work_accident = 0                                     -0.736
-#&gt; xgboost: satisfaction_level:time_spend_company = 0.89:5         0.406
-#&gt; xgboost: last_evaluation:time_spend_company = 1:5               0.316
-#&gt; xgboost: number_project:last_evaluation = 5:1                   0.258
-#&gt; xgboost: satisfaction_level = 0.89                             -0.238
-#&gt; xgboost: last_evaluation:average_montly_hours = 1:224           0.227
-#&gt; xgboost: number_project = 5                                    -0.224
-#&gt; xgboost: salary = 2                                             0.166
-#&gt; xgboost: average_montly_hours:last_evaluation = 224:1          -0.156
-#&gt; xgboost: last_evaluation:satisfaction_level = 1:0.89            0.111
-#&gt; xgboost: average_montly_hours:time_spend_company = 224:5        0.098
-#&gt; xgboost: time_spend_company:last_evaluation = 5:1               0.095
-#&gt; xgboost: average_montly_hours:number_project = 224:5            0.094
-#&gt; xgboost: average_montly_hours = 224                            -0.048
-#&gt; xgboost: satisfaction_level:number_project = 0.89:5            -0.003
-#&gt; xgboost: prediction                                             1.839</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>wf</span>)</div><div class='img'><img src='waterfall-1.png' alt='' width='700' height='433' /></div></pre>
+<span class='no'>wf</span></div><div class='output co'>#&gt;                                                         contribution
+#&gt; xgboost: intercept                                            -1.492
+#&gt; xgboost: time_spend_company = 5                                1.360
+#&gt; xgboost: last_evaluation = 1                                   1.093
+#&gt; xgboost: Work_accident = 0                                    -0.423
+#&gt; xgboost: satisfaction_level = 0.89                            -0.390
+#&gt; xgboost: last_evaluation:time_spend_company = 1:5              0.297
+#&gt; xgboost: last_evaluation:average_montly_hours = 1:224          0.227
+#&gt; xgboost: satisfaction_level:time_spend_company = 0.89:5        0.223
+#&gt; xgboost: number_project = 5                                   -0.211
+#&gt; xgboost: average_montly_hours:last_evaluation = 224:1         -0.156
+#&gt; xgboost: average_montly_hours = 224                           -0.096
+#&gt; xgboost: time_spend_company:last_evaluation = 5:1              0.095
+#&gt; xgboost: salary = 2                                            0.074
+#&gt; xgboost: satisfaction_level:number_project = 0.89:5           -0.003
+#&gt; xgboost: prediction                                            0.597</div><div class='input'>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>wf</span>)</div><div class='img'><img src='waterfall-1.png' alt='' width='700' height='433' /></div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

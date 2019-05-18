@@ -55,14 +55,13 @@ Additionally for plots with single variables:
 }
 }
 \examples{
-\dontrun{
 library("EIX")
 library("Matrix")
 sm <- sparse.model.matrix(left ~ . - 1,  data = HR_data)
 
 library("xgboost")
 param <- list(objective = "binary:logistic", max_depth = 2)
-xgb_model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 50, verbose=0)
+xgb_model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 25, verbose=0)
 
 imp <- importance(xgb_model, sm, option = "both")
 imp
@@ -80,10 +79,11 @@ plot(imp,  top = nrow(imp))
  imp
  plot(imp, top = nrow(imp), radar = FALSE, xmeasure = "sumCover", ymeasure = "sumGain")
 
+\donttest{
 library(lightgbm)
 train_data <- lgb.Dataset(sm, label =  HR_data[, left] == 1)
 params <- list(objective = "binary", max_depth = 2)
-lgb_model <- lgb.train(params, train_data, 50)
+lgb_model <- lgb.train(params, train_data, 25)
 
 imp <- importance(lgb_model, sm, option = "both")
 imp

@@ -28,23 +28,26 @@
 #' @importFrom xgboost xgb.DMatrix
 #'
 #' @examples
-#' \dontrun{
+#'
+#' \donttest{
 #' library("EIX")
 #' library("Matrix")
 #' sm <- sparse.model.matrix(left ~ . - 1,  data = HR_data)
 #'
 #' library("xgboost")
 #' param <- list(objective = "binary:logistic", max_depth = 2)
-#' xgb_model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 50, verbose=0)
+#' xgb_model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 25, verbose=0)
 #'
 #' data <- HR_data[9,-7]
 #' new_observation <- sm[9,]
+#'
 #' wf <- waterfall(xgb_model, new_observation, data,  option = "interactions")
 #' wf
-#' plot(wf)
-#'}
-#' @export
 #'
+#' plot(wf)
+#' }
+#'
+#' @export
 #'
 waterfall <- function(xgb_model, new_observation, data, type = "binary", option = "interactions", baseline = 0){
   #uses pieces of breakDown code created by Przemysław Biecek

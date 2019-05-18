@@ -178,195 +178,145 @@ of variables' or interactions' importance in the model.</p></td>
 
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='st'>"xgboost"</span>)
 <span class='no'>param</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>objective</span> <span class='kw'>=</span> <span class='st'>"binary:logistic"</span>, <span class='kw'>max_depth</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-<span class='no'>xgb_model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/xgboost/topics/xgb.train'>xgboost</a></span>(<span class='no'>sm</span>, <span class='kw'>params</span> <span class='kw'>=</span> <span class='no'>param</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='no'>HR_data</span>[, <span class='no'>left</span>] <span class='kw'>==</span> <span class='fl'>1</span>, <span class='kw'>nrounds</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>0</span>)
+<span class='no'>xgb_model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/xgboost/topics/xgb.train'>xgboost</a></span>(<span class='no'>sm</span>, <span class='kw'>params</span> <span class='kw'>=</span> <span class='no'>param</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='no'>HR_data</span>[, <span class='no'>left</span>] <span class='kw'>==</span> <span class='fl'>1</span>, <span class='kw'>nrounds</span> <span class='kw'>=</span> <span class='fl'>25</span>, <span class='kw'>verbose</span><span class='kw'>=</span><span class='fl'>0</span>)
 
 <span class='no'>imp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='importance.html'>importance</a></span>(<span class='no'>xgb_model</span>, <span class='no'>sm</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"both"</span>)
-<span class='no'>imp</span></div><div class='output co'>#&gt;                                     Feature  sumGain sumCover meanGain
-#&gt;  1:                      satisfaction_level 10040.00  43920.0   264.10
-#&gt;  2:                      time_spend_company  4016.00  19820.0   267.70
-#&gt;  3:                          number_project  3706.00  13940.0   264.70
-#&gt;  4:                         last_evaluation  1181.00  15340.0    90.81
-#&gt;  5:                    average_montly_hours   886.00  18190.0    46.63
-#&gt;  6:    last_evaluation:average_montly_hours   745.60   1767.0   372.80
-#&gt;  7:      last_evaluation:satisfaction_level   708.90   2985.0   177.20
-#&gt;  8:      last_evaluation:time_spend_company   635.00   2535.0   211.70
-#&gt;  9:   satisfaction_level:time_spend_company   560.00   1144.0   280.00
-#&gt; 10:          last_evaluation:number_project   390.20   1163.0   390.20
-#&gt; 11: average_montly_hours:time_spend_company   318.00    906.5   159.00
-#&gt; 12:    average_montly_hours:last_evaluation   312.10   1224.0   156.10
-#&gt; 13:                           Work_accident   231.20   3972.0    57.81
-#&gt; 14:     average_montly_hours:number_project   174.20    504.9   174.20
-#&gt; 15: average_montly_hours:satisfaction_level   169.90    575.8   169.90
-#&gt; 16: satisfaction_level:average_montly_hours   168.40    496.0   168.40
-#&gt; 17:                               salarylow   132.40   3015.0    44.13
-#&gt; 18:      satisfaction_level:last_evaluation   131.80    584.4   131.80
-#&gt; 19:      time_spend_company:last_evaluation   112.10   1342.0    56.03
-#&gt; 20:       satisfaction_level:number_project    87.10   1096.0    87.10
-#&gt; 21:                            salarymedium    45.28    709.2    45.28
-#&gt; 22:       time_spend_company:number_project    39.78    136.9    39.78
-#&gt; 23:          number_project:last_evaluation    19.03    776.2    19.03
-#&gt; 24:                  salarylow:salarymedium    14.39    337.7    14.39
-#&gt;                                     Feature  sumGain sumCover meanGain
-#&gt;     meanCover frequency mean5Gain
-#&gt;  1:    1156.0        38   1513.00
-#&gt;  2:    1321.0        15    670.40
-#&gt;  3:     995.6        14    697.40
-#&gt;  4:    1180.0        13    183.00
-#&gt;  5:     957.6        19     97.50
-#&gt;  6:     883.7         2    372.80
-#&gt;  7:     746.2         4    177.20
-#&gt;  8:     845.0         3    211.70
-#&gt;  9:     571.9         2    280.00
-#&gt; 10:    1163.0         1    390.20
-#&gt; 11:     453.2         2    159.00
-#&gt; 12:     612.2         2    156.10
-#&gt; 13:     992.9         4     57.81
-#&gt; 14:     504.9         1    174.20
-#&gt; 15:     575.8         1    169.90
-#&gt; 16:     496.0         1    168.40
-#&gt; 17:    1005.0         3     44.13
-#&gt; 18:     584.4         1    131.80
-#&gt; 19:     671.2         2     56.03
-#&gt; 20:    1096.0         1     87.10
-#&gt; 21:     709.2         1     45.28
-#&gt; 22:     136.9         1     39.78
-#&gt; 23:     776.2         1     19.03
-#&gt; 24:     337.7         1     14.39
-#&gt;     meanCover frequency mean5Gain</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>imp</span>,  <span class='kw'>top</span> <span class='kw'>=</span> <span class='fl'>10</span>)</div><div class='img'><img src='plot.importance-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='no'>imp</span></div><div class='output co'>#&gt;                                     Feature sumGain sumCover meanGain meanCover
+#&gt;  1:                      satisfaction_level 9549.00  33480.0   502.60    1762.0
+#&gt;  2:                      time_spend_company 3902.00  16670.0   354.70    1516.0
+#&gt;  3:                          number_project 3645.00  11670.0   331.40    1061.0
+#&gt;  4:                         last_evaluation  993.00   9803.0   141.90    1400.0
+#&gt;  5:    last_evaluation:average_montly_hours  702.10    697.7   702.10     697.7
+#&gt;  6:      last_evaluation:time_spend_company  564.30    665.5   564.30     665.5
+#&gt;  7:      last_evaluation:satisfaction_level  502.90   1374.0   502.90    1374.0
+#&gt;  8:                    average_montly_hours  487.50   6995.0    97.50    1399.0
+#&gt;  9:          last_evaluation:number_project  390.20   1163.0   390.20    1163.0
+#&gt; 10:   satisfaction_level:time_spend_company  332.20    753.6   332.20     753.6
+#&gt; 11: average_montly_hours:time_spend_company  262.60    549.2   262.60     549.2
+#&gt; 12:    average_montly_hours:last_evaluation  249.10    837.4   249.10     837.4
+#&gt; 13:                           Work_accident  198.00   2820.0    98.99    1410.0
+#&gt; 14: satisfaction_level:average_montly_hours  168.40    496.0   168.40     496.0
+#&gt; 15:                               salarylow   90.24   1444.0    90.24    1444.0
+#&gt; 16:       satisfaction_level:number_project   87.10   1096.0    87.10    1096.0
+#&gt; 17:      time_spend_company:last_evaluation   86.27   1242.0    86.27    1242.0
+#&gt; 18:                            salarymedium   45.28    709.2    45.28     709.2
+#&gt;     frequency mean5Gain
+#&gt;  1:        19   1513.00
+#&gt;  2:        11    670.40
+#&gt;  3:        11    697.40
+#&gt;  4:         7    183.00
+#&gt;  5:         1    702.10
+#&gt;  6:         1    564.30
+#&gt;  7:         1    502.90
+#&gt;  8:         5     97.50
+#&gt;  9:         1    390.20
+#&gt; 10:         1    332.20
+#&gt; 11:         1    262.60
+#&gt; 12:         1    249.10
+#&gt; 13:         2     98.99
+#&gt; 14:         1    168.40
+#&gt; 15:         1     90.24
+#&gt; 16:         1     87.10
+#&gt; 17:         1     86.27
+#&gt; 18:         1     45.28</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>imp</span>,  <span class='kw'>top</span> <span class='kw'>=</span> <span class='fl'>10</span>)</div><div class='img'><img src='plot.importance-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='no'>imp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='importance.html'>importance</a></span>(<span class='no'>xgb_model</span>, <span class='no'>sm</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"variables"</span>)
 <span class='no'>imp</span></div><div class='output co'>#&gt;                 Feature numberOfRoots weightedRoot meanDepth  sumGain sumCover
-#&gt; 1:   satisfaction_level            16      12.3800   0.21160 10920.00    47480
-#&gt; 2:   time_spend_company             5       0.2425   0.90240  5529.00    24410
-#&gt; 3:       number_project             2       0.0088   0.98880  4398.00    16840
-#&gt; 4: average_montly_hours            11       0.5522   0.68970  1800.00    20460
-#&gt; 5:      last_evaluation            11       1.0370   0.40280  1756.00    19270
-#&gt; 6:        Work_accident             3       0.0592   0.05031   231.20     3972
-#&gt; 7:            salarylow             2       0.0186   0.21850   132.40     3015
-#&gt; 8:         salarymedium             0       0.0000   1.00000    59.67     1047
+#&gt; 1:   satisfaction_level            11       8.9340    0.1598 10050.00  34850.0
+#&gt; 2:   time_spend_company             3       0.1399    0.9042  5061.00  18640.0
+#&gt; 3:       number_project             0       0.0000    1.0000  4122.00  13930.0
+#&gt; 4: average_montly_hours             3       0.0920    0.7652  1358.00   8189.0
+#&gt; 5:      last_evaluation             5       0.4139    0.3519  1328.00  11880.0
+#&gt; 6:        Work_accident             2       0.0381    0.0000   198.00   2820.0
+#&gt; 7:            salarylow             1       0.0087    0.0000    90.24   1444.0
+#&gt; 8:         salarymedium             0       0.0000    1.0000    45.28    709.2
 #&gt;    meanGain meanCover frequency mean5Gain
-#&gt; 1:   253.90    1104.0        43   1513.00
-#&gt; 2:   251.30    1109.0        22    751.50
-#&gt; 3:   244.30     935.5        18    721.70
-#&gt; 4:    81.82     929.9        22    241.70
-#&gt; 5:    92.40    1014.0        19    209.80
-#&gt; 6:    57.81     992.9         4     57.81
-#&gt; 7:    44.13    1005.0         3     44.13
-#&gt; 8:    29.84     523.4         2     29.84</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>imp</span>,  <span class='kw'>top</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/nrow'>nrow</a></span>(<span class='no'>imp</span>))</div><div class='img'><img src='plot.importance-2.png' alt='' width='700' height='433' /></div><div class='input'>
+#&gt; 1:   502.60    1743.0        20   1513.00
+#&gt; 2:   361.50    1332.0        14    751.50
+#&gt; 3:   317.10    1071.0        13    721.70
+#&gt; 4:   194.00    1170.0         7    241.70
+#&gt; 5:   147.60    1320.0         9    208.60
+#&gt; 6:    98.99    1410.0         2     98.99
+#&gt; 7:    90.24    1444.0         1     90.24
+#&gt; 8:    45.28     709.2         1     45.28</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>imp</span>,  <span class='kw'>top</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/nrow'>nrow</a></span>(<span class='no'>imp</span>))</div><div class='img'><img src='plot.importance-2.png' alt='' width='700' height='433' /></div><div class='input'>
  <span class='no'>imp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='importance.html'>importance</a></span>(<span class='no'>xgb_model</span>, <span class='no'>sm</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"interactions"</span>)
  <span class='no'>imp</span></div><div class='output co'>#&gt;                                     Feature sumGain sumCover meanGain meanCover
-#&gt;  1:    last_evaluation:average_montly_hours  745.60   1767.0   372.80     883.7
-#&gt;  2:      last_evaluation:satisfaction_level  708.90   2985.0   177.20     746.2
-#&gt;  3:      last_evaluation:time_spend_company  635.00   2535.0   211.70     845.0
-#&gt;  4:   satisfaction_level:time_spend_company  560.00   1144.0   280.00     571.9
-#&gt;  5:          last_evaluation:number_project  390.20   1163.0   390.20    1163.0
-#&gt;  6: average_montly_hours:time_spend_company  318.00    906.5   159.00     453.2
-#&gt;  7:    average_montly_hours:last_evaluation  312.10   1224.0   156.10     612.2
-#&gt;  8:     average_montly_hours:number_project  174.20    504.9   174.20     504.9
-#&gt;  9: average_montly_hours:satisfaction_level  169.90    575.8   169.90     575.8
-#&gt; 10: satisfaction_level:average_montly_hours  168.40    496.0   168.40     496.0
-#&gt; 11:      satisfaction_level:last_evaluation  131.80    584.4   131.80     584.4
-#&gt; 12:      time_spend_company:last_evaluation  112.10   1342.0    56.03     671.2
-#&gt; 13:       satisfaction_level:number_project   87.10   1096.0    87.10    1096.0
-#&gt; 14:       time_spend_company:number_project   39.78    136.9    39.78     136.9
-#&gt; 15:          number_project:last_evaluation   19.03    776.2    19.03     776.2
-#&gt; 16:                  salarylow:salarymedium   14.39    337.7    14.39     337.7
+#&gt;  1:    last_evaluation:average_montly_hours  702.10    697.7   702.10     697.7
+#&gt;  2:      last_evaluation:time_spend_company  564.30    665.5   564.30     665.5
+#&gt;  3:      last_evaluation:satisfaction_level  502.90   1374.0   502.90    1374.0
+#&gt;  4:          last_evaluation:number_project  390.20   1163.0   390.20    1163.0
+#&gt;  5:   satisfaction_level:time_spend_company  332.20    753.6   332.20     753.6
+#&gt;  6: average_montly_hours:time_spend_company  262.60    549.2   262.60     549.2
+#&gt;  7:    average_montly_hours:last_evaluation  249.10    837.4   249.10     837.4
+#&gt;  8: satisfaction_level:average_montly_hours  168.40    496.0   168.40     496.0
+#&gt;  9:       satisfaction_level:number_project   87.10   1096.0    87.10    1096.0
+#&gt; 10:      time_spend_company:last_evaluation   86.27   1242.0    86.27    1242.0
 #&gt;     frequency mean5Gain
-#&gt;  1:         2    372.80
-#&gt;  2:         4    177.20
-#&gt;  3:         3    211.70
-#&gt;  4:         2    280.00
-#&gt;  5:         1    390.20
-#&gt;  6:         2    159.00
-#&gt;  7:         2    156.10
-#&gt;  8:         1    174.20
-#&gt;  9:         1    169.90
-#&gt; 10:         1    168.40
-#&gt; 11:         1    131.80
-#&gt; 12:         2     56.03
-#&gt; 13:         1     87.10
-#&gt; 14:         1     39.78
-#&gt; 15:         1     19.03
-#&gt; 16:         1     14.39</div><div class='input'> <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>imp</span>,  <span class='kw'>top</span> <span class='kw'>=</span> <span class='fl'>10</span>)</div><div class='img'><img src='plot.importance-3.png' alt='' width='700' height='433' /></div><div class='input'>
+#&gt;  1:         1    702.10
+#&gt;  2:         1    564.30
+#&gt;  3:         1    502.90
+#&gt;  4:         1    390.20
+#&gt;  5:         1    332.20
+#&gt;  6:         1    262.60
+#&gt;  7:         1    249.10
+#&gt;  8:         1    168.40
+#&gt;  9:         1     87.10
+#&gt; 10:         1     86.27</div><div class='input'> <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>imp</span>,  <span class='kw'>top</span> <span class='kw'>=</span> <span class='fl'>10</span>)</div><div class='img'><img src='plot.importance-3.png' alt='' width='700' height='433' /></div><div class='input'>
  <span class='no'>imp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='importance.html'>importance</a></span>(<span class='no'>xgb_model</span>, <span class='no'>sm</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"variables"</span>)
  <span class='no'>imp</span></div><div class='output co'>#&gt;                 Feature numberOfRoots weightedRoot meanDepth  sumGain sumCover
-#&gt; 1:   satisfaction_level            16      12.3800   0.21160 10920.00    47480
-#&gt; 2:   time_spend_company             5       0.2425   0.90240  5529.00    24410
-#&gt; 3:       number_project             2       0.0088   0.98880  4398.00    16840
-#&gt; 4: average_montly_hours            11       0.5522   0.68970  1800.00    20460
-#&gt; 5:      last_evaluation            11       1.0370   0.40280  1756.00    19270
-#&gt; 6:        Work_accident             3       0.0592   0.05031   231.20     3972
-#&gt; 7:            salarylow             2       0.0186   0.21850   132.40     3015
-#&gt; 8:         salarymedium             0       0.0000   1.00000    59.67     1047
+#&gt; 1:   satisfaction_level            11       8.9340    0.1598 10050.00  34850.0
+#&gt; 2:   time_spend_company             3       0.1399    0.9042  5061.00  18640.0
+#&gt; 3:       number_project             0       0.0000    1.0000  4122.00  13930.0
+#&gt; 4: average_montly_hours             3       0.0920    0.7652  1358.00   8189.0
+#&gt; 5:      last_evaluation             5       0.4139    0.3519  1328.00  11880.0
+#&gt; 6:        Work_accident             2       0.0381    0.0000   198.00   2820.0
+#&gt; 7:            salarylow             1       0.0087    0.0000    90.24   1444.0
+#&gt; 8:         salarymedium             0       0.0000    1.0000    45.28    709.2
 #&gt;    meanGain meanCover frequency mean5Gain
-#&gt; 1:   253.90    1104.0        43   1513.00
-#&gt; 2:   251.30    1109.0        22    751.50
-#&gt; 3:   244.30     935.5        18    721.70
-#&gt; 4:    81.82     929.9        22    241.70
-#&gt; 5:    92.40    1014.0        19    209.80
-#&gt; 6:    57.81     992.9         4     57.81
-#&gt; 7:    44.13    1005.0         3     44.13
-#&gt; 8:    29.84     523.4         2     29.84</div><div class='input'> <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>imp</span>, <span class='kw'>top</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/nrow'>nrow</a></span>(<span class='no'>imp</span>), <span class='kw'>radar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>xmeasure</span> <span class='kw'>=</span> <span class='st'>"sumCover"</span>, <span class='kw'>ymeasure</span> <span class='kw'>=</span> <span class='st'>"sumGain"</span>)</div><div class='img'><img src='plot.importance-4.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>lightgbm</span>)
+#&gt; 1:   502.60    1743.0        20   1513.00
+#&gt; 2:   361.50    1332.0        14    751.50
+#&gt; 3:   317.10    1071.0        13    721.70
+#&gt; 4:   194.00    1170.0         7    241.70
+#&gt; 5:   147.60    1320.0         9    208.60
+#&gt; 6:    98.99    1410.0         2     98.99
+#&gt; 7:    90.24    1444.0         1     90.24
+#&gt; 8:    45.28     709.2         1     45.28</div><div class='input'> <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>imp</span>, <span class='kw'>top</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/nrow'>nrow</a></span>(<span class='no'>imp</span>), <span class='kw'>radar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>xmeasure</span> <span class='kw'>=</span> <span class='st'>"sumCover"</span>, <span class='kw'>ymeasure</span> <span class='kw'>=</span> <span class='st'>"sumGain"</span>)</div><div class='img'><img src='plot.importance-4.png' alt='' width='700' height='433' /></div><div class='input'>
+</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>lightgbm</span>)
 <span class='no'>train_data</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/lightgbm/topics/lgb.Dataset'>lgb.Dataset</a></span>(<span class='no'>sm</span>, <span class='kw'>label</span> <span class='kw'>=</span>  <span class='no'>HR_data</span>[, <span class='no'>left</span>] <span class='kw'>==</span> <span class='fl'>1</span>)
 <span class='no'>params</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>objective</span> <span class='kw'>=</span> <span class='st'>"binary"</span>, <span class='kw'>max_depth</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-<span class='no'>lgb_model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/lightgbm/topics/lgb.train'>lgb.train</a></span>(<span class='no'>params</span>, <span class='no'>train_data</span>, <span class='fl'>50</span>)
+<span class='no'>lgb_model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/lightgbm/topics/lgb.train'>lgb.train</a></span>(<span class='no'>params</span>, <span class='no'>train_data</span>, <span class='fl'>25</span>)
 
 <span class='no'>imp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='importance.html'>importance</a></span>(<span class='no'>lgb_model</span>, <span class='no'>sm</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"both"</span>)
-<span class='no'>imp</span></div><div class='output co'>#&gt;                                     Feature sumGain sumCover meanGain meanCover
-#&gt;  1:                      satisfaction_level 23630.0   112400   675.20      3211
-#&gt;  2:                          number_project 10070.0    52230   279.70      1451
-#&gt;  3:                      time_spend_company  8649.0    69620   360.40      2901
-#&gt;  4:   satisfaction_level:time_spend_company  2434.0     8112   811.30      2704
-#&gt;  5:                         last_evaluation  1966.0    49060    89.38      2230
-#&gt;  6:      last_evaluation:satisfaction_level  1595.0    14760   319.00      2952
-#&gt;  7:    last_evaluation:average_montly_hours  1328.0     5058   442.70      1686
-#&gt;  8:      last_evaluation:time_spend_company  1043.0     2498   521.30      1249
-#&gt;  9: average_montly_hours:time_spend_company   819.9     2946   410.00      1473
-#&gt; 10:                    average_montly_hours   787.7    21960   131.30      3659
-#&gt; 11:     average_montly_hours:number_project   453.5     2374   453.50      2374
-#&gt; 12:    average_montly_hours:last_evaluation   419.0     2179   419.00      2179
-#&gt; 13:          number_project:last_evaluation   411.1     3750   205.50      1875
-#&gt; 14:                           Work_accident   372.1    11250   124.00      3750
-#&gt; 15:      time_spend_company:last_evaluation   341.3     2939   341.30      2939
-#&gt; 16: average_montly_hours:satisfaction_level   292.9     7256   146.50      3628
-#&gt; 17: satisfaction_level:average_montly_hours   117.6     3409   117.60      3409
-#&gt; 18:                 Work_accident:salarylow   101.1     3208   101.10      3208
-#&gt;     frequency mean5Gain
-#&gt;  1:        35    2227.0
-#&gt;  2:        36     997.4
-#&gt;  3:        24     955.7
-#&gt;  4:         3     811.3
-#&gt;  5:        22     217.8
-#&gt;  6:         5     319.0
-#&gt;  7:         3     442.7
-#&gt;  8:         2     521.3
-#&gt;  9:         2     410.0
-#&gt; 10:         6     137.9
-#&gt; 11:         1     453.5
-#&gt; 12:         1     419.0
-#&gt; 13:         2     205.5
-#&gt; 14:         3     124.0
-#&gt; 15:         1     341.3
-#&gt; 16:         2     146.5
-#&gt; 17:         1     117.6
-#&gt; 18:         1     101.1</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>imp</span>,  <span class='kw'>top</span> <span class='kw'>=</span> <span class='fl'>10</span>)</div><div class='img'><img src='plot.importance-5.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='no'>imp</span></div><div class='output co'>#&gt;                                  Feature sumGain sumCover meanGain meanCover
+#&gt; 1:                    satisfaction_level 22290.0    77090  1013.00      3504
+#&gt; 2:                        number_project  9900.0    45910   396.00      1836
+#&gt; 3:                    time_spend_company  7284.0    38150   560.30      2934
+#&gt; 4: satisfaction_level:time_spend_company  2434.0     8112   811.30      2704
+#&gt; 5:                       last_evaluation   757.3    11550    84.14      1283
+#&gt; 6:  last_evaluation:average_montly_hours   658.0     1249   658.00      1249
+#&gt; 7:    last_evaluation:satisfaction_level   540.0     2500   540.00      2500
+#&gt; 8:    time_spend_company:last_evaluation   341.3     2939   341.30      2939
+#&gt;    frequency mean5Gain
+#&gt; 1:        22    2227.0
+#&gt; 2:        25     997.4
+#&gt; 3:        13     955.7
+#&gt; 4:         3     811.3
+#&gt; 5:         9     151.5
+#&gt; 6:         1     658.0
+#&gt; 7:         1     540.0
+#&gt; 8:         1     341.3</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>imp</span>,  <span class='kw'>top</span> <span class='kw'>=</span> <span class='fl'>10</span>)</div><div class='output co'>#&gt; <span class='error'>Error: Aesthetics must be either length 1 or the same as the data (9): y</span></div><div class='input'>
 <span class='no'>imp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='importance.html'>importance</a></span>(<span class='no'>lgb_model</span>, <span class='no'>sm</span>, <span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"variables"</span>)
 <span class='no'>imp</span></div><div class='output co'>#&gt;                 Feature numberOfRoots weightedRoot meanDepth sumGain sumCover
-#&gt; 1:   satisfaction_level            24      20.2700    0.1633 25520.0   134400
-#&gt; 2:   time_spend_company             8       0.5141    0.8745 12950.0    83180
-#&gt; 3:       number_project             1       0.0034    0.9919 10520.0    54600
-#&gt; 4:      last_evaluation             9       0.4195    0.6245  3138.0    57930
-#&gt; 5: average_montly_hours             5       0.1319    0.7013  2233.0    30420
-#&gt; 6:        Work_accident             3       0.0442    0.0000   372.1    11250
-#&gt; 7:            salarylow             0       0.0000    1.0000   101.1     3208
+#&gt; 1:   satisfaction_level            20      18.8300   0.08783   22830    79590
+#&gt; 2:       number_project             0       0.0000   1.00000    9900    45910
+#&gt; 3:   time_spend_company             4       0.1914   0.89110    9718    46260
+#&gt; 4:      last_evaluation             1       0.0106   0.78610    1099    14490
+#&gt; 5: average_montly_hours             0       0.0000   1.00000     658     1249
 #&gt;    meanGain meanCover frequency mean5Gain
-#&gt; 1:    607.6      3200        42    2227.0
-#&gt; 2:    417.6      2683        31     995.1
-#&gt; 3:    284.4      1476        37     997.4
-#&gt; 4:    120.7      2228        26     303.5
-#&gt; 5:    223.3      3042        10     331.0
-#&gt; 6:    124.0      3750         3     124.0
-#&gt; 7:    101.1      3208         1     101.1</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>imp</span>, <span class='kw'>top</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>radar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>xmeasure</span> <span class='kw'>=</span> <span class='st'>"sumCover"</span>, <span class='kw'>ymeasure</span> <span class='kw'>=</span> <span class='st'>"sumGain"</span>)</div><div class='img'><img src='plot.importance-6.png' alt='' width='700' height='433' /></div><div class='input'>
+#&gt; 1:    992.7      3460        23    2227.0
+#&gt; 2:    396.0      1836        25     997.4
+#&gt; 3:    607.4      2891        16     995.1
+#&gt; 4:    109.9      1449        10     219.7
+#&gt; 5:    658.0      1249         1     658.0</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>imp</span>, <span class='kw'>top</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>radar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>xmeasure</span> <span class='kw'>=</span> <span class='st'>"sumCover"</span>, <span class='kw'>ymeasure</span> <span class='kw'>=</span> <span class='st'>"sumGain"</span>)</div><div class='img'><img src='plot.importance-5.png' alt='' width='700' height='433' /></div><div class='input'>
 </div><div class='input'>
 </div></pre>
   </div>

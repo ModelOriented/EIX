@@ -26,14 +26,13 @@
 #' @importFrom stats frequency
 #'
 #' @examples
-#' \dontrun{
 #' library("EIX")
 #' library("Matrix")
 #' sm <- sparse.model.matrix(left ~ . - 1,  data = HR_data)
 #'
 #' library("xgboost")
 #' param <- list(objective = "binary:logistic", max_depth = 2)
-#' xgb_model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 50, verbose=0)
+#' xgb_model <- xgboost(sm, params = param, label = HR_data[, left] == 1, nrounds = 25, verbose=0)
 #'
 #' inter <- interactions(xgb_model, sm, option = "interactions")
 #' inter
@@ -43,10 +42,11 @@
 #' inter
 #' plot(inter)
 #'
+#' \donttest{
 #'library(lightgbm)
 #'train_data <- lgb.Dataset(sm, label =  HR_data[, left] == 1)
 #'params <- list(objective = "binary", max_depth = 2)
-#'lgb_model <- lgb.train(params, train_data, 50)
+#'lgb_model <- lgb.train(params, train_data, 25)
 #'
 #' inter <- interactions(lgb_model, sm, option = "interactions")
 #' inter
