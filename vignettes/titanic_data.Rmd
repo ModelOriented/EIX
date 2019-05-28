@@ -9,17 +9,18 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
+```{r, echo=FALSE}
 knitr::opts_chunk$set(fig.height = 6, fig.width = 6, fig.align = "center")
-#devtools :: install_github("ekarbowiak/EIX")
-library("EIX")
+
 ```
 
 ## Data Info
 This vignette shows usage of `EIX` package for titanic data. This dataset was copied from `stablelearner` package. With `EIX` package we explain XGBoost classification model concerning the survival problem. More details about `EIX` package [here](https://modeloriented.github.io/EIX/articles/EIX.html).
 
 
-```{r, warning=FALSE, message=FALSE}
+```{r}
+#devtools :: install_github("ModelOriented/EIX")
+library("EIX")
 library(data.table)
 set.seed(4)
 titanic_data<-data.table(na.omit(titanic_data))
@@ -44,7 +45,7 @@ xgb_model <- xgboost(sparse_matrix, params = param, label = titanic_data[, "surv
 
 First let's plot the model.
 
-```{r, warning=FALSE, message=FALSE}
+```{r}
 lolli<-lollipop(xgb_model,sparse_matrix)
 plot(lolli, threshold=0.02)
 ```
@@ -54,7 +55,7 @@ plot(lolli, threshold=0.02)
 
 Next we explore interactions using `interactions()` functions and its plot.
 
-```{r, warning=FALSE, message=FALSE}
+```{r}
 interactions<-interactions(xgb_model, sparse_matrix, option = "interactions")
 head(interactions, 15)
 plot(interactions)
@@ -62,13 +63,13 @@ plot(interactions)
 
 ## Variables' and interactions’ importance
 
-```{r, warning=FALSE, message=FALSE}
+```{r}
 importance<-importance(xgb_model, sparse_matrix, option = "both")
 head(importance, 15)
 plot(importance, radar=FALSE)
 ```
 
-```{r, warning=FALSE, message=FALSE}
+```{r}
 plot(importance)
 ```
 
@@ -76,7 +77,7 @@ plot(importance)
 
 Let's see an explanation of the prediction for an 18-year-old from England who has traveled 3rd class.
 
-```{r, warning=FALSE, message=FALSE}
+```{r}
 data <- titanic_data[27,]
 new_observation <- sparse_matrix[27,]
 wf<-waterfall(xgb_model, new_observation, data, option = "interactions")

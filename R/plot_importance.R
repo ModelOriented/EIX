@@ -60,13 +60,13 @@
 #'
 #'  imp <- importance(xgb_model, sm, option = "interactions")
 #'  imp
-#'  plot(imp,  top = 10)
+#' plot(imp,  top =  nrow(imp))
 #'
 #'  imp <- importance(xgb_model, sm, option = "variables")
 #'  imp
-#'  plot(imp, top = nrow(imp), radar = FALSE, xmeasure = "sumCover", ymeasure = "sumGain")
+#' plot(imp, top = NULL, radar = FALSE, xmeasure = "sumCover", ymeasure = "sumGain")
 #'
-#' \donttest{
+#'\donttest{
 #'library(lightgbm)
 #'train_data <- lgb.Dataset(sm, label =  HR_data[, left] == 1)
 #'params <- list(objective = "binary", max_depth = 2)
@@ -74,11 +74,11 @@
 #'
 #' imp <- importance(lgb_model, sm, option = "both")
 #' imp
-#' plot(imp,  top = 10)
+#' plot(imp,  top = nrow(imp))
 #'
 #' imp <- importance(lgb_model, sm, option = "variables")
 #' imp
-#' plot(imp, top = 10, radar = FALSE, xmeasure = "sumCover", ymeasure = "sumGain")
+#' plot(imp, top = NULL, radar = FALSE, xmeasure = "sumCover", ymeasure = "sumGain")
 #'
 #'}
 #'
@@ -91,7 +91,7 @@ plot.importance <- function(x, ...,  top = 10, radar = TRUE, text_start_point = 
   Feature <- sumGain <- sumCover <- meanGain <- meanCover <-
     mean5Gain <- . <- value <- variable <- hjust <- NULL
 
-  if (top == "NULL")
+  if (is.null(top))
     top <- nrow(x)
 
 

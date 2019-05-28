@@ -29,7 +29,6 @@ a ggplot object
 The lollipop plots the model with the most important interactions and variables in the roots.
 }
 \examples{
-options(warn = -1)
 library("EIX")
 library("Matrix")
 sm <- sparse.model.matrix(left ~ . - 1,  data = HR_data)

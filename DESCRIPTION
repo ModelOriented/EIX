@@ -27,7 +27,8 @@ Imports:
     ggiraphExtra,
     iBreakDown,
     Matrix,
-    tidyr
+    tidyr,
+    scales
 RoxygenNote: 6.1.1
 Suggests: knitr,
     rmarkdown,

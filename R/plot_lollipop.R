@@ -19,9 +19,9 @@
 #' @importFrom DALEX theme_drwhy
 #' @importFrom ggrepel geom_label_repel
 #' @importFrom ggrepel geom_text_repel
+#' @importFrom scales pseudo_log_trans
 #'
 #' @examples
-#' options(warn = -1)
 #' library("EIX")
 #' library("Matrix")
 #' sm <- sparse.model.matrix(left ~ . - 1,  data = HR_data)
@@ -79,7 +79,7 @@ roots_labels <- roots[Quality > threshold * (max(nodes[, Quality])),]
 
   q <- p + theme_drwhy()+ ylab("Gain") +
     scale_shape_discrete("Depth") +
-    scale_colour_discrete("Depth") + if (log_scale) {scale_x_log10(limits = c(NA, max(nodes[,"Tree"])))}
+    scale_colour_discrete("Depth") + if (log_scale){scale_x_continuous(trans="pseudo_log")}
   q
 }
 

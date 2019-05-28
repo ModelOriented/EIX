@@ -52,11 +52,11 @@
 #'
 #'  imp <- importance(xgb_model, sm, option = "interactions")
 #'  imp
-#' plot(imp,  top = 10)
+#' plot(imp,  top =  nrow(imp))
 #'
 #'  imp <- importance(xgb_model, sm, option = "variables")
 #'  imp
-#' plot(imp, top = 10, radar = FALSE, xmeasure = "sumCover", ymeasure = "sumGain")
+#' plot(imp, top = NULL, radar = FALSE, xmeasure = "sumCover", ymeasure = "sumGain")
 #'
 #'\donttest{
 #'library(lightgbm)
@@ -66,11 +66,11 @@
 #'
 #' imp <- importance(lgb_model, sm, option = "both")
 #' imp
-#' plot(imp,  top = 10)
+#' plot(imp,  top = nrow(imp))
 #'
 #' imp <- importance(lgb_model, sm, option = "variables")
 #' imp
-#' plot(imp, top = 10, radar = FALSE, xmeasure = "sumCover", ymeasure = "sumGain")
+#' plot(imp, top = NULL, radar = FALSE, xmeasure = "sumCover", ymeasure = "sumGain")
 #'
 #'}
 #'

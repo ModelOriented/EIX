@@ -13,7 +13,6 @@
 #' @import data.table
 #'
 #' @examples
-#' options(warn = -1)
 #' library("EIX")
 #' library("Matrix")
 #' sm <- sparse.model.matrix(left ~ . - 1,  data = HR_data)

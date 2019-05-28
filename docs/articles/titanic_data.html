@@ -90,8 +90,11 @@
 <h2 class="hasAnchor">
 <a href="#data-info" class="anchor"></a>Data Info</h2>
 <p>This vignette shows usage of <code>EIX</code> package for titanic data. This dataset was copied from <code>stablelearner</code> package. With <code>EIX</code> package we explain XGBoost classification model concerning the survival problem. More details about <code>EIX</code> package <a href="https://modeloriented.github.io/EIX/articles/EIX.html">here</a>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(data.table)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">4</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#devtools :: install_github("ModelOriented/EIX")</span>
+<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"EIX"</span>)
+<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(data.table)</code></pre></div>
+<pre><code>## Warning: pakiet 'data.table' został zbudowany w wersji R 3.4.4</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">4</span>)
 titanic_data&lt;-<span class="kw">data.table</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/na.fail">na.omit</a></span>(titanic_data))
 knitr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/knitr/topics/kable">kable</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(titanic_data))</code></pre></div>
 <table class="table">
@@ -175,8 +178,9 @@ knitr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentat
 </tr>
 </tbody>
 </table>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"Matrix"</span>)
-sparse_matrix &lt;-<span class="st"> </span><span class="kw">sparse.model.matrix</span>(survived <span class="op">~</span><span class="st"> </span>. <span class="op">-</span><span class="st"> </span><span class="dv">1</span>,  <span class="dt">data =</span> titanic_data)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"Matrix"</span>)</code></pre></div>
+<pre><code>## Warning: pakiet 'Matrix' został zbudowany w wersji R 3.4.4</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sparse_matrix &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/Matrix/topics/sparse.model.matrix">sparse.model.matrix</a></span>(survived <span class="op">~</span><span class="st"> </span>. <span class="op">-</span><span class="st"> </span><span class="dv">1</span>,  <span class="dt">data =</span> titanic_data)</code></pre></div>
 </div>
 <div id="xgboost-model-creation" class="section level2">
 <h2 class="hasAnchor">
