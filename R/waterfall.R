@@ -148,7 +148,7 @@ waterfall <- function(xgb_model, new_observation, data, type = "binary", option 
 create.broken <- function(broken_intercept, baseline = 0) {
   #code was copied from breakDown package created by Przemysław Biecek (with small modyfications to can use plot from iBreakDown package)
   broken_cumm <- data.frame(broken_intercept,
-                            cummulative = cumsum(as.numeric(broken_intercept$contribution)),
+                            cumulative = cumsum(as.numeric(broken_intercept$contribution)),
                             sign = factor(sign(as.numeric(broken_intercept$contribution)), levels = c(-1, 0, 1)),
                             position = length(broken_intercept$variable) - seq_along(broken_intercept$variable) + 2,
                             label = rep("xgboost", nrow(broken_intercept)))
@@ -157,7 +157,7 @@ create.broken <- function(broken_intercept, baseline = 0) {
                                   contribution = sum(broken_cumm$contribution),
                                   variable_name = "",
                                   variable_value = "",
-                                  cummulative = sum(broken_cumm$contribution),
+                                  cumulative = sum(broken_cumm$contribution),
                                   sign = "X",
                                   position = 1,
                                   label = "xgboost"))
