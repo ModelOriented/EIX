@@ -1,6 +1,6 @@
 Package: EIX
 Title: Explain Interactions in 'XGBoost'
-Version: 1.0
+Version: 1.1
 Authors@R: c(
   person("Ewelina", "Karbowiak", email = "ewelina.karbowiak12@gmail.com", role = c("aut", "cre")),
   person("Przemyslaw", "Biecek", email = "przemyslaw.biecek@gmail.com", role = c("aut","ths"))
@@ -9,7 +9,7 @@ Description: Structure mining from 'XGBoost' and 'LightGBM' models.
     Key functionalities of this package cover: visualisation of tree-based ensembles models,
     identification of interactions, measuring of variable importance,
     measuring of interaction importance, explanation of single prediction 
-    with break down plots (based on 'xgboostExplainer' and 'breakDown' packages). 
+    with break down plots (based on 'xgboostExplainer' and 'iBreakDown' packages). 
     To download the 'LightGBM' use the following link: <https://github.com/Microsoft/LightGBM>.
     'EIX' is a part of the 'DrWhy.AI' universe.
 Depends: R (>= 3.4.0)
