@@ -4,8 +4,14 @@
 \alias{waterfall}
 \title{Explain prediction of a single observation}
 \usage{
-waterfall(xgb_model, new_observation, data, type = "binary",
-  option = "interactions", baseline = 0)
+waterfall(
+  xgb_model,
+  new_observation,
+  data,
+  type = "binary",
+  option = "interactions",
+  baseline = 0
+)
 }
 \arguments{
 \item{xgb_model}{a xgboost model.}

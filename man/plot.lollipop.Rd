@@ -4,8 +4,7 @@
 \alias{plot.lollipop}
 \title{Visualiation of the model}
 \usage{
-\method{plot}{lollipop}(x, ..., labels = "topAll", log_scale = TRUE,
-  threshold = 0.1)
+\method{plot}{lollipop}(x, ..., labels = "topAll", log_scale = TRUE, threshold = 0.1)
 }
 \arguments{
 \item{x}{a result from the \code{lollipop} function.}

@@ -4,9 +4,16 @@
 \alias{plot.importance}
 \title{Plot importance measures}
 \usage{
-\method{plot}{importance}(x, ..., top = 10, radar = TRUE,
-  text_start_point = 0.5, text_size = 3.5, xmeasure = "sumCover",
-  ymeasure = "sumGain")
+\method{plot}{importance}(
+  x,
+  ...,
+  top = 10,
+  radar = TRUE,
+  text_start_point = 0.5,
+  text_size = 3.5,
+  xmeasure = "sumCover",
+  ymeasure = "sumGain"
+)
 }
 \arguments{
 \item{x}{a result from the \code{importance} function.}
