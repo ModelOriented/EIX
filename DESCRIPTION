@@ -26,13 +26,14 @@ Imports:
     ggrepel,
     ggiraphExtra,
     iBreakDown,
-    Matrix,
     tidyr,
     scales
 RoxygenNote: 7.1.1
-Suggests: knitr,
+Suggests:
+    Matrix,
+    knitr,
     rmarkdown,
-    lightgbm,
+    lightgbm
 VignetteBuilder: knitr
 URL: https://github.com/ModelOriented/EIX
 BugReports: https://github.com/ModelOriented/EIX/issues
