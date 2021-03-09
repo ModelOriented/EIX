@@ -1,8 +1,9 @@
 Package: EIX
 Title: Explain Interactions in 'XGBoost'
-Version: 1.1
+Version: 1.2
 Authors@R: c(
-  person("Ewelina", "Karbowiak", email = "ewelina.karbowiak12@gmail.com", role = c("aut", "cre")),
+  person("Szymon", "Maksymiuk", email = "sz.maksymiuk@gmail.com", role = c("cre")),
+  person("Ewelina", "Karbowiak", email = "ewelina.karbowiak12@gmail.com", role = c("aut")),
   person("Przemyslaw", "Biecek", email = "przemyslaw.biecek@gmail.com", role = c("aut","ths"))
   )
 Description: Structure mining from 'XGBoost' and 'LightGBM' models.
@@ -12,7 +13,7 @@ Description: Structure mining from 'XGBoost' and 'LightGBM' models.
     with break down plots (based on 'xgboostExplainer' and 'iBreakDown' packages). 
     To download the 'LightGBM' use the following link: <https://github.com/Microsoft/LightGBM>.
     'EIX' is a part of the 'DrWhy.AI' universe.
-Depends: R (>= 3.4.0)
+Depends: R (>= 3.5.0)
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
