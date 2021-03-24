@@ -1,6 +1,6 @@
 Package: EIX
 Title: Explain Interactions in 'XGBoost'
-Version: 1.2
+Version: 1.2.0
 Authors@R: c(
   person("Szymon", "Maksymiuk", email = "sz.maksymiuk@gmail.com", role = c("aut", "cre")),
   person("Ewelina", "Karbowiak", email = "ewelina.karbowiak12@gmail.com", role = c("aut")),
