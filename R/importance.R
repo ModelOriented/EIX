@@ -59,21 +59,6 @@
 #'  imp
 #' plot(imp, top = NULL, radar = FALSE, xmeasure = "sumCover", ymeasure = "sumGain")
 #'
-#'\donttest{
-#'library(lightgbm)
-#'train_data <- lgb.Dataset(sm, label =  HR_data[, left] == 1)
-#'params <- list(objective = "binary", max_depth = 2)
-#'lgb_model <- lgb.train(params, train_data, 25)
-#'
-#' imp <- importance(lgb_model, sm, option = "both")
-#' imp
-#' plot(imp,  top = nrow(imp))
-#'
-#' imp <- importance(lgb_model, sm, option = "variables")
-#' imp
-#' plot(imp, top = NULL, radar = FALSE, xmeasure = "sumCover", ymeasure = "sumGain")
-#'
-#'}
 #'
 #' @export
 

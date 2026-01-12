@@ -32,13 +32,12 @@
 #' @docType data
 #' @keywords titanic_data
 #' @name titanic_data
-#' @references   \url{https://www.encyclopedia-titanica.org}, \url{http://biostat.mc.vanderbilt.edu/DataSets},
+#' @references   \url{https://www.encyclopedia-titanica.org},
 #' \url{https://CRAN.R-project.org/package=stablelearner}, \url{https://cran.r-project.org/package=DALEX}.
 #' @source The description of dataset was copied from the \code{DALEX} package.
 #' This dataset was copied from the \code{stablelearner} package and went through few variable
 #' transformations. The complete list of persons on the RMS titanic was downloaded from
-#' \url{https://www.encyclopedia-titanica.org} on April 5, 2016. The  information given
-#' in \code{sibsp} and \code{parch} was adopoted from a data set obtained from \url{http://biostat.mc.vanderbilt.edu/DataSets}.
+#' \url{https://www.encyclopedia-titanica.org} on April 5, 2016.
 #' @usage data(titanic_data)
 #' @format a data frame with 2207 rows and 11 columns
 NULL
