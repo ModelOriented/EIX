@@ -24,8 +24,6 @@
 #'
 #' @import data.table
 #' @import iBreakDown
-#' @importFrom xgboost slice
-#' @importFrom xgboost xgb.DMatrix
 #'
 #' @examples
 #'
@@ -64,9 +62,9 @@ waterfall <- function(xgb_model, new_observation, data, type = "binary", option 
   }
 
   explainer = buildExplainerFromTreeList(tree_list,names(table(rbindlist(tree_list)[,Feature])))
-  new_observation_DM <- slice(xgb.DMatrix(t(new_observation)), as.integer(1))
+  new_observation_DM <- t(new_observation)
 
-  breakdown = explainPredictions(xgb_model, explainer, new_observation_DM)
+  breakdown <- explainPredictions(xgb_model, explainer, new_observation_DM)
 
 
   #merge categorical features
@@ -169,7 +167,7 @@ create.broken <- function(broken_intercept, baseline = 0) {
 getStatsForTreesInter = function(trees,type = "binary",  base_score = 0.5) {
   #code uses xgboostExplainer code created by David Foster
   leaf <- Feature <- H <- Cover <- Yes <- No <- ID <-
-    weight <- Quality <- previous_weight <- G <- parentsCover <-
+    weight <- Gain <- previous_weight <- G <- parentsCover <-
     name_pair <- childsGain <- uplift_weight <- parentsGain <-
     parentsName <- NULL
 
@@ -196,7 +194,7 @@ getStatsForTreesInter = function(trees,type = "binary",  base_score = 0.5) {
     base_weight = log(base_score / (1 - base_score))
   }
 
-  treeList[leaf == T, weight := base_weight + Quality]
+  treeList[leaf == T, weight := base_weight + Gain]
   treeList[, previous_weight := base_weight]
   treeList[1, previous_weight := 0]
   treeList[leaf == T, G := -weight * H]
@@ -222,19 +220,19 @@ getStatsForTreesInter = function(trees,type = "binary",  base_score = 0.5) {
       tree[ID == right, previous_weight := w]
       if (tree[ID == left, leaf] == F) {
 
-        tree[ID == left, `:=`(parentsGain = tree[r, Quality], parentsName = tree[r, Feature])]
+        tree[ID == left, `:=`(parentsGain = tree[r, Gain], parentsName = tree[r, Feature])]
         tree[ID == left, parentsCover := tree[r, Cover]]
         name_pair4 = paste(tree[r, Feature], tree[ID == left, Feature], sep = ":")
         tree[ID == left, name_pair := name_pair4]
-        tree[ID == left, childsGain := Quality]
+        tree[ID == left, childsGain := Gain]
 
       }
       if (tree[ID == right, leaf] == F) {
-        tree[ID == right, `:=`(parentsGain = tree[r, Quality], parentsName = tree[r, Feature])]
+        tree[ID == right, `:=`(parentsGain = tree[r, Gain], parentsName = tree[r, Feature])]
         tree[ID == right, parentsCover := tree[r, Cover]]
         name_pair1 = paste(tree[r, Feature], tree[ID == right, Feature], sep = ":")
         tree[ID == right, name_pair := name_pair1]
-        tree[ID == right, childsGain := Quality]
+        tree[ID == right, childsGain := Gain]
       }
     }
 
@@ -251,7 +249,7 @@ getStatsForTreesInter = function(trees,type = "binary",  base_score = 0.5) {
 getStatsForTrees = function(trees, nodes.train,type = "binary", base_score = 0.5) {
   #code was copied from xgboostExplainer package created by David Foster
   leaf <- Feature <- H <- Cover <- Yes <- No <- ID <-
-    weight <- Quality <- previous_weight <- G <- uplift_weight <- NULL
+    weight <- Gain <- previous_weight <- G <- uplift_weight <- NULL
 
   #Accepts data table of tree (the output of xgb.model.dt.tree)
   #Returns a list of tree, with the stats filled in
@@ -282,7 +280,7 @@ getStatsForTrees = function(trees, nodes.train,type = "binary", base_score = 0.5
     base_weight = log(base_score / (1 - base_score))
   }
 
-  tree_list[leaf == T, weight := base_weight + Quality]
+  tree_list[leaf == T, weight := base_weight + Gain]
 
   tree_list[, previous_weight := base_weight]
   tree_list[1, previous_weight := 0]
@@ -415,7 +413,7 @@ explainPredictions = function(xgb_model, explainer , data) {
   #Accepts data table of the breakdown for each leaf of each tree and the node matrix
   #Returns the breakdown for each prediction as a data table
 
-  nodes = predict(xgb_model, data, predleaf = TRUE)
+  nodes = predict(xgb_model, data, type = "leaf")
 
   colnames = names(explainer)[1:(ncol(explainer) - 2)]
 

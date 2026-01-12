@@ -36,8 +36,7 @@ sparse_matrix <- sparse.model.matrix(survived ~ . - 1,  data = titanic_data)
 
 ```{r, warning=FALSE, message=FALSE}
 library("xgboost")
-param <- list(objective = "binary:logistic", max_depth = 2)
-xgb_model <- xgboost(sparse_matrix, params = param, label = titanic_data[, "survived"] == "yes", nrounds = 50, verbose = FALSE)
+xgb_model<- xgboost(sparse_matrix, titanic_data[, "survived"], objective = "binary:logistic", max_depth = 2, nrounds = 50, verbosity = 0)
 ```
 
 

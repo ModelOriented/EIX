@@ -101,13 +101,13 @@ importance <- function(xgb_model, data, option = "both", digits = 4){
 
 importanceTableMixed <- function(xgb_model, data){
   parentsGain <- childsGain <- name_pair <- Cover <- Feature <-
-    Gain <- indx <- . <- Quality <- NULL
+    Gain <- indx <- . <- Gain <- NULL
 
   trees <- noLeavesGainTable(xgb_model, data)
 
   #single variables
   importanceSingle <-
-    trees[(interaction == FALSE) | (is.na(interaction)), .(Feature, Gain = Quality, Cover)]
+    trees[(interaction == FALSE) | (is.na(interaction)), .(Feature, Gain = Gain, Cover)]
 
   #interactions
   interactions <- trees[interaction == TRUE]
@@ -150,10 +150,10 @@ importanceInteraction <- function(xgb_model, data) {
 
 
 importanceSingleVariable <- function(xgb_model, data) {
-  Feature <- Gain <- Quality <- Cover <- indx <- . <- NULL
+  Feature <- Gain <- Gain <- Cover <- indx <- . <- NULL
 
   trees <- noLeavesGainTable(xgb_model, data)
-  trees[, Gain := Quality]
+  trees[, Gain := Gain]
 
   importance1 <- merge(countRoots(trees),calculateWeightedDepth(trees), by = "Feature", all = TRUE)[, -"sumGain"]
 
@@ -177,11 +177,11 @@ importanceSingleVariable <- function(xgb_model, data) {
 #Table with number of roots and weighedRoot
 #counts how many times each variable is in the root of the tree and calculates the weighedRoot-number of occurrences in root weighed by Gain.
 countRoots <- function(trees) {
-  Node <- Quality <- Feature <- sumGain <- . <-
+  Node <- Gain <- Feature <- sumGain <- . <-
     weightedRoot <- numberOfRoots <- NULL
 
   roots <- trees[Node == 0, ]
-  roots <- roots[, .(sumGain = sum(Quality), numberOfRoots = .N), by = Feature]
+  roots <- roots[, .(sumGain = sum(Gain), numberOfRoots = .N), by = Feature]
   sumGains <- sum(roots[, sumGain])
   roots <- roots[, weightedRoot := round(roots[, sumGain] * roots[, numberOfRoots] / sumGains, 4)]
 
@@ -202,9 +202,9 @@ mean5gain <- function(trees) {
 
 #calculates depth mean for every variable weighted by Gain
 calculateWeightedDepth <- function(trees) {
-  Feature <- depth <- Quality <- . <- NULL
+  Feature <- depth <- Gain <- . <- NULL
 
-  trees <- trees[, .(meanDepth = weighted.mean(depth, Quality), count = .N), by = Feature]
+  trees <- trees[, .(meanDepth = weighted.mean(depth, Gain), count = .N), by = Feature]
 
   return(trees[])
 }
@@ -212,12 +212,12 @@ calculateWeightedDepth <- function(trees) {
 
 noLeavesGainTable <- function(xgb_model, data) {
   parentsName <- Feature <- Tree <- name_pair <- parentsGain <- childsGain <-
-    . <- Cover <- parentsCover <- interaction <- Node <- Quality <- depth <- NULL
+    . <- Cover <- parentsCover <- interaction <- Node <- Gain <- depth <- NULL
 
   treeList <- calculateGain(xgb_model, data)
   trees <- rbindlist(treeList)
   trees <- trees[Feature != "Leaf", .(Tree, Node, name_pair, parentsGain, childsGain, Cover,
-                                      parentsCover, Feature, Quality, parentsName, interaction, depth)]
+                                      parentsCover, Feature, Gain, parentsName, interaction, depth)]
 
   return(trees[])
 }

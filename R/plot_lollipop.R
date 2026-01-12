@@ -47,17 +47,17 @@
 
 plot.lollipop<-function(x, ..., labels = "topAll", log_scale = TRUE, threshold=0.1){
 
-  Tree <- Quality <- depth <- Feature <- NULL
+  Tree <- Gain <- depth <- Feature <- NULL
   nodes <- x[[1]]
   roots <- x[[2]]
 
-  p <- ggplot(data = data.frame(nodes), aes(x = Tree, y = Quality, group = as.factor(depth))) +
+  p <- ggplot(data = data.frame(nodes), aes(x = Tree, y = Gain, group = as.factor(depth))) +
     geom_line(data = data.frame(roots), color = "red", size = 1.25, alpha = .5) +
-    geom_segment(aes(x = Tree, xend = Tree, y = 0, yend = Quality), size = 1.25) +
+    geom_segment(aes(x = Tree, xend = Tree, y = 0, yend = Gain), size = 1.25) +
     geom_point(aes(shape = as.factor(depth), color = as.factor(depth)), size = 3)
 
-nodes_labels <- nodes[(interaction == TRUE) & (Quality > threshold * (max(nodes[, Quality]))),]
-roots_labels <- roots[Quality > threshold * (max(nodes[, Quality])),]
+nodes_labels <- nodes[(interaction == TRUE) & (Gain > threshold * (max(nodes[, Gain]))),]
+roots_labels <- roots[Gain > threshold * (max(nodes[, Gain])),]
 
   p <- {
     switch(labels,

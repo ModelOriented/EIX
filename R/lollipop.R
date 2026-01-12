@@ -39,12 +39,12 @@
 
 lollipop <- function(xgb_model, data){
 
-  Feature <- Quality <- Node <- Tree <- ID <- depth <-
+  Feature <- Gain <- Node <- Tree <- ID <- depth <-
     interaction <- . <- parentsName <- name_pair <- NULL
 
   trees = rbindlist(calculateGain(xgb_model, data))
-  roots <- trees[Node == 0, .(Quality, Feature, Tree, ID, depth)]
-  nodes <- trees[Feature != "Leaf", .(Quality,
+  roots <- trees[Node == 0, .(Gain, Feature, Tree, ID, depth)]
+  nodes <- trees[Feature != "Leaf", .(Gain,
                                       Feature,
                                       Node,
                                       Tree,

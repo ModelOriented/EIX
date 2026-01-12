@@ -16,7 +16,7 @@
 # @import utils
 calculateGain <- function(xgb.model, data) {
 
-  leaf <- Feature <- Yes <- No <- ID <- parentsGain <- Quality <- parentsCover <-
+  leaf <- Feature <- Yes <- No <- ID <- parentsGain <- Gain <- parentsCover <-
     Cover <- name_pair <- childsGain <- depth <- parentsName <- NULL
 
   trees = tableOfTrees(xgb.model, data)
@@ -32,10 +32,10 @@ calculateGain <- function(xgb.model, data) {
       right = tree[r, No]
       if (tree[ID == left, leaf] == F) {
        # newDepth <- tree[r , depth] + 1
-        tree[ID == left,`:=`(parentsGain = tree[r, Quality],
+        tree[ID == left,`:=`(parentsGain = tree[r, Gain],
                              parentsCover = tree[r, Cover],
                              name_pair = paste(tree[r, Feature], tree[ID == left, Feature], sep = ":"),
-                             childsGain = Quality,
+                             childsGain = Gain,
                              depth = tree[r , depth] + 1,
                              parentsName = tree[r, Feature])]
         tree[ID == left, interaction := ((parentsGain < childsGain) & (Feature != parentsName))]
@@ -44,10 +44,10 @@ calculateGain <- function(xgb.model, data) {
       if (tree[ID == right, leaf]==F) {
 
         #newDepth <- tree[r , depth] + 1
-        tree[ID == right, `:=`(parentsGain = tree[r, Quality],
+        tree[ID == right, `:=`(parentsGain = tree[r, Gain],
                                parentsCover = tree[r, Cover],
                                name_pair = paste(tree[r, Feature], tree[ID == right, Feature], sep = ":"),
-                               childsGain = Quality,
+                               childsGain = Gain,
                                depth = tree[r , depth] + 1,
                                parentsName = tree[r, Feature])]
         tree[ID == right, interaction := ((parentsGain < childsGain) & (Feature != parentsName))]
@@ -75,18 +75,18 @@ calculateGain <- function(xgb.model, data) {
 #  @import lightgbm
 
 
-tableOfTrees <- function(model, data){
+tableOfTrees <- function(model, data) {
   count <- split_feature <- leaf_count <- internal_count <-
     split_index <- tree_index <- leaf_index <- threshold <-
     leaf_value <- split_gain <- flag <- node_parent <- leaf_parent<-
     Node <- Feature <- . <- Cover <- Yes <- No <- ID <-
-    Tree<- Quality <- Missing <-Leaf_old_num<- Split <- NULL
+    Tree<- Gain <- Missing <-Leaf_old_num<- Split <- NULL
 
 
-  if(class(model)[1] == "xgb.Booster") {
-    return(xgb.model.dt.tree(colnames(data), model)[])
+  if (inherits(model, "xgb.Booster")) {
+    return(xgb.model.dt.tree(model)[])
   }
-  if (class(model)[1] == "lgb.Booster") {
+  if (inherits(model, "lgb.Booster")) {
     lgb.trees <- lightgbm::lgb.model.dt.tree(model)
 
     lgb.trees <- lgb.trees[, count := ifelse(is.na(split_feature), leaf_count, internal_count)]
@@ -98,7 +98,7 @@ tableOfTrees <- function(model, data){
     trees <- lgb.trees[, `:=`(Tree = tree_index,
                               Node = ifelse(is.na(split_index), max + leaf_index + 1, split_index),
                               Feature = ifelse(is.na(split_feature), "Leaf", split_feature),
-                              Split = threshold, Missing = NA, Quality = ifelse(is.na(split_feature), leaf_value, split_gain),
+                              Split = threshold, Missing = NA, Gain = ifelse(is.na(split_feature), leaf_value, split_gain),
                               Cover = (1/4)*count,
                               Leaf_old_num=leaf_index)]
     trees[, `:=`(ID = paste(Tree, Node, sep = "-"))]
@@ -128,8 +128,8 @@ tableOfTrees <- function(model, data){
       }
     }
     trees <- rbindlist(treeList)
-    trees[, .(Tree, Node, ID, Feature, Split,  Yes, No, Missing,   Quality, Cover)]
-    return(trees[, .(Tree, Node, ID, Feature, Split,  Yes, No, Missing,   Quality, Cover,Leaf_old_num)][])
+    trees[, .(Tree, Node, ID, Feature, Split,  Yes, No, Missing,   Gain, Cover)]
+    return(trees[, .(Tree, Node, ID, Feature, Split,  Yes, No, Missing,   Gain, Cover,Leaf_old_num)][])
   }
   if (class(model)[1] != "xgb.Booster" || "lgb.Booster") {
     return(cat( "You should choose one of two available models: xgboost, lightgbm \n" ))

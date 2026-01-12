@@ -28,7 +28,7 @@ Imports:
     iBreakDown,
     tidyr,
     scales
-RoxygenNote: 7.1.1
+RoxygenNote: 7.3.2
 Suggests:
     Matrix,
     knitr,
